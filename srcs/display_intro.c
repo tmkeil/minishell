@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   display_intro.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frocha <frocha@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:21:26 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/12 21:21:27 by frocha           ###   ########.fr       */
+/*   Updated: 2024/12/12 23:52:40 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-void display_minishell_intro()
+void	display_minishell_intro(void)
 {
-    printf("\n");
-    printf("  ____  _          _ _   \n");
-    printf(" / ___|| |__   ___| | |  \n");
-    printf(" \\___ \\| '_ \\ / _ \\ | |  \n");
-    printf("  ___) | | | |  __/ | |  \n");
-    printf(" |____/|_| |_|\\___|_|_|  \n");
-    printf("\n");
+	printf("\n");
+	printf("  ____  _          _ _   \n");
+	printf(" / ___|| |__   ___| | |  \n");
+	printf(" \\___ \\| '_ \\ / _ \\ | |  \n");
+	printf("  ___) | | | |  __/ | |  \n");
+	printf(" |____/|_| |_|\\___|_|_|  \n");
+	printf("\n");
 }

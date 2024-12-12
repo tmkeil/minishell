@@ -1,5 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+LIBS = -lreadline
 
 NAME = minishell
 INCLUDES = -Iheaders
@@ -20,10 +21,10 @@ OBJS_BONUS = $(addprefix $(OBJSDIR), $(BONUS_SRCS:.c=.o))
 all: $(NAME)
 
 bonus: $(OBJS_BONUS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBFT) $(INCLUDES) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBFT) $(INCLUDES) $(LIBS) -o $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(INCLUDES) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(INCLUDES) $(LIBS) -o $(NAME)
 
 $(OBJSDIR)%.o: $(SRCSDIR)%.c
 	mkdir -p $(OBJSDIR)
