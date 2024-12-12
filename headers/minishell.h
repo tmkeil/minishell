@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: frocha <frocha@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/12 22:21:13 by tkeil            ###   ########.fr       */
+/*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
+/*   Updated: 2024/12/12 21:23:42 by frocha           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minishell.h"
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
-int main(void)
-{
-	display_minishell_intro();
-	return (0);
-}
+#include "ft_printf.h"
+
+void display_minishell_intro();
+
+#endif
