@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 00:07:46 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 00:10:53 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,14 @@ void	assign(t_lexems **lexems, char *splitted)
 		(*lexems)->type = NUMBER;
 		(*lexems)->value = (void *)&nbr;
 	}
-	if (get_command(splitted))
+	else if (get_command(splitted))
 	{
 		(*lexems)->type = COMMAND;
 		(*lexems)->value = (void *)splitted;
+	}
+	else if ()
+	{
+		/* code */
 	}
 	else
 	{

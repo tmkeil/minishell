@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/13 00:05:19 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 00:26:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,15 @@
 # define MINISHELL_H
 
 # define NUMBER 0
-# define COMMAND 1
-# define ARGUMENT 2
-# define INVALID 3
+# define COMMAND 1 // ls
+# define ARGUMENT 2 // ls -l
+# define REDIRECT 3 // >, <, >>, <<
+# define ENV_VAR 4 // $
+# define INVALID 5
+# define OPERATOR 6 // |
+# define PATH 7 // /bin/ls
+# define STRING 8 // "string" in ""
+# define SPECIAL 9 // &, ;, ', ...
 # define END_LEXEM -1
 
 # include "libft.h"
