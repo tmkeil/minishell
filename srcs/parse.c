@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 17:01:02 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 18:31:45 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 char	*get_command(char *split)
 {
-	int i;
-	char *path;
-	char *full;
-	char **env;
+	int		i;
+	char	*path;
+	char	*full;
+	char	**env;
 
 	path = NULL;
 	full = NULL;
@@ -46,6 +46,7 @@ int	append_lexem_to_lexems(t_lexems **lexems, e_types type, void *value)
 	t_lexems	*lex;
 	t_lexems	*last;
 
+	// printf("value = %s\n", (char *)value);
 	if (!lexems)
 		return (0);
 	lex = malloc(sizeof(t_lexems));
@@ -62,51 +63,53 @@ int	append_lexem_to_lexems(t_lexems **lexems, e_types type, void *value)
 	return (last->next = lex, 1);
 }
 
-int	handle_lexem(t_lexems *lexems, char *sub)
+int	handle_lexem(t_lexems **lexems, char *sub)
 {
 	if (!ft_strncmp(sub, "||", 2))
-		return (append_lexem_to_lexems(&lexems, OR, sub));
+		return (printf("OR sub = %s\n", sub), append_lexem_to_lexems(lexems, OR, sub));
 	else if (!ft_strncmp(sub, "&&", 2))
-		return (append_lexem_to_lexems(&lexems, AND, sub));
+		return (printf("AND sub = %s\n", sub), append_lexem_to_lexems(lexems, AND, sub));
 	else if (!ft_strncmp(sub, "|", 1))
-		return (append_lexem_to_lexems(&lexems, PIPE, sub));
-	else if (ft_isalnum(*sub) || *sub == '_' || *sub == '/')
-		return (append_lexem_to_lexems(&lexems, WORD, sub));
+		return (printf("PIPE\n"), append_lexem_to_lexems(lexems, PIPE, sub));
 	else if (ft_isdigit(*sub))
-		return (append_lexem_to_lexems(&lexems, NUMBER, sub));
+		return (printf("NUM\n"), append_lexem_to_lexems(lexems, NUMBER, sub));
+	else if (ft_isalnum(*sub) || *sub == '_' || *sub == '/')
+		return (printf("WORD\n"), append_lexem_to_lexems(lexems, WORD, sub));
 	else if (!ft_strncmp(sub, ">>", 2) || !ft_strncmp(sub, "<<", 2))
-		return (append_lexem_to_lexems(&lexems, APPEND, sub));
+		return (printf("APPEND\n"), append_lexem_to_lexems(lexems, APPEND, sub));
 	else if (!ft_strncmp(sub, "$", 1))
-		return (append_lexem_to_lexems(&lexems, ENV_VAR, sub));
+		return (printf("ENV\n"), append_lexem_to_lexems(lexems, ENV_VAR, sub));
 	else if (!ft_strncmp(sub, ">", 1) || !ft_strncmp(sub, "<", 1))
-		return (append_lexem_to_lexems(&lexems, REDIRECT, sub));
+		return (printf("REDI\n"), append_lexem_to_lexems(lexems, REDIRECT, sub));
 	else if (!ft_strncmp(sub, ";", 1))
-		return (append_lexem_to_lexems(&lexems, SEMICOLON, sub));
+		return (printf("SEM\n"), append_lexem_to_lexems(lexems, SEMICOLON, sub));
 	else if (!ft_strncmp(sub, "&", 1))
-		return (append_lexem_to_lexems(&lexems, AMPERSAND, sub));
+		return (printf("AMPER\n"), append_lexem_to_lexems(lexems, AMPERSAND, sub));
 	else if (!ft_strncmp(sub, "\'", 1))
-		return (append_lexem_to_lexems(&lexems, SINGLE_QUOTE, sub));
+		return (printf("SIN\n"), append_lexem_to_lexems(lexems, SINGLE_QUOTE, sub));
 	else if (!ft_strncmp(sub, "\"", 1))
-		return (append_lexem_to_lexems(&lexems, DOUBLE_QUOTE, sub));
-	return (append_lexem_to_lexems(&lexems, INVALID, sub));
+		return (printf("SOB\n"), append_lexem_to_lexems(lexems, DOUBLE_QUOTE, sub));
+	return (printf("INVALID\n"), append_lexem_to_lexems(lexems, INVALID, sub));
 }
 
 void	ft_test_lexes(t_lexems *lex)
 {
 	int		i;
-	char	*types[] = {[OR] = "OPERATOR", [AND] = "OPERATOR",
-			[PIPE] = "OPERATOR", [WORD] = "ARGUMENT", [NUMBER] = "NUMBER",
-			[APPEND] = "REDIRECT", [ENV_VAR] = "ENV_VAR",
+	char	*types[] = {[OR] = "OR", [AND] = "AND",
+			[PIPE] = "PIPE", [WORD] = "WORD", [NUMBER] = "NUMBER",
+			[APPEND] = "APPEND", [ENV_VAR] = "ENV_VAR",
 			[REDIRECT] = "REDIRECT", [INVALID] = "INVALID",
-			[SEMICOLON] = "OPERATOR", [SEPARATOR] = "SEPARATOR",
-			[AMPERSAND] = "OPERATOR", [SINGLE_QUOTE] = "STRING",
-			[DOUBLE_QUOTE] = "STRING"};
+			[SEMICOLON] = "SEMICOLON", [SEPARATOR] = "SEPARATOR",
+			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 
 	i = 0;
-	while (lex->next)
+	// printf("lex calue = %s\n", lex->value);
+	// printf("lex type = %d\n", lex->type);
+	while (lex)
 	{
 		printf("lexem[%i].type = %s\n", i, types[lex->type]);
-		printf("lexem[%i].value = %s\n\n", i, (char *)lex->value);
+		printf("lexem[%i].value = %s\n\n", i, (void *)lex->value);
 		lex = lex->next;
 		i++;
 	}
@@ -121,17 +124,20 @@ int	create_lexes(char *prompt)
 	lexems = NULL;
 	while (*prompt)
 	{
+		// printf("pos at: %s\n", prompt);
 		if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
 		{
-			append_lexem_to_lexems(&lexems, SEPARATOR, (void *)SEPARATOR);
+			append_lexem_to_lexems(&lexems, SEPARATOR, (void *)0x0);
 			while (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
 				prompt++;
+			// continue ;
 		}
 		ptr = prompt;
-		while (*prompt && !(*prompt >= 9 && *prompt <= 13))
+		while (*prompt && *prompt != ' ' && !(*prompt >= 9 && *prompt <= 13))
 			prompt++;
 		sub = ft_substr(ptr, 0, prompt - ptr);
-		if (!handle_lexem(lexems, sub))
+		printf("sub = %s\n", sub);
+		if (!handle_lexem(&lexems, sub))
 			return (free(sub), 0);
 		free(sub);
 	}
