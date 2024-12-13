@@ -6,62 +6,18 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 01:05:09 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 15:44:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-long	ft_atol(char *s)
-{
-	size_t	i;
-	int		p;
-	long	val;
-	bool	valid;
-
-	i = 0;
-	p = 1;
-	val = 0;
-	valid = false;
-	while (s[i] && (s[i] == ' ' || (s[i] >= 9 && s[i] <= 13)))
-		i++;
-	if (s[i] == '-' || s[i] == '+')
-	{
-		if (s[i++] == '-')
-			p = -1;
-	}
-	while (s[i] >= '0' && s[i] <= '9')
-	{
-		valid = true;
-		val = val * 10 + (s[i++] - '0');
-	}
-	if (!valid || s[i] != '\0')
-		return (LONG_MIN);
-	return (val * p);
-}
-
-void ft_clr(char ***env)
+char	*get_command(char *split, int *index)
 {
 	int i;
-
-	i = 0;
-	if (!env || !*env)
-        return ;
-	while((*env)[i])
-	{
-		free((*env)[i]);
-		i++;
-	}
-	free(*env);
-	*env = NULL;
-}
-
-char	*get_command(char *split)
-{
-	int		i;
-	char	*path;
-	char	*full;
-	char	**env;
+	char *path;
+	char *full;
+	char **env;
 
 	path = NULL;
 	full = NULL;
@@ -85,70 +41,98 @@ char	*get_command(char *split)
 	return (NULL);
 }
 
-void	assign(t_lexems **lexems, char *split)
+int	append_lexem_to_lexems(t_lexems **lexems, e_types type, void *value)
 {
-	long	nbr;
+	t_lexems	*lex;
+	t_lexems	*last;
 
-	nbr = ft_atol(split);
-	if (nbr != LONG_MIN)
+	if (!lexems)
+		return (0);
+	lex = malloc(sizeof(t_lexems));
+	if (!lex)
+		return (0);
+	lex->type = type;
+	lex->value = value;
+	lex->next = NULL;
+	if (!*lexems)
+		return (*lexems = lex, 1);
+	last = ft_lstlast(*lexems);
+	return (last->next = lex, 1);
+}
+
+int	handle_lexem(t_lexems *lexems, char *sub)
+{
+	if (!ft_strncmp(sub, "||", 2))
+		return (append_lexem_to_lexems(&lexems, OR, sub));
+	else if (!ft_strncmp(sub, "&&", 2))
+		return (append_lexem_to_lexems(&lexems, AND, sub));
+	else if (!ft_strncmp(sub, "|", 1))
+		return (append_lexem_to_lexems(&lexems, PIPE, sub));
+	else if (ft_isalnum(*sub) || *sub == '_' || *sub == '/')
+		return (append_lexem_to_lexems(&lexems, WORD, sub));
+	else if (ft_isdigit(*sub))
+		return (append_lexem_to_lexems(&lexems, NUMBER, sub));
+	else if (!ft_strncmp(sub, ">>", 2) || !ft_strncmp(sub, "<<", 2))
+		return (append_lexem_to_lexems(&lexems, APPEND, sub));
+	else if (!ft_strncmp(sub, "$", 1))
+		return (append_lexem_to_lexems(&lexems, ENV_VAR, sub));
+	else if (!ft_strncmp(sub, ">", 1) || !ft_strncmp(sub, "<", 1))
+		return (append_lexem_to_lexems(&lexems, REDIRECT, sub));
+	else if (!ft_strncmp(sub, ";", 1))
+		return (append_lexem_to_lexems(&lexems, SEMICOLON, sub));
+	else if (!ft_strncmp(sub, "&", 1))
+		return (append_lexem_to_lexems(&lexems, AMPERSAND, sub));
+	else if (!ft_strncmp(sub, "\'", 1))
+		return (append_lexem_to_lexems(&lexems, SINGLE_QUOTE, sub));
+	else if (!ft_strncmp(sub, "\"", 1))
+		return (append_lexem_to_lexems(&lexems, DOUBLE_QUOTE, sub));
+	return (append_lexem_to_lexems(&lexems, INVALID, sub));
+}
+
+void	ft_test_lexes(t_lexems *lex)
+{
+	int		i;
+	char	*types[] = {[OR] = "OPERATOR", [AND] = "OPERATOR",
+			[PIPE] = "OPERATOR", [WORD] = "ARGUMENT", [NUMBER] = "NUMBER",
+			[APPEND] = "REDIRECT", [ENV_VAR] = "ENV_VAR",
+			[REDIRECT] = "REDIRECT", [INVALID] = "INVALID",
+			[SEMICOLON] = "OPERATOR", [SEPARATOR] = "SEPARATOR",
+			[AMPERSAND] = "OPERATOR", [SINGLE_QUOTE] = "STRING",
+			[DOUBLE_QUOTE] = "STRING"};
+
+	i = 0;
+	while (lex->next)
 	{
-		(*lexems)->type = NUMBER;
-		(*lexems)->value = (void *)&nbr;
-	}
-	else if (get_command(split))
-	{
-		(*lexems)->type = COMMAND;
-		(*lexems)->value = (void *)split;
-	}
-	else if (ft_strnstr("\" $ \'", split, 5) && !get_command(split))
-	{
-        (*lexems)->type = ARGUMENT;
-        (*lexems)->value = (void *)split;
-    }
-	else if (ft_strnstr("<< >> < >", split, 9))
-	{
-        (*lexems)->type = REDIRECT;
-        (*lexems)->value = (void *)split;
-    }
-	else if (ft_strnstr("$", split, 1))
-	{
-        (*lexems)->type = ENV_VAR;
-        (*lexems)->value = (void *)split;
-    }
-	else if (ft_strnstr("| && ||", split, 7))
-	{
-        (*lexems)->type = OPERATOR;
-        (*lexems)->value = (void *)split;
-    }
-	else if (ft_strnstr("/ .", split, 3)) // or like this: else if (split[0] == '/' || split[0] == '.')
-	{
-        (*lexems)->type = PATH;
-        (*lexems)->value = (void *)split;
-    }
-	// string and special are missing
-	else
-	{
-		(*lexems)->type = INVALID;
-		(*lexems)->value = NULL;
+		printf("lexem[%i].type = %s\n", i, types[lex->type]);
+		printf("lexem[%i].value = %s\n\n", i, (char *)lex->value);
+		lex = lex->next;
+		i++;
 	}
 }
 
 void	create_lexes(char *prompt)
 {
-	int			i;
-	char		**split;
+	char		*ptr;
+	char		*sub;
 	t_lexems	*lexems;
 
-	split = ft_split(prompt, ' ');
-	i = 0;
-	while (split[i])
-		i++;
-	lexems = malloc(sizeof(t_lexems) * (i + 1));
-	i = 0;
-	while (split[i])
+	lexems = NULL;
+	while (*prompt)
 	{
-		assign(&lexems+i, split[i]);
-		i++;
+		if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
+		{
+			append_lexem_to_lexems(&lexems, SEPARATOR, (void *)SEPARATOR);
+			while (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
+				prompt++;
+		}
+		ptr = prompt;
+		while (*prompt && !(*prompt >= 9 && *prompt <= 13))
+			prompt++;
+		sub = ft_substr(ptr, 0, prompt - ptr);
+		if (!handle_lexem(lexems, sub))
+			return (free(sub), 0);
+		free(sub);
 	}
-	lexems[i].type = END_LEXEM;
+	ft_test_lexes(lexems);
+	return (1);
 }
