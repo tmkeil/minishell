@@ -6,24 +6,27 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/13 00:29:14 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 11:46:40 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define NUMBER 0
-# define COMMAND 1 // ls
-# define ARGUMENT 2 // ls -l
-# define REDIRECT 3 // >, <, >>, <<
-# define ENV_VAR 4 // $
-# define INVALID 5
-# define OPERATOR 6 // |, &&, ||, ;
-# define PATH 7 // /bin/ls
-# define STRING 8 // "string" in ""
-# define SPECIAL 9 // &, ;, ', ...
-# define END_LEXEM -1
+typedef enum e_types
+{
+	NUMBER = 0,
+	COMMAND = 1,  // ls
+	ARGUMENT = 2, // -l
+	REDIRECT = 3, // >, <, >>, <<
+	ENV_VAR = 4,  // $
+	INVALID = 5,
+	OPERATOR = 6, // |, &&, ||, ;
+	PATH = 7,     // /bin/ls
+	STRING = 8,   // "string" in ""
+	SPECIAL = 9,  // &, ;, ', ...
+	END_LEXEM = -1
+}			e_types;
 
 # include "libft.h"
 # include <readline/history.h>
