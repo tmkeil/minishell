@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 00:10:53 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 01:05:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ long	ft_atol(char *s)
 	return (val * p);
 }
 
-char	*get_command(char *splitted)
+char	*get_command(char *split)
 {
 	int		i;
 	char	*path;
@@ -49,14 +49,14 @@ char	*get_command(char *splitted)
 
 	path = NULL;
 	full = NULL;
-	if (access(splitted, X_OK) == 0)
-		return (ft_clr(&env), splitted);
+	if (access(split, X_OK) == 0)
+		return (ft_clr(&env), split);
 	i = 0;
 	env = ft_split(getenv("PATH"), ':');
 	while (env && env[i])
 	{
 		path = ft_strjoin(env[i], "/");
-		full = ft_strjoin(path, splitted);
+		full = ft_strjoin(path, split);
 		free(path);
 		if (!full)
 			return (ft_clr(&env), NULL);
@@ -68,25 +68,47 @@ char	*get_command(char *splitted)
 	return (NULL);
 }
 
-void	assign(t_lexems **lexems, char *splitted)
+void	assign(t_lexems **lexems, char *split)
 {
 	long	nbr;
 
-	nbr = ft_atol(splitted);
-	if (nbr <= INT_MIN && nbr >= INT_MAX)
+	nbr = ft_atol(split);
+	if (nbr != LONG_MIN)
 	{
 		(*lexems)->type = NUMBER;
 		(*lexems)->value = (void *)&nbr;
 	}
-	else if (get_command(splitted))
+	else if (get_command(split))
 	{
 		(*lexems)->type = COMMAND;
-		(*lexems)->value = (void *)splitted;
+		(*lexems)->value = (void *)split;
 	}
-	else if ()
+	else if (ft_strnstr("\" $ \'", split, 5) && !get_command(split))
 	{
-		/* code */
-	}
+        (*lexems)->type = ARGUMENT;
+        (*lexems)->value = (void *)split;
+    }
+	else if (ft_strnstr("<< >> < >", split, 9))
+	{
+        (*lexems)->type = REDIRECT;
+        (*lexems)->value = (void *)split;
+    }
+	else if (ft_strnstr("$", split, 1))
+	{
+        (*lexems)->type = ENV_VAR;
+        (*lexems)->value = (void *)split;
+    }
+	else if (ft_strnstr("| && ||", split, 7))
+	{
+        (*lexems)->type = OPERATOR;
+        (*lexems)->value = (void *)split;
+    }
+	else if (ft_strnstr("/ .", split, 3)) // or like this: else if (split[0] == '/' || split[0] == '.')
+	{
+        (*lexems)->type = PATH;
+        (*lexems)->value = (void *)split;
+    }
+	// string and special are missing
 	else
 	{
 		(*lexems)->type = INVALID;

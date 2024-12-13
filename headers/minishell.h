@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/13 00:26:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 00:29:14 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define REDIRECT 3 // >, <, >>, <<
 # define ENV_VAR 4 // $
 # define INVALID 5
-# define OPERATOR 6 // |
+# define OPERATOR 6 // |, &&, ||, ;
 # define PATH 7 // /bin/ls
 # define STRING 8 // "string" in ""
 # define SPECIAL 9 // &, ;, ', ...
