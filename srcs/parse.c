@@ -6,13 +6,13 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 15:44:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 17:01:02 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_command(char *split, int *index)
+char	*get_command(char *split)
 {
 	int i;
 	char *path;
@@ -56,7 +56,9 @@ int	append_lexem_to_lexems(t_lexems **lexems, e_types type, void *value)
 	lex->next = NULL;
 	if (!*lexems)
 		return (*lexems = lex, 1);
-	last = ft_lstlast(*lexems);
+	last = *lexems;
+	while (last->next)
+		last = last->next;
 	return (last->next = lex, 1);
 }
 
@@ -110,7 +112,7 @@ void	ft_test_lexes(t_lexems *lex)
 	}
 }
 
-void	create_lexes(char *prompt)
+int	create_lexes(char *prompt)
 {
 	char		*ptr;
 	char		*sub;

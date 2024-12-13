@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/13 15:14:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 17:01:38 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_lexems
 }					t_lexems;
 
 void				display_minishell_intro(void);
-void				create_lexes(char *prompt);
+int					create_lexes(char *prompt);
 
 // utils
 void				ft_clr(char ***ptr);
