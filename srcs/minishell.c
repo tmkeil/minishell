@@ -15,11 +15,13 @@
 void	get_user_input(void)
 {
 	char	*prompt;
+	char	*text_show;
 
-	ft_printf("%s", getenv("USER"));
-	prompt = readline("@minishell $ ");
+	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
+	prompt = readline(text_show);
 	add_history(prompt);
 	create_lexes(prompt);
+	free(text_show);
 	free(prompt);
 }
 
