@@ -40,6 +40,22 @@ long	ft_atol(char *s)
 	return (val * p);
 }
 
+void ft_clr(char ***env)
+{
+	int i;
+
+	i = 0;
+	if (!env || !*env)
+        return ;
+	while((*env)[i])
+	{
+		free((*env)[i]);
+		i++;
+	}
+	free(*env);
+	*env = NULL;
+}
+
 char	*get_command(char *split)
 {
 	int		i;
@@ -49,8 +65,9 @@ char	*get_command(char *split)
 
 	path = NULL;
 	full = NULL;
+	env = NULL;
 	if (access(split, X_OK) == 0)
-		return (ft_clr(&env), split);
+		return (split);
 	i = 0;
 	env = ft_split(getenv("PATH"), ':');
 	while (env && env[i])

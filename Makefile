@@ -9,7 +9,7 @@ SRCSDIR = srcs/
 LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
-SRCS = minishell.c display_intro.c
+SRCS = minishell.c display_intro.c parse.c
 BONUS_SRCS = minishell.c
 
 SRCS_PATHS = $(addprefix $(SRCSDIR), $(SRCS))
