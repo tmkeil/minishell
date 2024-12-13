@@ -17,14 +17,22 @@ void	get_user_input(void)
 	char	*prompt;
 
 	ft_printf("%s@minishell $", getenv("USER"));
-	prompt = readline("");
+	prompt = readline(" ");
 	create_lexes(prompt);
 	free(prompt);
 }
 
-int main(void)
+void start_bash()
 {
 	display_minishell_intro();
-	get_user_input();
+	while(1)
+	{
+		get_user_input();
+	}
+}
+
+int main(void)
+{
+	start_bash();
 	return (0);
 }
