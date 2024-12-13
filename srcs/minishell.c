@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 17:46:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 19:16:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 void	get_user_input(void)
 {
-	char	*prompt;
-	char	*text_show;
+	t_lexems	*lexems;
+	char		*prompt;
+	char		*text_show;
 
+	lexems = NULL;
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
 	prompt = readline(text_show);
 	if (!prompt)
 		exit(0);
 	add_history(prompt);
-	create_lexes(prompt);
+	create_lexes(lexems, prompt);
+	parse_lexes(lexems);
+	clr_lexes(&lexems);
 	free(text_show);
 	free(prompt);
 }

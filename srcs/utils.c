@@ -6,11 +6,26 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 15:38:38 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 19:14:07 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	clr_lexes(t_lexems **lexems)
+{
+	t_lexems	*tmp;
+
+	while (*lexems)
+	{
+		tmp = (*lexems)->next;
+		free((*lexems)->value);
+		free(*lexems);
+		*lexems = tmp;
+	}
+	free(*lexems);
+	*lexems = NULL;
+}
 
 void	ft_clr(char ***ptr)
 {
