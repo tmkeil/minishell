@@ -32,8 +32,14 @@ void start_bash()
 	}
 }
 
+void finish_bash()
+{
+	rl_clear_history();
+}
+
 int main(void)
 {
 	start_bash();
+	finish_bash();
 	return (0);
 }
