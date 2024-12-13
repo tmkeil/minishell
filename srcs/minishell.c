@@ -34,10 +34,15 @@ void handle_sigint(int sig)
     rl_redisplay();
 }
 
+void handle_sigquit(int sig) {
+    (void)sig;
+}
+
 void start_bash()
 {
 	display_minishell_intro();
 	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, handle_sigquit);
 	while(1)
 	{
 		get_user_input();
