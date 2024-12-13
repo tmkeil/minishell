@@ -19,6 +19,8 @@ void	get_user_input(void)
 
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
 	prompt = readline(text_show);
+	if (!prompt)
+		exit(0);
 	add_history(prompt);
 	create_lexes(prompt);
 	free(text_show);
