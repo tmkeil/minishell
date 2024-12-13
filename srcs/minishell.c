@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 19:16:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 21:40:58 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ void	get_user_input(void)
 		exit(0);
 	add_history(prompt);
 	create_lexes(lexems, prompt);
+	// parse, execute are not there yet
 	parse_lexes(lexems);
+	execute_commands();
 	clr_lexes(&lexems);
 	free(text_show);
 	free(prompt);
