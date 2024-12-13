@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/13 17:01:38 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 21:05:30 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,16 @@ typedef enum e_types
 
 typedef struct s_lexems
 {
-	int				type;
+	e_types			type;
 	void			*value;
 	struct s_lexems	*next;
 }					t_lexems;
 
 void				display_minishell_intro(void);
-int					create_lexes(char *prompt);
+int					create_lexes(t_lexems *lexems, char *prompt);
 
 // utils
 void				ft_clr(char ***ptr);
+void				clr_lexes(t_lexems **lexems);
 long				ft_atol(char *s, int *index);
 #endif

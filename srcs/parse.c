@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 19:00:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/13 19:06:08 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,11 @@ void	ft_test_lexes(t_lexems *lex)
 	}
 }
 
-int	create_lexes(char *prompt)
+int	create_lexes(t_lexems *lexems, char *prompt)
 {
 	char		*ptr;
 	char		*sub;
-	t_lexems	*lexems;
 
-	lexems = NULL;
 	while (*prompt)
 	{
 		if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
