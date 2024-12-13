@@ -147,7 +147,7 @@ void	create_lexes(char *prompt)
 	i = 0;
 	while (split[i])
 	{
-		assign(&lexems[i], split[i]);
+		assign(&lexems+i, split[i]);
 		i++;
 	}
 	lexems[i].type = END_LEXEM;
