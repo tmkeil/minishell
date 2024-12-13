@@ -22,7 +22,7 @@ void	get_user_input(void)
 	free(prompt);
 }
 
-int main(int argc, char **argv, char **envp)
+int main(void)
 {
 	display_minishell_intro();
 	get_user_input();
