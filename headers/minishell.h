@@ -36,6 +36,8 @@ typedef enum e_types
 # include <readline/readline.h>
 # include <stdio.h>
 # include <sys/wait.h>
+# include <termios.h>
+# include <signal.h>
 
 typedef struct s_lexems
 {

@@ -46,8 +46,24 @@ void handle_sigquit(int sig) {
     (void)sig;
 }
 
+void configure_terminal(void)
+{
+    struct termios term;
+
+    if (tcgetattr(STDIN_FILENO, &term) == -1) {
+        perror("tcgetattr");
+        exit(EXIT_FAILURE);
+    }
+    term.c_lflag &= ~ECHOCTL;
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1) {
+        perror("tcsetattr");
+        exit(EXIT_FAILURE);
+    }
+}
+
 void start_bash()
 {
+	configure_terminal();
 	display_minishell_intro();
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
