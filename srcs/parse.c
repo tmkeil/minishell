@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/14 13:09:15 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 13:47:41 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,22 +116,54 @@ void	ft_test_lexes(t_lexems *lex)
 	}
 }
 
+bool	check(char start, char end)
+{
+	
+}
+
+bool	matches(char *prompt)
+{
+	if (!check('(', ')'))
+		return (false);
+	if (!check('\'', '\''))
+		return (false);
+	if (!check('\"', '\"'))
+		return (false);
+	return (true);
+}
+
+bool	is_ident(char *prompt)
+{
+	if (*prompt == '(' || *prompt == ')' || *prompt == '\'' || *prompt == '\"')
+		return (true);
+	return (false);
+}
+
+bool	is_seperator(char *prompt)
+{
+	if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
+		return (true);
+	return (false);
+}
+
 int	create_lexes(t_lexems **lexems, char *prompt)
 {
 	char		*ptr;
 	char		*sub;
 
+	if (!matches(prompt))
+		return (0);
 	while (*prompt)
 	{
-		if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
+		if (is_seperator(prompt))
 		{
 			append_lexem(lexems, SEPARATOR, (void *)0x0);
-			while (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
+			while (is_seperator(prompt))
 				prompt++;
 			continue ;
 		}
 		ptr = prompt;
-		while (*prompt && *prompt != ' ' && !(*prompt >= 9 && *prompt <= 13))
+		while (*prompt && !is_ident(prompt) && !is_seperator(prompt))
 			prompt++;
 		sub = ft_substr(ptr, 0, prompt - ptr);
 		if (!handle_lexem(lexems, sub))
