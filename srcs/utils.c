@@ -6,11 +6,27 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 19:14:07 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 12:44:14 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	clr_ast(t_ast **ast)
+{
+	t_lexems	*tmp;
+
+	while (*ast)
+	{
+		tmp = (*ast)->next;
+		free((*ast)->value);
+		free(*ast);
+		*ast = tmp;
+	}
+	if (*ast)
+		free(*ast);
+	*ast = NULL;
+}
 
 void	clr_lexes(t_lexems **lexems)
 {
@@ -23,7 +39,8 @@ void	clr_lexes(t_lexems **lexems)
 		free(*lexems);
 		*lexems = tmp;
 	}
-	free(*lexems);
+	if (*ast)
+		free(*lexems);
 	*lexems = NULL;
 }
 

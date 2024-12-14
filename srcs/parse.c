@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/13 19:06:08 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 13:09:15 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*get_command(char *split)
 	return (NULL);
 }
 
-int	append_lexem_to_lexems(t_lexems **lexems, e_types type, void *value)
+int	append_lexem(t_lexems **lexems, t_types type, void *value)
 {
 	t_lexems	*lex;
 	t_lexems	*last;
@@ -62,36 +62,37 @@ int	append_lexem_to_lexems(t_lexems **lexems, e_types type, void *value)
 	last = *lexems;
 	while (last->next)
 		last = last->next;
-	return (last->next = lex, 1);
+	last->next = lex;
+	return (1);
 }
 
 int	handle_lexem(t_lexems **lexems, char *sub)
 {
 	if (!ft_strncmp(sub, "||", 2))
-		return (append_lexem_to_lexems(lexems, OR, sub));
+		return (append_lexem(lexems, OR, sub));
 	else if (!ft_strncmp(sub, "&&", 2))
-		return (append_lexem_to_lexems(lexems, AND, sub));
+		return (append_lexem(lexems, AND, sub));
 	else if (!ft_strncmp(sub, "|", 1))
-		return (append_lexem_to_lexems(lexems, PIPE, sub));
+		return (append_lexem(lexems, PIPE, sub));
 	else if (ft_isdigit(*sub))
-		return (append_lexem_to_lexems(lexems, NUMBER, sub));
+		return (append_lexem(lexems, NUMBER, sub));
 	else if (ft_isalnum(*sub) || *sub == '_' || *sub == '/')
-		return (append_lexem_to_lexems(lexems, WORD, sub));
+		return (append_lexem(lexems, WORD, sub));
 	else if (!ft_strncmp(sub, ">>", 2) || !ft_strncmp(sub, "<<", 2))
-		return (append_lexem_to_lexems(lexems, APPEND, sub));
+		return (append_lexem(lexems, APPEND, sub));
 	else if (!ft_strncmp(sub, "$", 1))
-		return (append_lexem_to_lexems(lexems, ENV_VAR, sub));
+		return (append_lexem(lexems, ENV_VAR, sub));
 	else if (!ft_strncmp(sub, ">", 1) || !ft_strncmp(sub, "<", 1))
-		return (append_lexem_to_lexems(lexems, REDIRECT, sub));
-	else if (!ft_strncmp(sub, ";", 1))
-		return (append_lexem_to_lexems(lexems, SEMICOLON, sub));
+		return (append_lexem(lexems, REDIRECT, sub));
+	else if (!ft_strncmp(sub, "(", 1) || !ft_strncmp(sub, ")", 1))
+		return (append_lexem(lexems, BRACKET, sub));
 	else if (!ft_strncmp(sub, "&", 1))
-		return (append_lexem_to_lexems(lexems, AMPERSAND, sub));
+		return (append_lexem(lexems, AMPERSAND, sub));
 	else if (!ft_strncmp(sub, "\'", 1))
-		return (append_lexem_to_lexems(lexems, SINGLE_QUOTE, sub));
+		return (append_lexem(lexems, SINGLE_QUOTE, sub));
 	else if (!ft_strncmp(sub, "\"", 1))
-		return (append_lexem_to_lexems(lexems, DOUBLE_QUOTE, sub));
-	return (append_lexem_to_lexems(lexems, INVALID, sub));
+		return (append_lexem(lexems, DOUBLE_QUOTE, sub));
+	return (append_lexem(lexems, INVALID, sub));
 }
 
 void	ft_test_lexes(t_lexems *lex)
@@ -101,7 +102,7 @@ void	ft_test_lexes(t_lexems *lex)
 			[PIPE] = "PIPE", [WORD] = "WORD", [NUMBER] = "NUMBER",
 			[APPEND] = "APPEND", [ENV_VAR] = "ENV_VAR",
 			[REDIRECT] = "REDIRECT", [INVALID] = "INVALID",
-			[SEMICOLON] = "SEMICOLON", [SEPARATOR] = "SEPARATOR",
+			[BRACKET] = "BRACKET", [SEPARATOR] = "SEPARATOR",
 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 
@@ -115,7 +116,7 @@ void	ft_test_lexes(t_lexems *lex)
 	}
 }
 
-int	create_lexes(t_lexems *lexems, char *prompt)
+int	create_lexes(t_lexems **lexems, char *prompt)
 {
 	char		*ptr;
 	char		*sub;
@@ -124,7 +125,7 @@ int	create_lexes(t_lexems *lexems, char *prompt)
 	{
 		if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
 		{
-			append_lexem_to_lexems(&lexems, SEPARATOR, (void *)0x0);
+			append_lexem(lexems, SEPARATOR, (void *)0x0);
 			while (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
 				prompt++;
 			continue ;
@@ -133,10 +134,10 @@ int	create_lexes(t_lexems *lexems, char *prompt)
 		while (*prompt && *prompt != ' ' && !(*prompt >= 9 && *prompt <= 13))
 			prompt++;
 		sub = ft_substr(ptr, 0, prompt - ptr);
-		if (!handle_lexem(&lexems, sub))
+		if (!handle_lexem(lexems, sub))
 			return (free(sub), 0);
 		free(sub);
 	}
-	ft_test_lexes(lexems);
+	ft_test_lexes(*lexems);
 	return (1);
 }
