@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/14 14:34:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 14:48:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,22 @@ void	ft_test_lexes(t_lexems *lex)
 
 bool	check(char *prompt, char start, char end)
 {
-	(void)start;
-	(void)end;
-	(void)prompt;
-	return (true);
+	int	count;
+
+	count = 0;
+	while (*prompt)
+	{
+		if (*prompt == start)
+			count++;
+		else if (*prompt == end)
+		{
+			if (count == 0)
+				return (false);
+			count--;
+		}
+		prompt++;
+	}
+	return (count == 0);
 }
 
 bool	matches(char *prompt)
