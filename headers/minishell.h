@@ -44,6 +44,13 @@ typedef struct s_lexems
 	struct s_lexems	*next;
 }					t_lexems;
 
+typedef struct s_ast
+{
+	t_lexems		*lexem;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}					t_ast;
+
 void				display_minishell_intro(void);
 int					create_lexes(t_lexems *lexems, char *prompt);
 
