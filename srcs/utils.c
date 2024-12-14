@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/14 14:14:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 17:58:26 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,33 @@ long	ft_atol(char *s, int *index)
 	if (!valid || !(s[*index] >= 9 && s[*index] <= 13))
 		return (LONG_MIN);
 	return (val * p);
+}
+
+char	*get_command(char *split)
+{
+	int		i;
+	char	*path;
+	char	*full;
+	char	**env;
+
+	path = NULL;
+	full = NULL;
+	env = NULL;
+	if (access(split, X_OK) == 0)
+		return (split);
+	i = 0;
+	env = ft_split(getenv("PATH"), ':');
+	while (env && env[i])
+	{
+		path = ft_strjoin(env[i], "/");
+		full = ft_strjoin(path, split);
+		free(path);
+		if (!full)
+			return (ft_clr(&env), NULL);
+		if (access(full, X_OK) == 0)
+			return (ft_clr(&env), full);
+		free(full);
+		i++;
+	}
+	return (NULL);
 }

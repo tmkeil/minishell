@@ -1,45 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/14 14:48:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 18:04:22 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*get_command(char *split)
-{
-	int		i;
-	char	*path;
-	char	*full;
-	char	**env;
-
-	path = NULL;
-	full = NULL;
-	env = NULL;
-	if (access(split, X_OK) == 0)
-		return (split);
-	i = 0;
-	env = ft_split(getenv("PATH"), ':');
-	while (env && env[i])
-	{
-		path = ft_strjoin(env[i], "/");
-		full = ft_strjoin(path, split);
-		free(path);
-		if (!full)
-			return (ft_clr(&env), NULL);
-		if (access(full, X_OK) == 0)
-			return (ft_clr(&env), full);
-		free(full);
-		i++;
-	}
-	return (NULL);
-}
 
 int	append_lexem(t_lexems **lexems, t_types type, void *value)
 {
@@ -116,61 +87,6 @@ void	ft_test_lexes(t_lexems *lex)
 	}
 }
 
-bool	check(char *prompt, char start, char end)
-{
-	int	count;
-
-	count = 0;
-	while (*prompt)
-	{
-		if (*prompt == start)
-			count++;
-		else if (*prompt == end)
-		{
-			if (count == 0)
-				return (false);
-			count--;
-		}
-		prompt++;
-	}
-	return (count == 0);
-}
-
-bool	matches(char *prompt)
-{
-	if (!check(prompt, '(', ')'))
-		return (false);
-	if (!check(prompt, '\'', '\''))
-		return (false);
-	if (!check(prompt, '\"', '\"'))
-		return (false);
-	return (true);
-}
-
-bool	is_ident(char *prompt)
-{
-	if (*prompt == '(' || *prompt == ')' || *prompt == '\'' || *prompt == '\"')
-		return (true);
-	return (false);
-}
-
-bool	is_seperator(char *prompt)
-{
-	if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
-		return (true);
-	return (false);
-}
-
-char	*create_ident(char c)
-{
-	char	*ident;
-
-	ident = malloc(sizeof(char) * 2);
-	ident[0] = c;
-	ident[1] = '\0';
-	return (ident);
-}
-
 int	create_lexes(t_lexems **lexems, char *prompt)
 {
 	char		*ptr;
@@ -180,20 +96,10 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 		return (0);
 	while (*prompt)
 	{
-		if (is_seperator(prompt))
-		{
-			append_lexem(lexems, SEPARATOR, (void *)0x0);
-			while (is_seperator(prompt))
-				prompt++;
+		if (handle_seperator(lexems, &prompt) == 1)
 			continue ;
-		}
-		if (is_ident(prompt))
-		{
-			if (!handle_lexem(lexems, create_ident(*prompt)))
-				return (0);
-			prompt++;
+		if (handle_identifier(lexems, &prompt) == 1)
 			continue ;
-		}
 		ptr = prompt;
 		while (*prompt && !is_ident(prompt) && !is_seperator(prompt))
 			prompt++;

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/14 13:07:36 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 18:08:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,16 @@ int					create_lexes(t_lexems **lexems, char *prompt);
 void				ft_clr(char ***ptr);
 void				clr_lexes(t_lexems **lexems);
 long				ft_atol(char *s, int *index);
+
+// lexer utils
+int					handle_identifier(t_lexems **lexems, char **prompt);
+int					handle_seperator(t_lexems **lexems, char **prompt);
+char				*create_ident(char c);
+bool				is_seperator(char *prompt);
+bool				is_ident(char *prompt);
+bool				matches(char *prompt);
+bool				check(char *prompt, char start, char end);
+int					handle_lexem(t_lexems **lexems, char *sub);
+int					append_lexem(t_lexems **lexems, t_types type, void *value);
+
 #endif
