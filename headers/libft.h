@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:15:05 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/05 17:18:55 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 14:15:49 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdarg.h>
 # include <fcntl.h>
 # include <stdbool.h>
+# include <stdint.h>
 # include "get_next_line.h"
 # include "ft_printf.h"
 

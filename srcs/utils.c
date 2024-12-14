@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/14 12:44:14 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 14:14:17 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,24 @@
 
 void	clr_ast(t_ast **ast)
 {
-	t_lexems	*tmp;
-
-	while (*ast)
-	{
-		tmp = (*ast)->next;
-		free((*ast)->value);
-		free(*ast);
-		*ast = tmp;
-	}
-	if (*ast)
-		free(*ast);
-	*ast = NULL;
+	if (!ast || !(*ast))
+		return ;
+	if ((*ast)->left)
+        clr_ast(&(*ast)->left);
+	if ((*ast)->right)
+        clr_ast(&(*ast)->right);
+	if ((*ast)->lexem)
+        clr_lexes(&(*ast)->lexem);
+    free(*ast);
+    *ast = NULL;
 }
 
 void	clr_lexes(t_lexems **lexems)
 {
 	t_lexems	*tmp;
 
+	if (!lexems || !(*lexems))
+		return ;
 	while (*lexems)
 	{
 		tmp = (*lexems)->next;
@@ -39,8 +39,6 @@ void	clr_lexes(t_lexems **lexems)
 		free(*lexems);
 		*lexems = tmp;
 	}
-	if (*ast)
-		free(*lexems);
 	*lexems = NULL;
 }
 
