@@ -6,30 +6,30 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/13 21:05:30 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/14 13:07:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-typedef enum e_types
+typedef enum s_types
 {
-	OR = 0,
-	AND = 1,
-	PIPE = 2,
-	WORD = 3,
-	NUMBER = 4,
-	APPEND = 5,
-	ENV_VAR = 6,
-	REDIRECT = 7,
-	INVALID = 8,
-	SEMICOLON = 9,
-	SEPARATOR = 10,
-	AMPERSAND = 11,
-	SINGLE_QUOTE = 12,
-	DOUBLE_QUOTE = 13
-}					e_types;
+	OR,
+	AND,
+	PIPE,
+	WORD,
+	NUMBER,
+	APPEND,
+	BRACKET,
+	ENV_VAR,
+	INVALID,
+	REDIRECT,
+	SEPARATOR,
+	AMPERSAND,
+	SINGLE_QUOTE,
+	DOUBLE_QUOTE
+}					t_types;
 
 # include "libft.h"
 # include <readline/history.h>
@@ -41,13 +41,20 @@ typedef enum e_types
 
 typedef struct s_lexems
 {
-	e_types			type;
+	t_types			type;
 	void			*value;
 	struct s_lexems	*next;
 }					t_lexems;
 
+typedef struct s_ast
+{
+	t_lexems		*lexem;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}				t_ast;
+
 void				display_minishell_intro(void);
-int					create_lexes(t_lexems *lexems, char *prompt);
+int					create_lexes(t_lexems **lexems, char *prompt);
 
 // utils
 void				ft_clr(char ***ptr);
