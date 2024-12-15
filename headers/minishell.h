@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/14 18:08:09 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/15 14:44:18 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,18 @@ typedef enum s_types
 	OR,
 	AND,
 	PIPE,
-	WORD,
+	WORD,//hello, echo, ls, ...
 	NUMBER,
-	APPEND,
-	BRACKET,
-	ENV_VAR,
+	APPEND,//>>
+	HEREDOC,//<<
+	ENV_VAR,//$
 	INVALID,
-	REDIRECT,
-	SEPARATOR,
+	LINEFEED,//\n
+	O_BRACKET,//(
+	C_BRACKET,//)
 	AMPERSAND,
+	IN_REDIRECT,//<
+	OUT_REDIRECT,//>
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE
 }					t_types;
@@ -63,10 +66,10 @@ long				ft_atol(char *s, int *index);
 
 // lexer utils
 int					handle_identifier(t_lexems **lexems, char **prompt);
-int					handle_seperator(t_lexems **lexems, char **prompt);
+int					handle_seperator(char **prompt);
 char				*create_ident(char c);
-bool				is_seperator(char *prompt);
-bool				is_ident(char *prompt);
+bool				is_seperator(char c);
+bool				is_ident(char c);
 bool				matches(char *prompt);
 bool				check(char *prompt, char start, char end);
 int					handle_lexem(t_lexems **lexems, char *sub);

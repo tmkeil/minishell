@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/14 18:04:22 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/15 14:52:12 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,22 @@ int	append_lexem(t_lexems **lexems, t_types type, void *value)
 
 int	handle_lexem(t_lexems **lexems, char *sub)
 {
-	if (!ft_strncmp(sub, "||", 2))
-		return (append_lexem(lexems, OR, sub));
-	else if (!ft_strncmp(sub, "&&", 2))
-		return (append_lexem(lexems, AND, sub));
-	else if (!ft_strncmp(sub, "|", 1))
-		return (append_lexem(lexems, PIPE, sub));
-	else if (ft_isdigit(*sub))
+	if (ft_isdigit(*sub))
 		return (append_lexem(lexems, NUMBER, sub));
-	else if (ft_isalnum(*sub) || *sub == '_' || *sub == '/')
+	if (ft_isalnum(*sub) || *sub == '_' || *sub == '/')
 		return (append_lexem(lexems, WORD, sub));
-	else if (!ft_strncmp(sub, ">>", 2) || !ft_strncmp(sub, "<<", 2))
-		return (append_lexem(lexems, APPEND, sub));
-	else if (!ft_strncmp(sub, "$", 1))
+	if (!ft_strncmp(sub, "$", ft_strlen(sub)))
 		return (append_lexem(lexems, ENV_VAR, sub));
-	else if (!ft_strncmp(sub, ">", 1) || !ft_strncmp(sub, "<", 1))
-		return (append_lexem(lexems, REDIRECT, sub));
-	else if (!ft_strncmp(sub, "(", 1) || !ft_strncmp(sub, ")", 1))
-		return (append_lexem(lexems, BRACKET, sub));
-	else if (!ft_strncmp(sub, "&", 1))
-		return (append_lexem(lexems, AMPERSAND, sub));
-	else if (!ft_strncmp(sub, "\'", 1))
+	if (!ft_strncmp(sub, "(", ft_strlen(sub)))
+		return (append_lexem(lexems, O_BRACKET, sub));
+	if (!ft_strncmp(sub, ")", ft_strlen(sub)))
+		return (append_lexem(lexems, C_BRACKET, sub));
+	if (!ft_strncmp(sub, "\'", ft_strlen(sub)))
 		return (append_lexem(lexems, SINGLE_QUOTE, sub));
-	else if (!ft_strncmp(sub, "\"", 1))
+	if (!ft_strncmp(sub, "\"", ft_strlen(sub)))
 		return (append_lexem(lexems, DOUBLE_QUOTE, sub));
+	if (!ft_strncmp(sub, "\n", ft_strlen(sub)))
+		return (append_lexem(lexems, LINEFEED, sub));
 	return (append_lexem(lexems, INVALID, sub));
 }
 
@@ -71,9 +63,9 @@ void	ft_test_lexes(t_lexems *lex)
 	int		i;
 	char	*types[] = {[OR] = "OR", [AND] = "AND",
 			[PIPE] = "PIPE", [WORD] = "WORD", [NUMBER] = "NUMBER",
-			[APPEND] = "APPEND", [ENV_VAR] = "ENV_VAR",
-			[REDIRECT] = "REDIRECT", [INVALID] = "INVALID",
-			[BRACKET] = "BRACKET", [SEPARATOR] = "SEPARATOR",
+			[APPEND] = "APPEND", [HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT", [INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 
@@ -87,6 +79,27 @@ void	ft_test_lexes(t_lexems *lex)
 	}
 }
 
+int	handle_operator(t_lexems **lexems, char **prompt)
+{
+	if (!strncmp(*prompt, "&&", 2))
+		return (append_lexem(lexems, AND, "&&"), (*prompt += 2), 1);
+	if (!strncmp(*prompt, "||", 2))
+		return (append_lexem(lexems, OR, "||"), (*prompt += 2), 1);
+	if (!strncmp(*prompt, ">>", 2))
+		return (append_lexem(lexems, APPEND, ">>"), (*prompt += 2), 1);
+	if (!strncmp(*prompt, "<<", 2))
+		return (append_lexem(lexems, HEREDOC, "<<"), (*prompt += 2), 1);
+	if (**prompt == '|')
+		return (append_lexem(lexems, PIPE, "|"), (*prompt)++, 1);
+	if (**prompt == '&')
+		return (append_lexem(lexems, AMPERSAND, "&"), (*prompt)++, 1);
+	if (**prompt == '>')
+		return (append_lexem(lexems, OUT_REDIRECT, ">"), (*prompt)++, 1);
+	if (**prompt == '<')
+		return (append_lexem(lexems, IN_REDIRECT, "<"), (*prompt)++, 1);
+	return (0);
+}
+
 int	create_lexes(t_lexems **lexems, char *prompt)
 {
 	char		*ptr;
@@ -96,12 +109,11 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 		return (0);
 	while (*prompt)
 	{
-		if (handle_seperator(lexems, &prompt) == 1)
-			continue ;
-		if (handle_identifier(lexems, &prompt) == 1)
+		if (handle_seperator(&prompt) || handle_operator(lexems, &prompt) ||
+			handle_identifier(lexems, &prompt))
 			continue ;
 		ptr = prompt;
-		while (*prompt && !is_ident(prompt) && !is_seperator(prompt))
+		while (*prompt && !is_ident(*prompt) && !is_seperator(*prompt))
 			prompt++;
 		sub = ft_substr(ptr, 0, prompt - ptr);
 		if (!handle_lexem(lexems, sub))

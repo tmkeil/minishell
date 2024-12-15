@@ -6,24 +6,21 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:57:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/14 18:01:14 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/15 14:50:53 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_ident(char *prompt)
+bool	is_ident(char c)
 {
-	if (*prompt == '(' || *prompt == ')' || *prompt == '\'' || *prompt == '\"')
-		return (true);
-	return (false);
+	return (c == '(' || c == ')' || c == '\'' || c == '\"' ||
+			c == '|' || c == '&' || c == '<' || c == '>');
 }
 
-bool	is_seperator(char *prompt)
+bool	is_seperator(char c)
 {
-	if (*prompt == ' ' || (*prompt >= 9 && *prompt <= 13))
-		return (true);
-	return (false);
+	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
 char	*create_ident(char c)
@@ -36,40 +33,30 @@ char	*create_ident(char c)
 	return (ident);
 }
 
-int	handle_seperator(t_lexems **lexems, char **prompt)
+int	handle_seperator(char **prompt)
 {
-	bool	sep;
-
-	sep = false;
-	if (is_seperator(*prompt))
+	if (is_seperator(**prompt))
 	{
-		sep = true;
-		append_lexem(lexems, SEPARATOR, (void *)0x0);
-		while (is_seperator(*prompt))
+		while (is_seperator(**prompt))
 			(*prompt)++;
-	}
-	if (sep)
 		return (1);
+	}
 	return (0);
 }
 
 int	handle_identifier(t_lexems **lexems, char **prompt)
 {
-	bool	ident;
 	char	*identifier;
 
-	ident = false;
 	identifier = NULL;
-	if (is_ident(*prompt))
+	if (is_ident(**prompt))
 	{
-		ident = true;
 		identifier = create_ident(**prompt);
 		if (!handle_lexem(lexems, identifier))
 			return (free(identifier), 0);
 		free(identifier);
 		(*prompt)++;
-	}
-	if (ident)
 		return (1);
+	}
 	return (0);
 }
