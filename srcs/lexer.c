@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 02:42:59 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 02:54:00 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,33 +73,36 @@ void	append_identifier(t_lexems **lexems, char *sub)
 {
 	if (!ft_strncmp(sub, "(", ft_strlen(sub)))
 		append_lexem(lexems, O_BRACKET, sub);
-	if (!ft_strncmp(sub, ")", ft_strlen(sub)))
+	else if (!ft_strncmp(sub, ")", ft_strlen(sub)))
 		append_lexem(lexems, C_BRACKET, sub);
-	if (!ft_strncmp(sub, "\'", ft_strlen(sub)))
+	else if (!ft_strncmp(sub, "\'", ft_strlen(sub)))
 		append_lexem(lexems, SINGLE_QUOTE, sub);
-	if (!ft_strncmp(sub, "\"", ft_strlen(sub)))
+	else if (!ft_strncmp(sub, "\"", ft_strlen(sub)))
 		append_lexem(lexems, DOUBLE_QUOTE, sub);
-	append_lexem(lexems, INVALID, sub);
+	else
+		append_lexem(lexems, INVALID, sub);
 }
 
 void	append_operation(t_lexems **lexems, char *sub)
 {
 	if (!strncmp(sub, "&&", 2))
 		append_lexem(lexems, AND, "&&");
-	if (!strncmp(sub, "||", 2))
+	else if (!strncmp(sub, "||", 2))
 		append_lexem(lexems, OR, "||");
-	if (!strncmp(sub, ">>", 2))
+	else if (!strncmp(sub, ">>", 2))
 		append_lexem(lexems, APPEND, ">>");
-	if (!strncmp(sub, "<<", 2))
+	else if (!strncmp(sub, "<<", 2))
 		append_lexem(lexems, HEREDOC, "<<");
-	if (*sub == '|')
+	else if (*sub == '|')
 		append_lexem(lexems, PIPE, "|");
-	if (*sub == '&')
+	else if (*sub == '&')
 		append_lexem(lexems, AMPERSAND, "&");
-	if (*sub == '>')
+	else if (*sub == '>')
 		append_lexem(lexems, OUT_REDIRECT, ">");
-	if (*sub == '<')
+	else if (*sub == '<')
 		append_lexem(lexems, IN_REDIRECT, "<");
+	else
+		append_lexem(lexems, INVALID, sub);
 }
 
 int	create_lexes(t_lexems **lexems, char *prompt)
