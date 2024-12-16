@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/16 02:20:56 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:07:34 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ long				ft_atol(char *s, int *index);
 
 // lexing
 int					create_lexes(t_lexems **lexems, char *prompt);
-int					is_operator(char c);
-bool				is_seperator(char c);
-bool				is_identifier(char c);
+int					is_op(char c);
+bool				is_sep(char c);
+bool				is_ident(char c);
 bool				matches(char *prompt);
 bool				check(char *prompt, char start, char end);
 int					handle_seperator(char **prompt);
@@ -75,7 +75,7 @@ int					handle_operator(t_lexems **lexems, char **prompt);
 int					handle_identifier(t_lexems **lexems, char **prompt);
 void				append_word(t_lexems **lexems, char *sub);
 void				append_operation(t_lexems **lexems, char *sub);
-void				append_identifier(t_lexems **lexems, char *sub);
+void				append_identifier(t_lexems **lexems, char *sub, char type);
 void				append_lexem(t_lexems **lexems, t_types type, void *value);
 void				handle_invalid_operation(char *sub);
 

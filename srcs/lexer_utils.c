@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:57:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 02:42:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:19:53 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	handle_seperator(char **prompt)
 {
 	if (!*prompt)
 		return (1);
-	if (is_seperator(**prompt))
+	if (is_sep(**prompt))
 	{
-		while (is_seperator(**prompt))
+		while (is_sep(**prompt))
 			(*prompt)++;
 		return (1);
 	}
@@ -29,39 +29,42 @@ int	handle_identifier(t_lexems **lexems, char **prompt)
 {
 	char	*ptr;
 	char	*sub;
+	char	*type;
 
-	ptr = NULL;
-	sub = NULL;
 	if (!*prompt)
 		return (1);
-	if (is_identifier(**prompt))
+	if (is_ident(**prompt))
 	{
+		type = *prompt;
 		(*prompt)++;
 		ptr = *prompt;
-		while (!is_identifier(**prompt))
+		if (**prompt && is_ident(**prompt) && *prompt - type <= 1)
+			return (0);
+		while (**prompt && !is_ident(**prompt))
 			(*prompt)++;
 		sub = ft_substr(ptr, 0, *prompt - ptr);
-		append_identifier(lexems, sub);
+		append_identifier(lexems, sub, *type);
 		free(sub);
+		(*prompt)++;
 	}
 	return (1);
 }
 
 int	handle_operator(t_lexems **lexems, char **prompt)
 {
-	char 	*ptr;
+	char	*ptr;
 	char	*sub;
 
-	ptr = NULL;
-	sub = NULL;
 	if (!*prompt)
 		return (1);
-	if (is_operator(**prompt))
+	if (is_op(**prompt))
 	{
 		ptr = *prompt;
-		while (is_operator(**prompt))
+		while (**prompt && is_op(**prompt))
 			(*prompt)++;
 		sub = ft_substr(ptr, 0, *prompt - ptr);
+		if (!sub)
+			return (0);
 		if (!ft_strnstr(OPERATIONS, sub, ft_strlen(OPERATIONS)))
 			return (handle_invalid_operation(sub), free(sub), 0);
 		append_operation(lexems, sub);
@@ -70,16 +73,30 @@ int	handle_operator(t_lexems **lexems, char **prompt)
 	return (1);
 }
 
+void	ft_putstrn_fd(char *s, int n, int fd)
+{
+	int	i;
+
+	if (s)
+	{
+		i = 0;
+		while (i < n)
+		{
+			if (s[i])
+				ft_putchar_fd(s[i], fd);
+			i++;
+		}
+	}
+}
+
 void	handle_invalid_operation(char *sub)
 {
-	int		a;
-	int		i;
-	int		j;
-	char	*ptr;
+	int	a;
+	int	i;
+	int	j;
 
 	a = 0;
 	i = 0;
-	ptr = NULL;
 	if (!sub)
 		return ;
 	while (OPERATIONS[i])
@@ -87,12 +104,10 @@ void	handle_invalid_operation(char *sub)
 		j = 0;
 		while (sub[j] && sub[j] == OPERATIONS[i + j])
 			j++;
-		if (j > a)
-			a = j;
+		a = j * (j > a) + a * (j <= a);
 		i++;
 	}
-	if (!ft_strlcpy(ptr, &sub[a], 2))
-		return ;
-	ft_printf("-bash: syntax error near unexpected token `%s'\n", ptr);
-	free(ptr);
+	ft_putstr_fd("-bash: syntax error near unexpected token `", STDERR_FILENO);
+	ft_putstrn_fd(sub + a, 2, STDERR_FILENO);
+	ft_putendl_fd("'", STDERR_FILENO);
 }

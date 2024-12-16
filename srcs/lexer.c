@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 02:54:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:26:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 void	ft_test_lexes(t_lexems *lex)
 {
 	int		i;
-	char	*types[] = {[OR] = "OR", [AND] = "AND",
-			[PIPE] = "PIPE", [WORD] = "WORD", [NUMBER] = "NUMBER",
-			[APPEND] = "APPEND", [HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT", [INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+	char	*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
@@ -69,15 +70,13 @@ void	append_word(t_lexems **lexems, char *sub)
 		append_lexem(lexems, INVALID, sub);
 }
 
-void	append_identifier(t_lexems **lexems, char *sub)
+void	append_identifier(t_lexems **lexems, char *sub, char type)
 {
-	if (!ft_strncmp(sub, "(", ft_strlen(sub)))
+	if (type == '(')
 		append_lexem(lexems, O_BRACKET, sub);
-	else if (!ft_strncmp(sub, ")", ft_strlen(sub)))
-		append_lexem(lexems, C_BRACKET, sub);
-	else if (!ft_strncmp(sub, "\'", ft_strlen(sub)))
+	else if (type == '\'')
 		append_lexem(lexems, SINGLE_QUOTE, sub);
-	else if (!ft_strncmp(sub, "\"", ft_strlen(sub)))
+	else if (type == '\"')
 		append_lexem(lexems, DOUBLE_QUOTE, sub);
 	else
 		append_lexem(lexems, INVALID, sub);
@@ -107,8 +106,8 @@ void	append_operation(t_lexems **lexems, char *sub)
 
 int	create_lexes(t_lexems **lexems, char *prompt)
 {
-	char		*ptr;
-	char		*sub;
+	char	*ptr;
+	char	*sub;
 
 	sub = NULL;
 	if (!matches(prompt))
@@ -116,10 +115,13 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 	while (*prompt)
 	{
 		handle_seperator(&prompt);
-		if (!handle_operator(lexems, &prompt) || !handle_identifier(lexems, &prompt))
+		if (!handle_operator(lexems, &prompt))
+			return (0);
+		if (!handle_identifier(lexems, &prompt))
 			return (0);
 		ptr = prompt;
-		while (*prompt && !is_seperator(*prompt) && !is_operator(*prompt) && !is_identifier(*prompt))
+		while (*prompt && !is_sep(*prompt) && !is_op(*prompt)
+			&& !is_ident(*prompt))
 			prompt++;
 		if (prompt > ptr)
 		{
@@ -128,6 +130,5 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 			free(sub);
 		}
 	}
-	ft_test_lexes(*lexems);
-	return (1);
+	return (ft_test_lexes(*lexems), 1);
 }

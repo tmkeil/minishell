@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:04:25 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 02:29:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:25:53 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 bool	check(char *prompt, char start, char end)
 {
 	int		count;
-	bool 	quotes;
+	bool	quotes;
 
 	count = 0;
 	quotes = true;
@@ -38,6 +38,19 @@ bool	check(char *prompt, char start, char end)
 
 bool	matches(char *prompt)
 {
+	int	i;
+	int	open;
+
+	i = 0;
+	open = 0;
+	while (prompt[i])
+	{
+		if (prompt[i++] == ')' && !open)
+		{
+			ft_putendl_fd("zsh: parse error near `)'", STDERR_FILENO);
+			return (false);
+		}
+	}
 	if (!check(prompt, '(', ')'))
 		return (false);
 	if (!check(prompt, '\'', '\''))
@@ -47,17 +60,17 @@ bool	matches(char *prompt)
 	return (true);
 }
 
-bool	is_identifier(char c)
+bool	is_ident(char c)
 {
 	return (c == '(' || c == ')' || c == '\'' || c == '\"');
 }
 
-bool	is_seperator(char c)
+bool	is_sep(char c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-int	is_operator(char c)
+int	is_op(char c)
 {
 	return (ft_strchr(OPERATIONS, c) != NULL);
 }
