@@ -60,7 +60,7 @@ int	create_exec_table(t_lexems **lexems, t_exec_table *exec_table)
 	i = 0;
 	lex = *lexems;
 	size = ft_table_size(lex) + 2;
-	exec_table->lexems = malloc(sizeof(t_lexems *) * size);
+	exec_table->lexems = malloc(sizeof(t_lexems *) * size + 1);
 	if (!exec_table->lexems)
 		return (0);
 	while (i < size)
@@ -74,6 +74,7 @@ int	create_exec_table(t_lexems **lexems, t_exec_table *exec_table)
 			i++;
 		lex = lex->next;
 	}
+	exec_table->lexems[i + 1] = NULL;
 	return (1);
 }
 
@@ -105,6 +106,24 @@ void	ft_test_exec_table(t_exec_table table)
 	}
 }
 
+void clr_exec_table(t_exec_table *exec_table)
+{
+	int i;
+	t_lexems *current;
+
+	i = 0;
+	while(exec_table[0].lexems[i])
+	{
+		current = exec_table[0].lexems[i]+0;
+		while(current)
+		{
+			free(current->value);
+			current = current->next;
+		}
+		i++;
+	}
+}
+
 void	get_user_input(void)
 {
 	t_lexems		*lexems;
@@ -124,6 +143,7 @@ void	get_user_input(void)
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
 	// execute_commands();
+	clr_exec_table(&exec_table);
 	clr_lexes(&lexems);
 	free(text_show);
 	free(prompt);
