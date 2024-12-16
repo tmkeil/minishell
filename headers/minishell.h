@@ -6,13 +6,13 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/15 14:44:18 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 02:20:56 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
+# define OPERATIONS "&& || & | < > << >>"
 typedef enum s_types
 {
 	OR,
@@ -57,22 +57,26 @@ typedef struct s_ast
 }				t_ast;
 
 void				display_minishell_intro(void);
-int					create_lexes(t_lexems **lexems, char *prompt);
 
 // utils
 void				ft_clr(char ***ptr);
 void				clr_lexes(t_lexems **lexems);
 long				ft_atol(char *s, int *index);
 
-// lexer utils
-int					handle_identifier(t_lexems **lexems, char **prompt);
-int					handle_seperator(char **prompt);
-char				*create_ident(char c);
+// lexing
+int					create_lexes(t_lexems **lexems, char *prompt);
+int					is_operator(char c);
 bool				is_seperator(char c);
-bool				is_ident(char c);
+bool				is_identifier(char c);
 bool				matches(char *prompt);
 bool				check(char *prompt, char start, char end);
-int					handle_lexem(t_lexems **lexems, char *sub);
-int					append_lexem(t_lexems **lexems, t_types type, void *value);
+int					handle_seperator(char **prompt);
+int					handle_operator(t_lexems **lexems, char **prompt);
+int					handle_identifier(t_lexems **lexems, char **prompt);
+void				append_word(t_lexems **lexems, char *sub);
+void				append_operation(t_lexems **lexems, char *sub);
+void				append_identifier(t_lexems **lexems, char *sub);
+void				append_lexem(t_lexems **lexems, t_types type, void *value);
+void				handle_invalid_operation(char *sub);
 
 #endif

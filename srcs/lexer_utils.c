@@ -6,35 +6,16 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:57:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/15 14:50:53 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 02:42:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_ident(char c)
-{
-	return (c == '(' || c == ')' || c == '\'' || c == '\"' ||
-			c == '|' || c == '&' || c == '<' || c == '>');
-}
-
-bool	is_seperator(char c)
-{
-	return (c == ' ' || (c >= 9 && c <= 13));
-}
-
-char	*create_ident(char c)
-{
-	char	*ident;
-
-	ident = malloc(sizeof(char) * 2);
-	ident[0] = c;
-	ident[1] = '\0';
-	return (ident);
-}
-
 int	handle_seperator(char **prompt)
 {
+	if (!*prompt)
+		return (1);
 	if (is_seperator(**prompt))
 	{
 		while (is_seperator(**prompt))
@@ -46,17 +27,72 @@ int	handle_seperator(char **prompt)
 
 int	handle_identifier(t_lexems **lexems, char **prompt)
 {
-	char	*identifier;
+	char	*ptr;
+	char	*sub;
 
-	identifier = NULL;
-	if (is_ident(**prompt))
-	{
-		identifier = create_ident(**prompt);
-		if (!handle_lexem(lexems, identifier))
-			return (free(identifier), 0);
-		free(identifier);
-		(*prompt)++;
+	ptr = NULL;
+	sub = NULL;
+	if (!*prompt)
 		return (1);
+	if (is_identifier(**prompt))
+	{
+		(*prompt)++;
+		ptr = *prompt;
+		while (!is_identifier(**prompt))
+			(*prompt)++;
+		sub = ft_substr(ptr, 0, *prompt - ptr);
+		append_identifier(lexems, sub);
+		free(sub);
 	}
-	return (0);
+	return (1);
+}
+
+int	handle_operator(t_lexems **lexems, char **prompt)
+{
+	char 	*ptr;
+	char	*sub;
+
+	ptr = NULL;
+	sub = NULL;
+	if (!*prompt)
+		return (1);
+	if (is_operator(**prompt))
+	{
+		ptr = *prompt;
+		while (is_operator(**prompt))
+			(*prompt)++;
+		sub = ft_substr(ptr, 0, *prompt - ptr);
+		if (!ft_strnstr(OPERATIONS, sub, ft_strlen(OPERATIONS)))
+			return (handle_invalid_operation(sub), free(sub), 0);
+		append_operation(lexems, sub);
+		free(sub);
+	}
+	return (1);
+}
+
+void	handle_invalid_operation(char *sub)
+{
+	int		a;
+	int		i;
+	int		j;
+	char	*ptr;
+
+	a = 0;
+	i = 0;
+	ptr = NULL;
+	if (!sub)
+		return ;
+	while (OPERATIONS[i])
+	{
+		j = 0;
+		while (sub[j] && sub[j] == OPERATIONS[i + j])
+			j++;
+		if (j > a)
+			a = j;
+		i++;
+	}
+	if (!ft_strlcpy(ptr, &sub[a], 2))
+		return ;
+	ft_printf("-bash: syntax error near unexpected token `%s'\n", ptr);
+	free(ptr);
 }
