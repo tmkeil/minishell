@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 16:55:41 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 22:08:47 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,7 @@ void	append_lexem(t_lexems **lexems, t_types type, void *value)
 	if (!lex)
 		return ;
 	lex->type = type;
-	if (value)
-		lex->value = ft_strdup((char *)value);
-	else
-		lex->value = NULL;
+	lex->value = ft_strdup((char *)value);
 	lex->next = NULL;
 	if (!*lexems)
 	{

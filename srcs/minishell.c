@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 21:54:18 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 22:12:15 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ size_t	ft_table_size(t_lexems *lexems)
 			size++;
 		lexems = lexems->next;
 	}
-	printf("size = %zi\n", size);
 	return (size);
 }
 
@@ -37,21 +36,18 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	new_node = malloc(sizeof(t_lexems));
 	if (!new_node)
 		return ;
-	*new_node = *lex;
+	new_node->type = lex->type;
+	new_node->value = ft_strdup((char *)lex->value);
 	new_node->next = NULL;
 	if (!*table)
 	{
-		printf("added\n");
-		*table = lex;
+		*table = new_node;
 		return ;
 	}
 	last = *table;
 	while (last->next)
-	{
-		printf("last.value = %s\n", (char *)last->value);
 		last = last->next;
-	}
-	last->next = lex;
+	last->next = new_node;
 	return ;
 }
 
@@ -73,15 +69,9 @@ int	create_exec_table(t_lexems **lexems, t_exec_table *exec_table)
 	while (lex)
 	{
 		if (lex->type != PIPE)
-		{
-			printf("node append. value: %s\n", (char *)lex->value);
 			ft_append_node(&exec_table->lexems[i], lex);
-		}
 		else
-		{
-			printf("i increase\n");
 			i++;
-		}
 		lex = lex->next;
 	}
 	return (1);
