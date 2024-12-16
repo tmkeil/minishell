@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 16:26:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:38:50 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	append_lexem(t_lexems **lexems, t_types type, void *value)
 
 void	append_word(t_lexems **lexems, char *sub)
 {
-	if (ft_isalnum(*sub) || *sub == '_' || *sub == '/')
+	if (ft_isalnum(*sub) || strchr("_/.-", *sub))
 		append_lexem(lexems, WORD, sub);
 	else
 		append_lexem(lexems, INVALID, sub);
