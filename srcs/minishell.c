@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 21:01:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 21:54:18 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,27 +19,38 @@ size_t	ft_table_size(t_lexems *lexems)
 	size = 0;
 	if (!lexems)
 		return (0);
-	while (lexems->next)
+	while (lexems)
 	{
 		if (lexems->type == PIPE)
 			size++;
 		lexems = lexems->next;
 	}
+	printf("size = %zi\n", size);
 	return (size);
 }
 
 void	ft_append_node(t_lexems **table, t_lexems *lex)
 {
 	t_lexems	*last;
+	t_lexems	*new_node;
 
+	new_node = malloc(sizeof(t_lexems));
+	if (!new_node)
+		return ;
+	*new_node = *lex;
+	new_node->next = NULL;
 	if (!*table)
 	{
+		printf("added\n");
 		*table = lex;
 		return ;
 	}
 	last = *table;
 	while (last->next)
+	{
+		printf("last.value = %s\n", (char *)last->value);
 		last = last->next;
+	}
 	last->next = lex;
 	return ;
 }
@@ -52,19 +63,56 @@ int	create_exec_table(t_lexems **lexems, t_exec_table *exec_table)
 
 	i = 0;
 	lex = *lexems;
-	size = ft_table_size(lex);
-	exec_table->lexems = malloc(sizeof(t_lexems *) * (size + 1));
+	size = ft_table_size(lex) + 2;
+	exec_table->lexems = malloc(sizeof(t_lexems *) * size);
 	if (!exec_table->lexems)
 		return (0);
-	while (lex->next)
+	while (i < size)
+		exec_table->lexems[i++] = NULL;
+	i = 0;
+	while (lex)
 	{
 		if (lex->type != PIPE)
+		{
+			printf("node append. value: %s\n", (char *)lex->value);
 			ft_append_node(&exec_table->lexems[i], lex);
+		}
 		else
+		{
+			printf("i increase\n");
 			i++;
+		}
 		lex = lex->next;
 	}
 	return (1);
+}
+
+void	ft_test_exec_table(t_exec_table table)
+{
+	int			i;
+	t_lexems	*current;
+
+	i = 0;
+	char	*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+
+	while (table.lexems[i])
+	{
+		current = table.lexems[i];
+		while (current)
+		{
+			printf("table.lexems[%i]->type = %s\n", i, types[current->type]);
+			printf("table.lexems[%i]->value = %s\n", i, (char *)current->value);
+			current = current->next;
+		}
+		i++;
+	}
 }
 
 void	get_user_input(void)
@@ -82,6 +130,7 @@ void	get_user_input(void)
 	add_history(prompt);
 	create_lexes(&lexems, prompt);
 	create_exec_table(&lexems, &exec_table);
+	ft_test_exec_table(exec_table);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
 	// execute_commands();
