@@ -6,13 +6,14 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/16 17:02:18 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 20:58:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define OPERATIONS "&& || & | < > << >>"
+// # define OPERATIONS "&& || & | < > << >>"
+# define OPERATIONS "| < > << >>"
 
 typedef enum s_types
 {
@@ -49,6 +50,11 @@ typedef struct s_lexems
 	void			*value;
 	struct s_lexems	*next;
 }					t_lexems;
+
+typedef struct s_exec_table
+{
+	t_lexems	**lexems;
+}				t_exec_table;
 
 typedef struct s_ast
 {

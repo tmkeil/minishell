@@ -6,17 +6,73 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 16:29:34 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 21:01:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+size_t	ft_table_size(t_lexems *lexems)
+{
+	size_t	size;
+
+	size = 0;
+	if (!lexems)
+		return (0);
+	while (lexems->next)
+	{
+		if (lexems->type == PIPE)
+			size++;
+		lexems = lexems->next;
+	}
+	return (size);
+}
+
+void	ft_append_node(t_lexems **table, t_lexems *lex)
+{
+	t_lexems	*last;
+
+	if (!*table)
+	{
+		*table = lex;
+		return ;
+	}
+	last = *table;
+	while (last->next)
+		last = last->next;
+	last->next = lex;
+	return ;
+}
+
+int	create_exec_table(t_lexems **lexems, t_exec_table *exec_table)
+{
+	size_t		i;
+	size_t		size;
+	t_lexems	*lex;
+
+	i = 0;
+	lex = *lexems;
+	size = ft_table_size(lex);
+	exec_table->lexems = malloc(sizeof(t_lexems *) * (size + 1));
+	if (!exec_table->lexems)
+		return (0);
+	while (lex->next)
+	{
+		if (lex->type != PIPE)
+			ft_append_node(&exec_table->lexems[i], lex);
+		else
+			i++;
+		lex = lex->next;
+	}
+	return (1);
+}
+
 void	get_user_input(void)
 {
-	t_lexems	*lexems;
-	char		*prompt;
-	char		*text_show;
+	t_lexems		*lexems;
+	t_exec_table	exec_table;
+	char			*prompt;
+	char			*text_show;
 
 	lexems = NULL;
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
@@ -25,8 +81,9 @@ void	get_user_input(void)
 		exit(0);
 	add_history(prompt);
 	create_lexes(&lexems, prompt);
+	create_exec_table(&lexems, &exec_table);
 	// parse, execute are not there yet
-	parse_lexes(&lexems);
+	// parse_lexes(&lexems);
 	// execute_commands();
 	clr_lexes(&lexems);
 	free(text_show);
