@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/16 16:31:19 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 17:02:18 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_ast
 	t_lexems		*lexem;
 	struct s_ast	*left;
 	struct s_ast	*right;
+	struct s_ast	*arguments;
 }					t_ast;
 
 void				display_minishell_intro(void);

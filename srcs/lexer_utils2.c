@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:04:25 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 16:25:53 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/16 16:57:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,14 @@ bool	matches(char *prompt)
 	open = 0;
 	while (prompt[i])
 	{
-		if (prompt[i++] == ')' && !open)
+		if (prompt[i] == '(')
+			open++;
+		if (prompt[i] == ')' && !open)
 		{
 			ft_putendl_fd("zsh: parse error near `)'", STDERR_FILENO);
 			return (false);
 		}
+		i++;
 	}
 	if (!check(prompt, '(', ')'))
 		return (false);
