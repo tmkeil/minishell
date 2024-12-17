@@ -26,19 +26,6 @@ size_t	ft_size(t_lexems *lexes)
 	return (i);
 }
 
-void clean_args(char **args)
-{
-	int i;
-
-	i = 0;
-	while(args[i])
-	{
-		free(args[i]);
-		i++;
-	}
-	free(args);
-}
-
 void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 {
 	char	**args;

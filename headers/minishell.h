@@ -66,9 +66,14 @@ typedef struct s_ast
 
 void				display_minishell_intro(void);
 
-// utils
+// cleaners
 void				ft_clr(char ***ptr);
 void				clr_lexes(t_lexems **lexems);
+void				clr_ast(t_ast **ast);
+void				clr_exec_table(t_exec_table *exec_table);
+void				clean_args(char **args);
+
+// utils
 long				ft_atol(char *s, int *index);
 
 // lexing

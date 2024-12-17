@@ -106,27 +106,6 @@ void	ft_test_exec_table(t_exec_table table)
 	}
 }
 
-void clr_exec_table(t_exec_table *exec_table)
-{
-	int i;
-	t_lexems *current;
-	t_lexems *next;
-
-	i = 0;
-	while(exec_table[0].lexems[i])
-	{
-		current = exec_table[0].lexems[i];
-		while(current)
-		{
-			next = current->next;
-			free(current->value);
-			free(current);
-			current = next;
-		}
-		i++;
-	}
-}
-
 void	get_user_input(char **envp)
 {
 	t_lexems		*lexems;

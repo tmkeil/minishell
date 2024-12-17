@@ -9,7 +9,7 @@ SRCSDIR = srcs/
 LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
-SRCS = minishell.c display_intro.c lexer.c utils.c lexer_utils.c lexer_utils2.c recursive_descent_parser.c execution.c
+SRCS = minishell.c display_intro.c lexer.c utils.c lexer_utils.c lexer_utils2.c recursive_descent_parser.c execution.c clear_functions.c
 BONUS_SRCS = minishell.c display_intro.c lexer.c utils.c lexer_utils.c lexer_utils2.c recursive_descent_parser.c execution.c
 
 SRCS_PATHS = $(addprefix $(SRCSDIR), $(SRCS))
