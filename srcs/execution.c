@@ -26,6 +26,19 @@ size_t	ft_size(t_lexems *lexes)
 	return (i);
 }
 
+void clean_args(char **args)
+{
+	int i;
+
+	i = 0;
+	while(args[i])
+	{
+		free(args[i]);
+		i++;
+	}
+	free(args);
+}
+
 void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 {
 	char	**args;
@@ -46,6 +59,7 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 	}
 	args[i] = NULL;
 	execve(cmd, args, envp);
+	clean_args(args);
 }
 
 static char	*ft_check_paths(char **env, char *cmd)
@@ -107,6 +121,7 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 			ft_execute(exec_table->lexems[i], cmd, envp);
 		}
 	}
+	free(cmd);
 	waitpid(pid, NULL, 0);
 	// else if ()
 	// {
