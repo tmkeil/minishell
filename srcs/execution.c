@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/17 21:32:49 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/17 22:41:04 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,85 +49,95 @@ char	*ft_until_next_env(char *ptr)
 
 void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
 {
-	char	**args;
-	int		i;
-	char	*ptr;
-	char	*env_var;
-	char	*current;
-	int		len;
-	char	*sub;
-	char	*result;
-	char	*v;
-	int		p;
-	int		dollar_count;
+	char		**args;
+	int			i;
+	size_t		len;
+	char		*current;
+	char		*result;
+	char		*sub;
+	char		*env_var;
+	const char	*v;
+	char		*ptr;
+	char		*temp;
+	char		*pid_str;
 
 	args = malloc(sizeof(char *) * (ft_size(lexems) + 1));
 	if (!args)
 		return ;
 	i = 0;
-	len = 0;
-	p = 0;
 	while (lexems)
 	{
-		args[i] = NULL;
 		current = (char *)(lexems->value);
 		result = NULL;
-		dollar_count = 0;
-		// printf("current = %s\n", current);
 		while (*current)
 		{
 			if (*current != '$')
 			{
-				dollar_count++;
 				len = ft_until_next_env(current) - current;
-				printf("len = %i\n", len);
 				sub = ft_substr(current, 0, len);
-				args[i] = ft_strjoin(args[i], sub);
+				if (!result)
+					result = sub;
+				else
+				{
+					temp = ft_strjoin(result, sub);
+					free(result);
+					result = temp;
+				}
+				free(sub);
 				current += len;
 			}
 			else
 			{
-				ptr = ft_strchr(current, '$');
-				if (ptr)
+				ptr = current + 1;
+				if (*ptr == '$')
 				{
-					len = ft_find_end(ptr) - ptr;
-					printf("var len = %i\n", len);
-					env_var = ft_substr(ptr, 0, len);
-					printf("env var name = %s\n", env_var);
-					v = getenv(env_var + 1);
-					if (!v)
-					{
-						printf("env gibt es nicht: %s\n", env_var + 1);
-						p = 0;
-						while (env_var[p] && env_var[p + 1] == '$')
-						{
-							args[i] = ft_strjoin(args[i], ft_itoa(pid));
-							p += 2;
-						}
-						if (env_var[p])
-							args[i] = ft_strjoin(args[i], env_var[p]);
-						
-						// args[i] = ft_strjoin(args[i], "");
-						current += len;
-					}
+					pid_str = ft_itoa(pid);
+					if (!result)
+						result = ft_strdup(pid_str);
 					else
 					{
-						// if (!v)
-						// {
-						//  free(env_var);
-						//  return ;
-						// }
-						printf("env gibt es: %s\n", env_var + 1);
-						args[i] = ft_strjoin(args[i], v);
-						current += len;
+						temp = ft_strjoin(result, pid_str);
+						free(result);
+						result = temp;
 					}
+					free(pid_str);
+					current += 2;
+				}
+				else if (ft_isalpha(*ptr) || *ptr == '_')
+				{
+					len = ft_find_end(current + 1) - (current + 1);
+					env_var = ft_substr(current + 1, 0, len);
+					v = getenv(env_var);
+					if (v)
+					{
+						if (!result)
+							result = ft_strdup(v);
+						else
+						{
+							temp = ft_strjoin(result, v);
+							free(result);
+							result = temp;
+						}
+					}
+					free(env_var);
+					current += len + 1;
 				}
 				else
+				{
+					if (!result)
+						result = ft_strdup("$");
+					else
+					{
+						temp = ft_strjoin(result, "$");
+						free(result);
+						result = temp;
+					}
 					current++;
+				}
 			}
 		}
+		args[i++] = result;
 		lexems = lexems->next;
-		i++;
 	}
 	args[i] = NULL;
 	execve(cmd, args, envp);
