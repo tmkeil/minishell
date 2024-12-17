@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 22:12:15 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/17 12:48:49 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	create_exec_table(t_lexems **lexems, t_exec_table *exec_table)
 	i = 0;
 	lex = *lexems;
 	size = ft_table_size(lex) + 2;
-	exec_table->lexems = malloc(sizeof(t_lexems *) * size + 1);
+	exec_table->lexems = malloc(sizeof(t_lexems *) * size);
 	if (!exec_table->lexems)
 		return (0);
 	while (i < size)
@@ -123,7 +123,6 @@ void clr_exec_table(t_exec_table *exec_table)
 			free(current);
 			current = next;
 		}
-		free(exec_table[0].lexems[i]);
 		i++;
 	}
 }

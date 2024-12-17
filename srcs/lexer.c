@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 22:08:47 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/17 12:40:49 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,5 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 			free(sub);
 		}
 	}
-	return (ft_test_lexes(*lexems), 1);
+	return (1);
 }
