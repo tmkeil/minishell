@@ -17,13 +17,13 @@ void	clr_ast(t_ast **ast)
 	if (!ast || !(*ast))
 		return ;
 	if ((*ast)->left)
-        clr_ast(&(*ast)->left);
+		clr_ast(&(*ast)->left);
 	if ((*ast)->right)
-        clr_ast(&(*ast)->right);
+		clr_ast(&(*ast)->right);
 	if ((*ast)->lexem)
-        clr_lexes(&(*ast)->lexem);
-    free(*ast);
-    *ast = NULL;
+		clr_lexes(&(*ast)->lexem);
+	free(*ast);
+	*ast = NULL;
 }
 
 void	clr_lexes(t_lexems **lexems)
@@ -50,22 +50,25 @@ void	ft_clr(char ***ptr)
 		return ;
 	i = 0;
 	while ((*ptr)[i])
-		free((*ptr)[i++]);
+	{
+		free((*ptr)[i]);
+		i++;
+	}
 	free(*ptr);
 	*ptr = NULL;
 }
 
-void clr_exec_table(t_exec_table *exec_table)
+void	clr_exec_table(t_exec_table *exec_table)
 {
-	int i;
-	t_lexems *current;
-	t_lexems *next;
+	int			i;
+	t_lexems	*current;
+	t_lexems	*next;
 
 	i = 0;
-	while(exec_table[0].lexems[i])
+	while (exec_table[0].lexems[i])
 	{
 		current = exec_table[0].lexems[i];
-		while(current)
+		while (current)
 		{
 			next = current->next;
 			free(current->value);
@@ -76,12 +79,12 @@ void clr_exec_table(t_exec_table *exec_table)
 	}
 }
 
-void clean_args(char **args)
+void	clean_args(char **args)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(args[i])
+	while (args[i])
 	{
 		free(args[i]);
 		i++;
