@@ -40,7 +40,23 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 	while (i < size)
 	{
 		// args[i] = malloc(sizeof(char) * (ft_strlen((char *)lexems->value)
-		args[i] = ft_strdup((char *)lexems->value);
+		if (ft_strchr(lexems->value, '$'))
+		{
+			char **array_dollar = ft_split(lexems->value,'$');
+			if (((char *)(lexems->value))[0] == '$')
+			{
+				args[i] = ft_strdup(getenv((char *)lexems->value+1));
+			}
+			else if ((lexems->type == WORD || lexems->type == DOUBLE_QUOTE) && check_array_size(array_dollar) > 1)
+			{
+				args[i] = ft_strdup((char *)array_dollar[0]);
+			}
+			clean_args(array_dollar);
+		}
+		else
+		{
+			args[i] = ft_strdup((char *)lexems->value);
+		}
 		lexems = lexems->next;
 		i++;
 	}

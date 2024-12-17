@@ -75,6 +75,7 @@ void				clean_args(char **args);
 
 // utils
 long				ft_atol(char *s, int *index);
+int					check_array_size(char **array);
 
 // lexing
 int					create_lexes(t_lexems **lexems, char *prompt);
