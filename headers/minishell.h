@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/16 20:58:09 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/17 15:07:45 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,8 @@ void				handle_invalid_operation(char *sub);
 
 // parsing
 void				parse_lexes(t_lexems **lexems);
+
+// exe
+int	execute_commands(t_exec_table *exec_table, char **envp);
 
 #endif
