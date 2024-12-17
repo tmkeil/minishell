@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/17 17:19:24 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/17 21:08:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	get_user_input(char **envp)
 	add_history(prompt);
 	create_lexes(&lexems, prompt);
 	create_exec_table(&lexems, &exec_table);
-	ft_test_exec_table(exec_table);
+	// ft_test_exec_table(exec_table);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
 	execute_commands(&exec_table, envp);
@@ -186,8 +186,10 @@ int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
+	// (void)envp;
 	start_bash(envp);
 	finish_bash();
 	system("leaks minishell");
+	// printf("%s\n", getenv("$$"));
 	return (0);
 }

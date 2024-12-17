@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/17 17:39:15 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/17 21:32:49 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_find_end(char *ptr)
 	int	i;
 
 	i = 0;
-	while (ptr[i] && ptr[i] != '$' && ptr[i] != ' ')
+	while (ptr[i] && (ft_isalpha(ptr[i]) || ptr[i] == '$'))
 		i++;
 	return (&ptr[i]);
 }
@@ -47,42 +47,84 @@ char	*ft_until_next_env(char *ptr)
 	return (&ptr[i]);
 }
 
-void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
+void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
 {
 	char	**args;
 	int		i;
-	int		size;
-	int		j;
 	char	*ptr;
 	char	*env_var;
-	char	*env;
+	char	*current;
+	int		len;
+	char	*sub;
+	char	*result;
+	char	*v;
+	int		p;
+	int		dollar_count;
 
-	// char	**array_dollar;
-	size = ft_size(lexems);
-	args = malloc(sizeof(char *) * (size + 1));
+	args = malloc(sizeof(char *) * (ft_size(lexems) + 1));
 	if (!args)
 		return ;
 	i = 0;
-	while (i < size)
+	len = 0;
+	p = 0;
+	while (lexems)
 	{
-		j = 0;
-		while (((char *)(lexems->value))[j])
+		args[i] = NULL;
+		current = (char *)(lexems->value);
+		result = NULL;
+		dollar_count = 0;
+		// printf("current = %s\n", current);
+		while (*current)
 		{
-			if (((char *)(lexems->value))[j] != '$')
+			if (*current != '$')
 			{
-				ft_strjoin(args[i], ft_until_next_env((char *)lexems->value));
+				dollar_count++;
+				len = ft_until_next_env(current) - current;
+				printf("len = %i\n", len);
+				sub = ft_substr(current, 0, len);
+				args[i] = ft_strjoin(args[i], sub);
+				current += len;
 			}
-			ptr = ft_strchr((char *)lexems->value, '$');
-			if (ptr)
+			else
 			{
-				env_var = ft_substr(ptr + 1, 0, ft_find_end(ptr + 1) - (ptr
-							+ 1));
-				env = ft_strdup(getenv(env_var));
-				args[i] = ft_strjoin(args[i], env);
-				free(lexems->value);
-				lexems->value = (void *)ft_find_end(ptr + 1) + 1;
+				ptr = ft_strchr(current, '$');
+				if (ptr)
+				{
+					len = ft_find_end(ptr) - ptr;
+					printf("var len = %i\n", len);
+					env_var = ft_substr(ptr, 0, len);
+					printf("env var name = %s\n", env_var);
+					v = getenv(env_var + 1);
+					if (!v)
+					{
+						printf("env gibt es nicht: %s\n", env_var + 1);
+						p = 0;
+						while (env_var[p] && env_var[p + 1] == '$')
+						{
+							args[i] = ft_strjoin(args[i], ft_itoa(pid));
+							p += 2;
+						}
+						if (env_var[p])
+							args[i] = ft_strjoin(args[i], env_var[p]);
+						
+						// args[i] = ft_strjoin(args[i], "");
+						current += len;
+					}
+					else
+					{
+						// if (!v)
+						// {
+						//  free(env_var);
+						//  return ;
+						// }
+						printf("env gibt es: %s\n", env_var + 1);
+						args[i] = ft_strjoin(args[i], v);
+						current += len;
+					}
+				}
+				else
+					current++;
 			}
-			j++;
 		}
 		lexems = lexems->next;
 		i++;
@@ -148,14 +190,14 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 		pid = fork();
 		if (pid == 0)
 		{
-			ft_execute(exec_table->lexems[i], cmd, envp);
+			ft_execute(exec_table->lexems[i], cmd, envp, pid);
 		}
 	}
 	free(cmd);
 	waitpid(pid, NULL, 0);
 	// else if ()
 	// {
-	// 	/* code */
+	//  /* code */
 	// }
 	return (2);
 }
