@@ -106,25 +106,50 @@ void	ft_test_exec_table(t_exec_table table)
 	}
 }
 
+size_t custom_strcspn(const char *str1, const char *str2) {
+    const char *p1, *p2;
+
+    for (p1 = str1; *p1; ++p1) {
+        for (p2 = str2; *p2; ++p2) {
+            if (*p1 == *p2) {
+                return (size_t)(p1 - str1);
+            }
+        }
+    }
+
+    return (size_t)(p1 - str1);
+}
+
 void	get_user_input(char **envp)
 {
 	t_lexems		*lexems;
 	t_exec_table	exec_table;
 	char			*prompt;
 	char			*text_show;
+	char            buffer[1024];
 
+	text_show = NULL;
 	lexems = NULL;
-	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
-	prompt = readline(text_show);
-	if (!prompt)
+	if (isatty(STDIN_FILENO))
 	{
-		system("leaks minishell");
-		exit(0);
+		text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
+		prompt = readline(text_show);
+		if (!prompt)
+		{
+			exit(0);
+		}
+		add_history(prompt);
+	} else
+	{
+		 if (!fgets(buffer, sizeof(buffer), stdin)) {
+            return;
+        }
+        prompt = ft_strdup(buffer);
+        prompt[custom_strcspn(prompt, "\n")] = '\0'; 
 	}
-	add_history(prompt);
 	create_lexes(&lexems, prompt);
 	create_exec_table(&lexems, &exec_table);
-	ft_test_exec_table(exec_table);
+	// ft_test_exec_table(exec_table);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
 	execute_commands(&exec_table, envp);
@@ -154,20 +179,21 @@ void configure_terminal(void)
 
     if (tcgetattr(STDIN_FILENO, &term) == -1) {
         perror("tcgetattr");
-		system("leaks minishell");
         exit(EXIT_FAILURE);
     }
     term.c_lflag &= ~ECHOCTL;
     if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1) {
         perror("tcsetattr");
-		system("leaks minishell");
         exit(EXIT_FAILURE);
     }
 }
 
 void start_bash(char **envp)
 {
-	configure_terminal();
+	if (isatty(STDIN_FILENO))
+	{
+		configure_terminal();
+	}
 	display_minishell_intro();
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
@@ -188,6 +214,5 @@ int main(int argc, char **argv, char **envp)
 	(void)argv;
 	start_bash(envp);
 	finish_bash();
-	system("leaks minishell");
 	return (0);
 }
