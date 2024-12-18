@@ -47,6 +47,19 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 	clean_args(args);
 }
 
+void ft_handle_export(t_lexems *args, char **envp)
+{
+ 	if (args == NULL || args->next == NULL || ft_strchr(args->next->value, '=') == NULL)
+	{
+        int i = 0;
+        while (envp[i]) {
+            ft_printf("%s\n", envp[i]);
+            i++;
+        }
+        return;
+    }
+}
+
 int	execute_commands(t_exec_table *exec_table, char **envp)
 {
 	int		i;
@@ -62,6 +75,10 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 		pid = fork();
 		if (pid == 0)
 			ft_execute(exec_table->lexems[i], cmd, envp);
+	}
+	else if(ft_strncmp(exec_table->lexems[i]->value, "export",7) == 0)
+	{
+		ft_handle_export(exec_table->lexems[i], envp);
 	}
 	free(cmd);
 	waitpid(pid, NULL, 0);
