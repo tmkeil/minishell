@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 19:08:51 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 20:09:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,14 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 	int		i;
 	char	*cmd;
 	int		pid;
+	bool	valid;
 
 	i = 0;
-	pid = 0;
+	pid = 1;
 	cmd = NULL;
 	while (exec_table->lexems[i])
 	{
+		valid = false;
 		if (ft_check_builtin(exec_table->lexems[i], envp))
 		{
 			i++;
@@ -78,6 +80,7 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 			pid = fork();
 			if (pid == 0)
 				ft_execute(exec_table->lexems[i], cmd, envp);
+			valid = true;
 		}
 		if (pid > 0)
 		{
@@ -85,6 +88,8 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 			free(cmd);
 			waitpid(pid, NULL, 0);
 		}
+		if (!valid)
+			printf("zsh: command not found: %s\n", (char *)exec_table->lexems[i - 1]->value);
 	}
 	return (2);
 }
