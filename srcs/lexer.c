@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/17 16:57:20 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 15:37:37 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 	char	*sub;
 
 	sub = NULL;
-	if (!matches(prompt))
-		return (0);
+	// if (!matches(prompt))
+	// 	return (0);
 	while (*prompt)
 	{
 		handle_seperator(&prompt);

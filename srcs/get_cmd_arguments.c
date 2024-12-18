@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 15:09:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 16:06:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,20 @@ void	handle_env_var(char **args, int i, char **current)
 	*current += len + 1;
 }
 
-void	handle_lexem(char **args, int i, char *current)
+void	handle_lexem(char **args, int i, char *current, t_types type)
 {
 	size_t	len;
 	char	*sub;
 
 	while (*current)
 	{
+		if (type == SINGLE_QUOTE)
+		{
+			sub = ft_substr(current, 0, ft_strlen((char *)current));
+			append_to_args(args, i, sub);
+			free(sub);
+			return ;
+		}
 		if (*current != '$')
 		{
 			len = ft_until_next_env(current) - current;
