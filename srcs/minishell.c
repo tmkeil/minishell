@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 17:05:33 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 18:40:28 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,16 @@ void	ft_test_exec_table(t_exec_table table)
 {
 	int			i;
 	t_lexems	*current;
+	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 
 	i = 0;
-	char	*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-
 	while (table.lexems[i])
 	{
 		current = table.lexems[i];
@@ -133,7 +132,7 @@ void	get_user_input(char **envp)
 	free(prompt);
 }
 
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
@@ -142,27 +141,30 @@ void handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void handle_sigquit(int sig) {
+void	handle_sigquit(int sig)
+{
 	(void)sig;
 	rl_redisplay();
 }
 
-void configure_terminal(void)
+void	configure_terminal(void)
 {
-    struct termios term;
+	struct termios	term;
 
-    if (tcgetattr(STDIN_FILENO, &term) == -1) {
-        perror("tcgetattr");
-        exit(EXIT_FAILURE);
-    }
-    term.c_lflag &= ~ECHOCTL;
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1) {
-        perror("tcsetattr");
-        exit(EXIT_FAILURE);
-    }
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+	{
+		perror("tcgetattr");
+		exit(EXIT_FAILURE);
+	}
+	term.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+	{
+		perror("tcsetattr");
+		exit(EXIT_FAILURE);
+	}
 }
 
-void start_bash(char **envp)
+void	start_bash(char **envp)
 {
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
@@ -174,12 +176,12 @@ void start_bash(char **envp)
 	}
 }
 
-void finish_bash()
+void	finish_bash(void)
 {
 	rl_clear_history();
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;

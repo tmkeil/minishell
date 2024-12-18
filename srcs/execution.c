@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 16:00:58 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 19:08:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,55 +47,13 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 	clean_args(args);
 }
 
-int is_valid_env_name(char *name) {
-    int i;
-
-	i = 0;
-    if (!name || !(ft_isalpha(name[0]) || name[0] == '_'))
-        return 0;
-    i = 1;
-    while (name[i])
-	{
-        if (!ft_isalnum(name[i]) && name[i] != '_') {
-            return 0;
-        }
-        i++;
-    }
-    return (1);
-}
-
-void update_env_var(const char *name, const char *value)
+int	ft_check_builtin(t_lexems *lexems, char **envp)
 {
-	if (setenv(name, value ? value : "", 1) == -1) {
-        perror("setenv");
-    }
-}
-
-void ft_handle_export(t_lexems *args, char **envp)
-{
-	t_lexems *current;
-	char **values_to_set_env;
-
- 	if (args == NULL || args->next == NULL || ft_strchr(args->next->value, '=') == NULL)
-	{
-        int i = 0;
-        while (envp[i]) {
-            ft_printf("%s\n", envp[i]);
-            i++;
-        }
-        return;
-    }
-	current = args->next;
-	while(current && ft_strchr(current->value, '='))
-	{
-		values_to_set_env = ft_split(current->value, '=');
-		if (values_to_set_env[0] && is_valid_env_name(values_to_set_env[0]))
-            update_env_var(values_to_set_env[0], values_to_set_env[1]);
-		else
-            ft_printf("export: `%s': not a valid identifier\n", current->value);
-		clean_args(values_to_set_env);
-		current = current->next;
-	}
+	if (ft_changedir(lexems))
+		return (1);
+	if (ft_handle_export(lexems, envp))
+		return (1);
+	return (0);
 }
 
 int	execute_commands(t_exec_table *exec_table, char **envp)
@@ -106,19 +64,27 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 
 	i = 0;
 	pid = 0;
-	cmd = ft_getpath(exec_table->lexems[i]->value, envp);
-	
-	if (cmd)
+	cmd = NULL;
+	while (exec_table->lexems[i])
 	{
-		pid = fork();
-		if (pid == 0)
-			ft_execute(exec_table->lexems[i], cmd, envp);
+		if (ft_check_builtin(exec_table->lexems[i], envp))
+		{
+			i++;
+			continue ;
+		}
+		cmd = ft_getpath(exec_table->lexems[i]->value, envp);
+		if (cmd)
+		{
+			pid = fork();
+			if (pid == 0)
+				ft_execute(exec_table->lexems[i], cmd, envp);
+		}
+		if (pid > 0)
+		{
+			i++;
+			free(cmd);
+			waitpid(pid, NULL, 0);
+		}
 	}
-	else if(ft_strncmp(exec_table->lexems[i]->value, "export",7) == 0)
-	{
-		ft_handle_export(exec_table->lexems[i], envp);
-	}
-	free(cmd);
-	waitpid(pid, NULL, 0);
 	return (2);
 }

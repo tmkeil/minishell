@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/18 16:01:35 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 18:54:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,16 @@ int					execute_commands(t_exec_table *exec_table, char **envp);
 char				*ft_getpath(char *cmd, char **envp);
 
 // cmd arguments
-void				handle_lexem(char **args, int i, char *current, t_types type);
+void				handle_lexem(char **args, int i, char *current,
+						t_types type);
 void				handle_env_var(char **args, int i, char **current);
 void				append_to_args(char **args, int i, char *value);
 char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
+
+// builtins
+int					ft_check_builtin(t_lexems *lexems, char **envp);
+int					ft_changedir(t_lexems *lexems);
+int					ft_handle_export(t_lexems *args, char **envp);
 
 #endif
