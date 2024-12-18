@@ -1,3 +1,11 @@
 **/.o
 **/.git
 .vscode
+tmp_out_minishell
+tmp_out_bash
+tmp_err_minishell
+tmp_err_bash
+tester.sh
+minishell
+42_minishell_tester
+objs
