@@ -193,8 +193,8 @@ void start_bash(char **envp)
 	if (isatty(STDIN_FILENO))
 	{
 		configure_terminal();
+		display_minishell_intro();
 	}
-	display_minishell_intro();
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
 	while(1)
