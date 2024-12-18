@@ -190,14 +190,17 @@ void configure_terminal(void)
 
 void start_bash(char **envp)
 {
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, handle_sigquit);
 	if (isatty(STDIN_FILENO))
 	{
 		configure_terminal();
 		display_minishell_intro();
-	}
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
-	while(1)
+		while(1)
+		{
+			get_user_input(envp);
+		}
+	}else
 	{
 		get_user_input(envp);
 	}
