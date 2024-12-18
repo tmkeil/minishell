@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/17 22:41:04 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 13:24:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
 	int			i;
 	size_t		len;
 	char		*current;
-	char		*result;
 	char		*sub;
 	char		*env_var;
 	const char	*v;
@@ -68,21 +67,13 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
 	while (lexems)
 	{
 		current = (char *)(lexems->value);
-		result = NULL;
 		while (*current)
 		{
 			if (*current != '$')
 			{
 				len = ft_until_next_env(current) - current;
 				sub = ft_substr(current, 0, len);
-				if (!result)
-					result = sub;
-				else
-				{
-					temp = ft_strjoin(result, sub);
-					free(result);
-					result = temp;
-				}
+				args[i] = ft_strjoin(args[i], sub);
 				free(sub);
 				current += len;
 			}
@@ -91,17 +82,7 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
 				ptr = current + 1;
 				if (*ptr == '$')
 				{
-					pid_str = ft_itoa(pid);
-					if (!result)
-						result = ft_strdup(pid_str);
-					else
-					{
-						temp = ft_strjoin(result, pid_str);
-						free(result);
-						result = temp;
-					}
-					free(pid_str);
-					current += 2;
+					
 				}
 				else if (ft_isalpha(*ptr) || *ptr == '_')
 				{
@@ -122,21 +103,8 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
 					free(env_var);
 					current += len + 1;
 				}
-				else
-				{
-					if (!result)
-						result = ft_strdup("$");
-					else
-					{
-						temp = ft_strjoin(result, "$");
-						free(result);
-						result = temp;
-					}
-					current++;
-				}
 			}
 		}
-		args[i++] = result;
 		lexems = lexems->next;
 	}
 	args[i] = NULL;
