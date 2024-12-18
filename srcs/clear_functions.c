@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear_functions.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frocha <frocha@student.42heilbronn.de>     +#+  +:+       +#+        */
+/*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/17 15:46:37 by frocha           ###   ########.fr       */
+/*   Updated: 2024/12/18 14:55:55 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,13 @@ void	clean_args(char **args)
 	int	i;
 
 	i = 0;
+	if (!args)
+		return ;
 	while (args[i])
 	{
 		free(args[i]);
 		i++;
 	}
 	free(args);
+	args = NULL;
 }

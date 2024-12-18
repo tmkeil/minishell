@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 13:24:36 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 15:07:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,38 +27,10 @@ size_t	ft_size(t_lexems *lexes)
 	return (i);
 }
 
-char	*ft_find_end(char *ptr)
+void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 {
-	int	i;
-
-	i = 0;
-	while (ptr[i] && (ft_isalpha(ptr[i]) || ptr[i] == '$'))
-		i++;
-	return (&ptr[i]);
-}
-
-char	*ft_until_next_env(char *ptr)
-{
-	int	i;
-
-	i = 0;
-	while (ptr[i] && ptr[i] != '$')
-		i++;
-	return (&ptr[i]);
-}
-
-void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
-{
-	char		**args;
-	int			i;
-	size_t		len;
-	char		*current;
-	char		*sub;
-	char		*env_var;
-	const char	*v;
-	char		*ptr;
-	char		*temp;
-	char		*pid_str;
+	char	**args;
+	int		i;
 
 	args = malloc(sizeof(char *) * (ft_size(lexems) + 1));
 	if (!args)
@@ -66,92 +38,14 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, int pid)
 	i = 0;
 	while (lexems)
 	{
-		current = (char *)(lexems->value);
-		while (*current)
-		{
-			if (*current != '$')
-			{
-				len = ft_until_next_env(current) - current;
-				sub = ft_substr(current, 0, len);
-				args[i] = ft_strjoin(args[i], sub);
-				free(sub);
-				current += len;
-			}
-			else
-			{
-				ptr = current + 1;
-				if (*ptr == '$')
-				{
-					
-				}
-				else if (ft_isalpha(*ptr) || *ptr == '_')
-				{
-					len = ft_find_end(current + 1) - (current + 1);
-					env_var = ft_substr(current + 1, 0, len);
-					v = getenv(env_var);
-					if (v)
-					{
-						if (!result)
-							result = ft_strdup(v);
-						else
-						{
-							temp = ft_strjoin(result, v);
-							free(result);
-							result = temp;
-						}
-					}
-					free(env_var);
-					current += len + 1;
-				}
-			}
-		}
+		args[i] = NULL;
+		handle_lexem(args, i++, (char *)lexems->value);
 		lexems = lexems->next;
 	}
 	args[i] = NULL;
-	execve(cmd, args, envp);
+	if (execve(cmd, args, envp) == -1)
+		clean_args(args);
 	clean_args(args);
-}
-
-static char	*ft_check_paths(char **env, char *cmd)
-{
-	int		i;
-	char	*path;
-	char	*full;
-
-	i = 0;
-	path = NULL;
-	full = NULL;
-	while (env[i])
-	{
-		path = ft_strjoin(env[i], "/");
-		full = ft_strjoin(path, cmd);
-		free(path);
-		if (!full)
-			return (ft_clr(&env), NULL);
-		if (access(full, X_OK) == 0)
-			return (ft_clr(&env), full);
-		free(full);
-		i++;
-	}
-	return (ft_clr(&env), NULL);
-}
-
-char	*ft_getpath(char *cmd, char **envp)
-{
-	char	**env;
-
-	if (!envp || !*envp)
-		return (NULL);
-	while (*envp)
-	{
-		if (ft_strnstr(*envp, "PATH=", 5))
-			break ;
-		envp++;
-	}
-	env = ft_split(*envp + 5, ':');
-	if (!env || !*env)
-		return (NULL);
-	return (ft_check_paths(env, cmd));
 }
 
 int	execute_commands(t_exec_table *exec_table, char **envp)
@@ -167,15 +61,9 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 	{
 		pid = fork();
 		if (pid == 0)
-		{
-			ft_execute(exec_table->lexems[i], cmd, envp, pid);
-		}
+			ft_execute(exec_table->lexems[i], cmd, envp);
 	}
 	free(cmd);
 	waitpid(pid, NULL, 0);
-	// else if ()
-	// {
-	//  /* code */
-	// }
 	return (2);
 }
