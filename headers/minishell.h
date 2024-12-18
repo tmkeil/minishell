@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/17 15:07:45 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 14:59:18 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ typedef struct s_lexems
 
 typedef struct s_exec_table
 {
-	t_lexems	**lexems;
-}				t_exec_table;
+	t_lexems		**lexems;
+}					t_exec_table;
 
 typedef struct s_ast
 {
@@ -97,6 +97,16 @@ void				handle_invalid_operation(char *sub);
 void				parse_lexes(t_lexems **lexems);
 
 // exe
-int	execute_commands(t_exec_table *exec_table, char **envp);
+int					execute_commands(t_exec_table *exec_table, char **envp);
+
+// find exe path
+char				*ft_getpath(char *cmd, char **envp);
+
+// cmd arguments
+void				handle_lexem(char **args, int i, char *current);
+void				handle_env_var(char **args, int i, char **current);
+void				append_to_args(char **args, int i, char *value);
+char				*ft_until_next_env(char *ptr);
+char				*ft_find_end(char *ptr);
 
 #endif

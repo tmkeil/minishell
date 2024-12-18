@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/17 17:19:24 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 15:21:29 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,10 @@ int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
+	// (void)envp;
 	start_bash(envp);
 	finish_bash();
+	system("leaks minishell");
+	// printf("%s\n", getenv("$$"));
 	return (0);
 }
