@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 18:46:34 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 19:08:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,28 +47,12 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 	clean_args(args);
 }
 
-void ft_handle_export(t_lexems *args, char **envp)
-{
- 	if (args == NULL || args->next == NULL || ft_strchr(args->next->value, '=') == NULL)
-	{
-        int i = 0;
-        while (envp[i]) {
-            ft_printf("%s\n", envp[i]);
-            i++;
-        }
-        return;
-    }
-}
-
-int ft_check_builtin(t_lexems *lexems, char **envp)
+int	ft_check_builtin(t_lexems *lexems, char **envp)
 {
 	if (ft_changedir(lexems))
 		return (1);
-	else if(ft_strncmp(lexems->value, "export", 7) == 0)
-	{
-		ft_handle_export(lexems, envp);
+	if (ft_handle_export(lexems, envp))
 		return (1);
-	}
 	return (0);
 }
 

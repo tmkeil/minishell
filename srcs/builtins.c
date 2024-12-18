@@ -6,11 +6,31 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 18:46:50 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 19:10:54 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_handle_export(t_lexems *lexems, char **envp)
+{
+	int	i;
+
+	if (ft_strncmp(lexems->value, "export", 7) == 0)
+	{
+		if (!lexems || !lexems->next || !ft_strchr(lexems->next->value, '='))
+		{
+			i = 0;
+			while (envp[i])
+			{
+				ft_printf("%s\n", envp[i]);
+				i++;
+			}
+			return (1);
+		}
+	}
+	return (0);
+}
 
 int	ft_changedir(t_lexems *lexems)
 {
@@ -30,7 +50,6 @@ int	ft_changedir(t_lexems *lexems)
 			home = getenv("HOME");
 			if (chdir(home) != 0)
 				printf("cd: no such file or directory: %s\n", home);
-			free(home);
 		}
 		return (1);
 	}
