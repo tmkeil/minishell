@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 20:09:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 20:22:00 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	ft_check_builtin(t_lexems *lexems, char **envp)
 	if (ft_changedir(lexems))
 		return (1);
 	if (ft_handle_export(lexems, envp))
+		return (1);
+	if (ft_unset(lexems, envp))
 		return (1);
 	return (0);
 }

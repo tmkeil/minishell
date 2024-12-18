@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 19:10:54 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 20:25:45 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ int	ft_handle_export(t_lexems *lexems, char **envp)
 		{
 			i = 0;
 			while (envp[i])
-			{
-				ft_printf("%s\n", envp[i]);
-				i++;
-			}
+				ft_printf("%s\n", envp[i++]);
 		}
 		current = lexems->next;
 		while(current && ft_strchr(current->value, '='))
@@ -90,5 +87,11 @@ int	ft_changedir(t_lexems *lexems)
 		}
 		return (1);
 	}
+	return (0);
+}
+
+int	ft_unset(t_lexems *lexems, char **envp)
+{
+	
 	return (0);
 }
