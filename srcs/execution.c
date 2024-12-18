@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 18:44:19 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 18:46:34 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int ft_check_builtin(t_lexems *lexems, char **envp)
 	else if(ft_strncmp(lexems->value, "export", 7) == 0)
 	{
 		ft_handle_export(lexems, envp);
+		return (1);
 	}
 	return (0);
 }

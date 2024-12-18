@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/18 18:38:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 18:46:14 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
 
 // builtins
-int					ft_check_builtin(t_lexems *lexems);
+int ft_check_builtin(t_lexems *lexems, char **envp);
 int	ft_changedir(t_lexems *lexems);
 
 #endif
