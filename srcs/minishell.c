@@ -106,47 +106,21 @@ void	ft_test_exec_table(t_exec_table table)
 	}
 }
 
-size_t custom_strcspn(const char *str1, const char *str2) {
-    const char *p1, *p2;
-
-    for (p1 = str1; *p1; ++p1) {
-        for (p2 = str2; *p2; ++p2) {
-            if (*p1 == *p2) {
-                return (size_t)(p1 - str1);
-            }
-        }
-    }
-
-    return (size_t)(p1 - str1);
-}
-
 void	get_user_input(char **envp)
 {
 	t_lexems		*lexems;
 	t_exec_table	exec_table;
 	char			*prompt;
 	char			*text_show;
-	char            buffer[1024];
 
-	text_show = NULL;
 	lexems = NULL;
-	if (isatty(STDIN_FILENO))
+	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
+	prompt = readline(text_show);
+	if (!prompt)
 	{
-		text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
-		prompt = readline(text_show);
-		if (!prompt)
-		{
-			exit(0);
-		}
-		add_history(prompt);
-	} else
-	{
-		 if (!fgets(buffer, sizeof(buffer), stdin)) {
-            return;
-        }
-        prompt = ft_strdup(buffer);
-        prompt[custom_strcspn(prompt, "\n")] = '\0'; 
+		exit(0);
 	}
+	add_history(prompt);
 	create_lexes(&lexems, prompt);
 	create_exec_table(&lexems, &exec_table);
 	// ft_test_exec_table(exec_table);
@@ -192,15 +166,9 @@ void start_bash(char **envp)
 {
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
-	if (isatty(STDIN_FILENO))
-	{
-		configure_terminal();
-		display_minishell_intro();
-		while(1)
-		{
-			get_user_input(envp);
-		}
-	}else
+	configure_terminal();
+	display_minishell_intro();
+	while(1)
 	{
 		get_user_input(envp);
 	}
