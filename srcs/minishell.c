@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 17:05:33 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/18 17:44:20 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,16 @@ void	ft_test_exec_table(t_exec_table table)
 {
 	int			i;
 	t_lexems	*current;
+	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 
 	i = 0;
-	char	*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-
 	while (table.lexems[i])
 	{
 		current = table.lexems[i];
@@ -106,18 +105,26 @@ void	ft_test_exec_table(t_exec_table table)
 	}
 }
 
-size_t custom_strcspn(const char *str1, const char *str2) {
-    const char *p1, *p2;
+size_t	custom_strcspn(const char *str1, const char *str2)
+{
+	const char	*p1;
+	const char	*p2;
 
-    for (p1 = str1; *p1; ++p1) {
-        for (p2 = str2; *p2; ++p2) {
-            if (*p1 == *p2) {
-                return (size_t)(p1 - str1);
-            }
-        }
-    }
-
-    return (size_t)(p1 - str1);
+	p1 = str1;
+	p2 = str2;
+	while (*p1)
+	{
+		while (*p2)
+		{
+			if (*p1 == *p2)
+			{
+				return (size_t)(p1 - str1);
+			}
+			++p2;
+		}
+		++p1;
+	}
+	return (size_t)(p1 - str1);
 }
 
 void	get_user_input(char **envp)
@@ -126,7 +133,7 @@ void	get_user_input(char **envp)
 	t_exec_table	exec_table;
 	char			*prompt;
 	char			*text_show;
-	char            buffer[1024];
+	char			buffer[1024];
 
 	text_show = NULL;
 	lexems = NULL;
@@ -139,13 +146,15 @@ void	get_user_input(char **envp)
 			exit(0);
 		}
 		add_history(prompt);
-	} else
+	}
+	else
 	{
-		 if (!fgets(buffer, sizeof(buffer), stdin)) {
-            return;
-        }
-        prompt = ft_strdup(buffer);
-        prompt[custom_strcspn(prompt, "\n")] = '\0'; 
+		if (!fgets(buffer, sizeof(buffer), stdin))
+		{
+			return ;
+		}
+		prompt = ft_strdup(buffer);
+		prompt[custom_strcspn(prompt, "\n")] = '\0';
 	}
 	create_lexes(&lexems, prompt);
 	create_exec_table(&lexems, &exec_table);
@@ -159,7 +168,7 @@ void	get_user_input(char **envp)
 	free(prompt);
 }
 
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
@@ -168,27 +177,30 @@ void handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void handle_sigquit(int sig) {
+void	handle_sigquit(int sig)
+{
 	(void)sig;
 	rl_redisplay();
 }
 
-void configure_terminal(void)
+void	configure_terminal(void)
 {
-    struct termios term;
+	struct termios	term;
 
-    if (tcgetattr(STDIN_FILENO, &term) == -1) {
-        perror("tcgetattr");
-        exit(EXIT_FAILURE);
-    }
-    term.c_lflag &= ~ECHOCTL;
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1) {
-        perror("tcsetattr");
-        exit(EXIT_FAILURE);
-    }
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+	{
+		perror("tcgetattr");
+		exit(EXIT_FAILURE);
+	}
+	term.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+	{
+		perror("tcsetattr");
+		exit(EXIT_FAILURE);
+	}
 }
 
-void start_bash(char **envp)
+void	start_bash(char **envp)
 {
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
@@ -196,22 +208,23 @@ void start_bash(char **envp)
 	{
 		configure_terminal();
 		display_minishell_intro();
-		while(1)
+		while (1)
 		{
 			get_user_input(envp);
 		}
-	}else
+	}
+	else
 	{
 		get_user_input(envp);
 	}
 }
 
-void finish_bash()
+void	finish_bash(void)
 {
 	rl_clear_history();
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
