@@ -12,8 +12,34 @@
 
 #include "minishell.h"
 
+int is_valid_env_name(char *name) {
+    int i;
+
+	i = 0;
+    if (!name || !(ft_isalpha(name[0]) || name[0] == '_'))
+        return 0;
+    i = 1;
+    while (name[i])
+	{
+        if (!ft_isalnum(name[i]) && name[i] != '_') {
+            return 0;
+        }
+        i++;
+    }
+    return (1);
+}
+
+void update_env_var(const char *name, const char *value)
+{
+	if (setenv(name, value ? value : "", 1) == -1) {
+        perror("setenv");
+    }
+}
+
 int	ft_handle_export(t_lexems *lexems, char **envp)
 {
+	t_lexems *current;
+	char **values_to_set_env;
 	int	i;
 
 	if (ft_strncmp(lexems->value, "export", 7) == 0)
@@ -26,8 +52,19 @@ int	ft_handle_export(t_lexems *lexems, char **envp)
 				ft_printf("%s\n", envp[i]);
 				i++;
 			}
-			return (1);
 		}
+		current = lexems->next;
+		while(current && ft_strchr(current->value, '='))
+		{
+			values_to_set_env = ft_split(current->value, '=');
+			if (values_to_set_env[0] && is_valid_env_name(values_to_set_env[0]))
+				update_env_var(values_to_set_env[0], values_to_set_env[1]);
+			else
+				ft_printf("export: `%s': not a valid identifier\n", current->value);
+			clean_args(values_to_set_env);
+			current = current->next;
+		}
+		return (1);
 	}
 	return (0);
 }
