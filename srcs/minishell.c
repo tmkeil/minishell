@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 18:37:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 18:41:15 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,9 @@ void	ft_set_exit_status(t_minishell *minishell)
 
 void	get_user_input(char **envp, t_env_node *envp_list)
 {
-	t_minishell		minishell;
-	char			*prompt;
-	char			*text_show;
+	t_minishell	minishell;
+	char		*prompt;
+	char		*text_show;
 
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
 	prompt = readline(text_show);
@@ -175,7 +175,7 @@ void	start_bash(char **envp, t_env_node *envp_list)
 	signal(SIGQUIT, handle_sigquit);
 	configure_terminal();
 	display_minishell_intro();
-	while(1)
+	while (1)
 	{
 		get_user_input(envp, envp_list);
 	}
@@ -186,61 +186,65 @@ void	finish_bash(void)
 	rl_clear_history();
 }
 
-void split_env_var(const char *env_var, char **name, char **value) {
-    char *equal_sign;
-    size_t name_len;
-
-    equal_sign = ft_strchr(env_var, '=');
-    if (equal_sign) {
-        name_len = equal_sign - env_var;
-        *name = malloc(name_len + 1);
-        if (!*name)
-            exit(EXIT_FAILURE);
-        ft_memcpy(*name, env_var, name_len);
-        (*name)[name_len] = '\0';
-        *value = ft_strdup(equal_sign + 1);
-    } else {
-        *name = ft_strdup(env_var);
-        *value = NULL;
-    }
-}
-t_env_node *copy_envp_to_list(char **envp)
+void	split_env_var(const char *env_var, char **name, char **value)
 {
-	t_env_node *head;
-	char *name;
-	char *value;
-    t_env_node *current;
-    int i;
-	t_env_node *new_node;
+	char	*equal_sign;
+	size_t	name_len;
+
+	equal_sign = ft_strchr(env_var, '=');
+	if (equal_sign)
+	{
+		name_len = equal_sign - env_var;
+		*name = malloc(name_len + 1);
+		if (!*name)
+			exit(EXIT_FAILURE);
+		ft_memcpy(*name, env_var, name_len);
+		(*name)[name_len] = '\0';
+		*value = ft_strdup(equal_sign + 1);
+	}
+	else
+	{
+		*name = ft_strdup(env_var);
+		*value = NULL;
+	}
+}
+
+t_env_node	*copy_envp_to_list(char **envp)
+{
+	t_env_node	*head;
+	char		*name;
+	char		*value;
+	t_env_node	*current;
+	int			i;
+	t_env_node	*new_node;
 
 	head = NULL;
 	current = NULL;
 	i = 0;
-    while (envp[i])
+	while (envp[i])
 	{
-        name = NULL;
-        value = NULL;
-
-        split_env_var(envp[i], &name, &value);
-        new_node = malloc(sizeof(t_env_node));
-        if (!new_node)
-            exit(EXIT_FAILURE);
-        new_node->name = name;
-        new_node->value = value;
-        new_node->next = NULL;
-        if (!head)
-            head = new_node;
-        else
-            current->next = new_node;
-        current = new_node;
-        i++;
-    }
-    return head;
+		name = NULL;
+		value = NULL;
+		split_env_var(envp[i], &name, &value);
+		new_node = malloc(sizeof(t_env_node));
+		if (!new_node)
+			exit(EXIT_FAILURE);
+		new_node->name = name;
+		new_node->value = value;
+		new_node->next = NULL;
+		if (!head)
+			head = new_node;
+		else
+			current->next = new_node;
+		current = new_node;
+		i++;
+	}
+	return (head);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_env_node *envp_list;
+	t_env_node	*envp_list;
 
 	envp_list = copy_envp_to_list(envp);
 	(void)argc;
