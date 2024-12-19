@@ -44,6 +44,12 @@ typedef enum s_types
 # include <sys/wait.h>
 # include <termios.h>
 
+typedef struct s_env_node {
+    char *name;
+    char *value;
+    struct s_env_node *next;
+} t_env_node;
+
 typedef struct s_lexems
 {
 	t_types			type;
@@ -72,6 +78,7 @@ void				clr_lexes(t_lexems **lexems);
 void				clr_ast(t_ast **ast);
 void				clr_exec_table(t_exec_table *exec_table);
 void				clean_args(char **args);
+void				free_env_list(t_env_node *head);
 
 // utils
 long				ft_atol(char *s, int *index);
@@ -97,7 +104,7 @@ void				handle_invalid_operation(char *sub);
 void				parse_lexes(t_lexems **lexems);
 
 // exe
-int					execute_commands(t_exec_table *exec_table, char **envp);
+int					execute_commands(t_exec_table *exec_table, char **envp, t_env_node *envp_list);
 
 // find exe path
 char				*ft_getpath(char *cmd, char **envp);
@@ -111,9 +118,9 @@ char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
 
 // builtins
-int					ft_check_builtin(t_lexems *lexems, char **envp);
+int					ft_check_builtin(t_lexems *lexems, char **envp, t_env_node *envp_list);
 int					ft_changedir(t_lexems *lexems);
-int					ft_handle_export(t_lexems *args, char **envp);
+int					ft_handle_export(t_lexems *args, t_env_node *envp_list);
 int					ft_unset(t_lexems *lexems, char **envp);
 
 #endif

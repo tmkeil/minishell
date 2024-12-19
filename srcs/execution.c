@@ -47,18 +47,18 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 	clean_args(args);
 }
 
-int	ft_check_builtin(t_lexems *lexems, char **envp)
+int	ft_check_builtin(t_lexems *lexems, char **envp, t_env_node *envp_list)
 {
 	if (ft_changedir(lexems))
 		return (1);
-	if (ft_handle_export(lexems, envp))
+	if (ft_handle_export(lexems, envp_list))
 		return (1);
 	if (ft_unset(lexems, envp))
 		return (1);
 	return (0);
 }
 
-int	execute_commands(t_exec_table *exec_table, char **envp)
+int	execute_commands(t_exec_table *exec_table, char **envp, t_env_node *envp_list)
 {
 	int		i;
 	char	*cmd;
@@ -71,7 +71,7 @@ int	execute_commands(t_exec_table *exec_table, char **envp)
 	while (exec_table->lexems[i])
 	{
 		valid = false;
-		if (ft_check_builtin(exec_table->lexems[i], envp))
+		if (ft_check_builtin(exec_table->lexems[i], envp, envp_list))
 		{
 			i++;
 			continue ;

@@ -105,7 +105,7 @@ void	ft_test_exec_table(t_exec_table table)
 	}
 }
 
-void	get_user_input(char **envp)
+void	get_user_input(char **envp, t_env_node *envp_list)
 {
 	t_lexems		*lexems;
 	t_exec_table	exec_table;
@@ -125,7 +125,7 @@ void	get_user_input(char **envp)
 	ft_test_exec_table(exec_table);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
-	execute_commands(&exec_table, envp);
+	execute_commands(&exec_table, envp, envp_list);
 	clr_exec_table(&exec_table);
 	clr_lexes(&lexems);
 	free(text_show);
@@ -164,7 +164,7 @@ void	configure_terminal(void)
 	}
 }
 
-void	start_bash(char **envp)
+void	start_bash(char **envp, t_env_node *envp_list)
 {
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
@@ -172,7 +172,7 @@ void	start_bash(char **envp)
 	display_minishell_intro();
 	while(1)
 	{
-		get_user_input(envp);
+		get_user_input(envp, envp_list);
 	}
 }
 
@@ -181,14 +181,70 @@ void	finish_bash(void)
 	rl_clear_history();
 }
 
+void split_env_var(const char *env_var, char **name, char **value) {
+    char *equal_sign;
+    size_t name_len;
+
+    equal_sign = ft_strchr(env_var, '=');
+    if (equal_sign) {
+        name_len = equal_sign - env_var;
+        *name = malloc(name_len + 1);
+        if (!*name)
+            exit(EXIT_FAILURE);
+        ft_memcpy(*name, env_var, name_len);
+        (*name)[name_len] = '\0';
+        *value = ft_strdup(equal_sign + 1);
+    } else {
+        *name = ft_strdup(env_var);
+        *value = NULL;
+    }
+}
+t_env_node *copy_envp_to_list(char **envp)
+{
+	t_env_node *head;
+	char *name;
+	char *value;
+    t_env_node *current;
+    int i;
+	t_env_node *new_node;
+
+	head = NULL;
+	current = NULL;
+	i = 0;
+    while (envp[i])
+	{
+        name = NULL;
+        value = NULL;
+
+        split_env_var(envp[i], &name, &value);
+        new_node = malloc(sizeof(t_env_node));
+        if (!new_node)
+            exit(EXIT_FAILURE);
+        new_node->name = name;
+        new_node->value = value;
+        new_node->next = NULL;
+        if (!head)
+            head = new_node;
+        else
+            current->next = new_node;
+        current = new_node;
+        i++;
+    }
+    return head;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
+	t_env_node *envp_list;
+
+	envp_list = copy_envp_to_list(envp);
 	(void)argc;
 	(void)argv;
 	// (void)envp;
-	start_bash(envp);
+	start_bash(envp, envp_list);
 	finish_bash();
 	// system("leaks minishell");
 	// printf("%s\n", getenv("$$"));
+	free_env_list(envp_list);
 	return (0);
 }

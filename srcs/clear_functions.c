@@ -94,3 +94,17 @@ void	clean_args(char **args)
 	free(args);
 	args = NULL;
 }
+
+void free_env_list(t_env_node *head)
+{
+    t_env_node *current;
+
+    while (head) {
+        current = head;
+        head = head->next;
+
+        free(current->name);
+        free(current->value);
+        free(current);
+    }
+}
