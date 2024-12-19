@@ -114,5 +114,6 @@ char				*ft_find_end(char *ptr);
 int					ft_check_builtin(t_lexems *lexems, char **envp);
 int					ft_changedir(t_lexems *lexems);
 int					ft_handle_export(t_lexems *args, char **envp);
+int					ft_unset(t_lexems *lexems, char **envp);
 
 #endif

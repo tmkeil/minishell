@@ -92,6 +92,7 @@ int	ft_changedir(t_lexems *lexems)
 
 int	ft_unset(t_lexems *lexems, char **envp)
 {
-	
+	(void)lexems;
+	(void)envp;
 	return (0);
 }
