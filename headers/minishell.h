@@ -111,8 +111,8 @@ char				*ft_getpath(char *cmd, char **envp);
 
 // cmd arguments
 void				handle_lexem(char **args, int i, char *current,
-						t_types type);
-void				handle_env_var(char **args, int i, char **current);
+						t_types type, t_env_node *envp_list);
+void				handle_env_var(char **args, int i, char **current, t_env_node *envp_list);
 void				append_to_args(char **args, int i, char *value);
 char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
