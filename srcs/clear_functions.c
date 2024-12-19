@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/19 15:22:10 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 18:36:49 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,27 @@ void	clr_exec_table(t_lexems ***table)
 	t_lexems	*current;
 	t_lexems	*next;
 
-	if (!table || !*table || !**table)
+	if (!table || !*table)
 		return ;
 	i = 0;
 	while ((*table)[i])
 	{
-		current = (*table)[i++];
+		current = (*table)[i];
 		while (current)
 		{
 			next = current->next;
-			free(current->value);
+			if (current->value)
+			{
+				free(current->value);
+				current->value = NULL;
+			}
 			free(current);
 			current = next;
 		}
+		i++;
 	}
+	free(*table);
+	*table = NULL;
 }
 
 void	clean_args(char **args)
@@ -96,16 +103,16 @@ void	clean_args(char **args)
 	args = NULL;
 }
 
-void free_env_list(t_env_node *head)
+void	free_env_list(t_env_node *head)
 {
-    t_env_node *current;
+	t_env_node	*current;
 
-    while (head) {
-        current = head;
-        head = head->next;
-
-        free(current->name);
-        free(current->value);
-        free(current);
-    }
+	while (head)
+	{
+		current = head;
+		head = head->next;
+		free(current->name);
+		free(current->value);
+		free(current);
+	}
 }

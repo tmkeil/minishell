@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 15:25:22 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 18:37:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	create_exec_table(t_minishell *minishell)
 			i++;
 		lex = lex->next;
 	}
-	minishell->table[i + 1] = NULL;
+	minishell->table[size] = NULL;
 	return (1);
 }
 
@@ -108,7 +108,7 @@ void	ft_test_exec_table(t_minishell minishell)
 void	ft_set_exit_status(t_minishell *minishell)
 {
 	(void)minishell;
-	printf("setting\n");
+	// printf("setting\n");
 }
 
 void	get_user_input(char **envp, t_env_node *envp_list)
@@ -121,13 +121,11 @@ void	get_user_input(char **envp, t_env_node *envp_list)
 	prompt = readline(text_show);
 	minishell.tokens = NULL;
 	if (!prompt)
-	{
 		exit(0);
-	}
 	add_history(prompt);
 	create_lexes(&minishell.tokens, prompt);
 	create_exec_table(&minishell);
-	ft_test_exec_table(minishell);
+	// ft_test_exec_table(minishell);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
 	execute_commands(minishell.table, envp, envp_list);
