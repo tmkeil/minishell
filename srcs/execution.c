@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 20:22:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 15:23:25 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	ft_check_builtin(t_lexems *lexems, char **envp, t_env_node *envp_list)
 	return (0);
 }
 
-int	execute_commands(t_exec_table *exec_table, char **envp, t_env_node *envp_list)
+int	execute_commands(t_lexems **table, char **envp, t_env_node *envp_list)
 {
 	int		i;
 	char	*cmd;
@@ -68,20 +68,20 @@ int	execute_commands(t_exec_table *exec_table, char **envp, t_env_node *envp_lis
 	i = 0;
 	pid = 1;
 	cmd = NULL;
-	while (exec_table->lexems[i])
+	while (table[i])
 	{
 		valid = false;
-		if (ft_check_builtin(exec_table->lexems[i], envp, envp_list))
+		if (ft_check_builtin(table[i], envp, envp_list))
 		{
 			i++;
 			continue ;
 		}
-		cmd = ft_getpath(exec_table->lexems[i]->value, envp);
+		cmd = ft_getpath(table[i]->value, envp);
 		if (cmd)
 		{
 			pid = fork();
 			if (pid == 0)
-				ft_execute(exec_table->lexems[i], cmd, envp);
+				ft_execute(table[i], cmd, envp);
 			valid = true;
 		}
 		if (pid > 0)
@@ -91,7 +91,10 @@ int	execute_commands(t_exec_table *exec_table, char **envp, t_env_node *envp_lis
 			waitpid(pid, NULL, 0);
 		}
 		if (!valid)
-			printf("zsh: command not found: %s\n", (char *)exec_table->lexems[i - 1]->value);
+		{
+			printf("\n");
+			return (printf("zsh: command not found: %s\n", (char *)table[i - 1]->value), INVALID_CMD);
+		}
 	}
-	return (2);
+	return (0);
 }

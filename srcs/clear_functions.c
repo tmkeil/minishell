@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/18 14:55:55 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 14:52:59 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,18 @@ void	ft_clr(char ***ptr)
 	*ptr = NULL;
 }
 
-void	clr_exec_table(t_exec_table *exec_table)
+void	clr_exec_table(t_lexems ***table)
 {
 	int			i;
 	t_lexems	*current;
 	t_lexems	*next;
 
+	if (!table || !*table || !**table)
+		return ;
 	i = 0;
-	while (exec_table[0].lexems[i])
+	while ((*table)[i])
 	{
-		current = exec_table[0].lexems[i];
+		current = (*table)[i++];
 		while (current)
 		{
 			next = current->next;
@@ -75,7 +77,6 @@ void	clr_exec_table(t_exec_table *exec_table)
 			free(current);
 			current = next;
 		}
-		i++;
 	}
 }
 

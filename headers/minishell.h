@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/18 18:54:19 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 15:20:54 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,19 @@
 # define MINISHELL_H
 // # define OPERATIONS "&& || & | < > << >>"
 # define OPERATIONS "| < > << >>"
+
+# include "libft.h"
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdio.h>
+# include <sys/wait.h>
+# include <termios.h>
+
+typedef enum s_errors
+{
+	INVALID_CMD = 127,
+}					t_errors;
 
 typedef enum s_types
 {
@@ -57,6 +70,13 @@ typedef struct s_lexems
 	struct s_lexems	*next;
 }					t_lexems;
 
+typedef struct s_minishell
+{
+	int				exit_status;
+	t_lexems		*tokens;
+	t_lexems		**table;
+}					t_minishell;
+
 typedef struct s_exec_table
 {
 	t_lexems		**lexems;
@@ -76,7 +96,7 @@ void				display_minishell_intro(void);
 void				ft_clr(char ***ptr);
 void				clr_lexes(t_lexems **lexems);
 void				clr_ast(t_ast **ast);
-void				clr_exec_table(t_exec_table *exec_table);
+void				clr_exec_table(t_lexems ***table);
 void				clean_args(char **args);
 void				free_env_list(t_env_node *head);
 
@@ -104,7 +124,7 @@ void				handle_invalid_operation(char *sub);
 void				parse_lexes(t_lexems **lexems);
 
 // exe
-int					execute_commands(t_exec_table *exec_table, char **envp, t_env_node *envp_list);
+int					execute_commands(t_lexems **table, char **envp, t_env_node *envp_list);
 
 // find exe path
 char				*ft_getpath(char *cmd, char **envp);
