@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 19:31:23 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 15:25:22 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,34 +51,34 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	return ;
 }
 
-int	create_exec_table(t_lexems **lexems, t_exec_table *exec_table)
+int	create_exec_table(t_minishell *minishell)
 {
 	size_t		i;
 	size_t		size;
 	t_lexems	*lex;
 
 	i = 0;
-	lex = *lexems;
+	lex = minishell->tokens;
 	size = ft_table_size(lex) + 2;
-	exec_table->lexems = malloc(sizeof(t_lexems *) * size);
-	if (!exec_table->lexems)
+	minishell->table = malloc(sizeof(t_lexems *) * size);
+	if (!minishell->table)
 		return (0);
 	while (i < size)
-		exec_table->lexems[i++] = NULL;
+		minishell->table[i++] = NULL;
 	i = 0;
 	while (lex)
 	{
 		if (lex->type != PIPE)
-			ft_append_node(&exec_table->lexems[i], lex);
+			ft_append_node(&minishell->table[i], lex);
 		else
 			i++;
 		lex = lex->next;
 	}
-	exec_table->lexems[i + 1] = NULL;
+	minishell->table[i + 1] = NULL;
 	return (1);
 }
 
-void	ft_test_exec_table(t_exec_table table)
+void	ft_test_exec_table(t_minishell minishell)
 {
 	int			i;
 	t_lexems	*current;
@@ -92,9 +92,9 @@ void	ft_test_exec_table(t_exec_table table)
 				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 
 	i = 0;
-	while (table.lexems[i])
+	while (minishell.table[i])
 	{
-		current = table.lexems[i];
+		current = minishell.table[i];
 		while (current)
 		{
 			printf("table.lexems[%i]->type = %s\n", i, types[current->type]);
@@ -105,29 +105,36 @@ void	ft_test_exec_table(t_exec_table table)
 	}
 }
 
+void	ft_set_exit_status(t_minishell *minishell)
+{
+	(void)minishell;
+	printf("setting\n");
+}
+
 void	get_user_input(char **envp, t_env_node *envp_list)
 {
-	t_lexems		*lexems;
-	t_exec_table	exec_table;
+	t_minishell		minishell;
 	char			*prompt;
 	char			*text_show;
 
-	lexems = NULL;
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
 	prompt = readline(text_show);
+	minishell.tokens = NULL;
 	if (!prompt)
 	{
 		exit(0);
 	}
 	add_history(prompt);
-	create_lexes(&lexems, prompt);
-	create_exec_table(&lexems, &exec_table);
-	ft_test_exec_table(exec_table);
+	create_lexes(&minishell.tokens, prompt);
+	create_exec_table(&minishell);
+	ft_test_exec_table(minishell);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
-	execute_commands(&exec_table, envp, envp_list);
-	clr_exec_table(&exec_table);
-	clr_lexes(&lexems);
+	execute_commands(minishell.table, envp, envp_list);
+	if (minishell.exit_status != 0)
+		ft_set_exit_status(&minishell);
+	clr_exec_table(&minishell.table);
+	clr_lexes(&minishell.tokens);
 	free(text_show);
 	free(prompt);
 }

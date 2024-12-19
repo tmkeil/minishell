@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 15:37:37 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 15:13:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	append_operation(t_lexems **lexems, char *sub)
 		append_lexem(lexems, INVALID, sub);
 }
 
-int	create_lexes(t_lexems **lexems, char *prompt)
+int	create_lexes(t_lexems **tokens, char *prompt)
 {
 	char	*ptr;
 	char	*sub;
@@ -112,9 +112,9 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 	while (*prompt)
 	{
 		handle_seperator(&prompt);
-		if (!handle_operator(lexems, &prompt))
+		if (!handle_operator(tokens, &prompt))
 			return (0);
-		if (!handle_identifier(lexems, &prompt))
+		if (!handle_identifier(tokens, &prompt))
 			return (0);
 		ptr = prompt;
 		while (*prompt && !is_sep(*prompt) && !is_op(*prompt)
@@ -123,7 +123,7 @@ int	create_lexes(t_lexems **lexems, char *prompt)
 		if (prompt > ptr)
 		{
 			sub = ft_substr(ptr, 0, prompt - ptr);
-			append_word(lexems, sub);
+			append_word(tokens, sub);
 			free(sub);
 		}
 	}
