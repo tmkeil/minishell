@@ -29,11 +29,47 @@ int is_valid_env_name(char *name) {
     return (1);
 }
 
-void update_env_var(const char *name, const char *value)
+char *construct_env_var(const char *name, const char *value)
 {
-	if (setenv(name, value ? value : "", 1) == -1) {
-        perror("setenv");
+	size_t name_len;
+    size_t value_len;
+	size_t total_len;
+    char *result;
+
+	name_len = ft_strlen(name);
+	if (value)
+        value_len = ft_strlen(value);
+    else
+        value_len = 0;
+	total_len = name_len + value_len + 2;
+	result = malloc(total_len);
+    if (!result)
+        exit(EXIT_FAILURE);
+    ft_strlcpy(result, name, total_len);
+    ft_strlcat(result, "=", total_len);
+    if (value) {
+        ft_strlcat(result, value, total_len);
     }
+    return result;
+}
+
+void update_env_var(const char *name, const char *value, char ***envp)
+{
+	int i;
+	size_t name_len;
+
+	name_len = ft_strlen(name);
+	i = 0;
+	while((*envp)[i])
+	{
+		if (ft_strncmp((*envp)[i], name, name_len) == 0 && (*envp)[i][name_len] == '=')
+		{
+			free((*envp)[i]);
+			(*envp)[i] = construct_env_var(name, value);
+			return ;
+		}
+		i++;
+	}
 }
 
 int	ft_handle_export(t_lexems *lexems, char **envp)
@@ -55,7 +91,7 @@ int	ft_handle_export(t_lexems *lexems, char **envp)
 		{
 			values_to_set_env = ft_split(current->value, '=');
 			if (values_to_set_env[0] && is_valid_env_name(values_to_set_env[0]))
-				update_env_var(values_to_set_env[0], values_to_set_env[1]);
+				update_env_var(values_to_set_env[0], values_to_set_env[1], &envp);
 			else
 				ft_printf("export: `%s': not a valid identifier\n", current->value);
 			clean_args(values_to_set_env);
