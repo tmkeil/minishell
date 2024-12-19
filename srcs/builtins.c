@@ -82,7 +82,6 @@ void update_env_var(const char *name, const char *value, char ***envp)
 	}
 	(*envp)[envp_old_size] = construct_env_var(name, value);
 	new_envp[envp_old_size + 1] = NULL;
-	free(*envp);
 	*envp = new_envp;
 }
 
