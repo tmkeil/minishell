@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 15:40:09 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 19:42:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	is_valid_env_name(char *name)
 	int	i;
 
 	i = 0;
-	if (!name || !(ft_isalpha(name[0]) || name[0] == '_'))
+	if (!name || !(ft_isalpha(name[0]) || ft_strchr("_?", name[0])))
 		return (0);
 	i = 1;
 	while (name[i])
 	{
-		if (!ft_isalnum(name[i]) && name[i] != '_')
+		if (!ft_isalnum(name[i]) && name[i] != '_' || name[i] == '?')
 		{
 			return (0);
 		}
