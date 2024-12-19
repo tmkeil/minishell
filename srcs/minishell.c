@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 15:17:51 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 15:25:22 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,6 @@ void	ft_test_exec_table(t_minishell minishell)
 		}
 		i++;
 	}
-}
-
-void	ft_set_exit_status(t_minishell *minishell)
-{
-	(void)minishell;
-	printf("setting\n");
 }
 
 void	ft_set_exit_status(t_minishell *minishell)
