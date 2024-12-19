@@ -147,6 +147,6 @@ int						ft_check_builtin(t_lexems *lexems, char **envp,
 							t_env_node *envp_list);
 int						ft_changedir(t_lexems *lexems);
 int						ft_handle_export(t_lexems *args, t_env_node *envp_list);
-int						ft_unset(t_lexems *lexems, char **envp);
+int						ft_unset(t_lexems *lexems, t_env_node *envp_list);
 
 #endif

@@ -129,9 +129,16 @@ int	ft_changedir(t_lexems *lexems)
 	return (0);
 }
 
-int	ft_unset(t_lexems *lexems, char **envp)
+int	ft_unset(t_lexems *lexems, t_env_node *envp_list)
 {
 	(void)lexems;
-	(void)envp;
+	(void)envp_list;
+
+	if (ft_strncmp(lexems->value, "unset", 6) == 0)
+	{
+		if (!lexems || !lexems->next)
+			ft_printf("unset: not enough arguments\n");
+		return (1);
+	}
 	return (0);
 }
