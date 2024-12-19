@@ -57,6 +57,8 @@ void update_env_var(const char *name, const char *value, char ***envp)
 {
 	int i;
 	size_t name_len;
+	char **new_envp;
+	int envp_old_size;
 
 	name_len = ft_strlen(name);
 	i = 0;
@@ -70,6 +72,18 @@ void update_env_var(const char *name, const char *value, char ***envp)
 		}
 		i++;
 	}
+	envp_old_size = i;
+	new_envp = malloc(envp_old_size + 2 * sizeof(char *));
+	i = 0;
+	while(i < envp_old_size)
+	{
+		new_envp[i] = (*envp)[i];
+		i++;
+	}
+	(*envp)[envp_old_size] = construct_env_var(name, value);
+	new_envp[envp_old_size + 1] = NULL;
+	free(*envp);
+	*envp = new_envp;
 }
 
 int	ft_handle_export(t_lexems *lexems, char **envp)
