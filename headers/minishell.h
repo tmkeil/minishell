@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/19 15:35:31 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/19 18:47:16 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,12 @@ int						execute_commands(t_lexems **table, char **envp,
 char					*ft_getpath(char *cmd, char **envp);
 
 // cmd arguments
-void					handle_lexem(char **args, int i, char *current,
-							t_types type);
-void					handle_env_var(char **args, int i, char **current);
-void					append_to_args(char **args, int i, char *value);
-char					*ft_until_next_env(char *ptr);
-char					*ft_find_end(char *ptr);
+void				handle_lexem(char **args, int i, char *current,
+						t_types type, t_env_node *envp_list);
+void				handle_env_var(char **args, int i, char **current, t_env_node *envp_list);
+void				append_to_args(char **args, int i, char *value);
+char				*ft_until_next_env(char *ptr);
+char				*ft_find_end(char *ptr);
 
 // builtins
 int						ft_check_builtin(t_lexems *lexems, char **envp,

@@ -41,12 +41,28 @@ void	append_to_args(char **args, int i, char *value)
 	free(tmp);
 }
 
-void	handle_env_var(char **args, int i, char **current)
+char *get_value_env_linked_list(char *env_var, t_env_node *envp_list)
+{
+	t_env_node *current;
+	size_t env_var_size;
+
+	env_var_size = ft_strlen(env_var);
+	current = envp_list;
+	while(current)
+	{
+		if (ft_strncmp(current->name, env_var, env_var_size+1) == 0)
+			return (current->value);
+		current = current->next;
+	}
+	return NULL;
+}
+
+void	handle_env_var(char **args, int i, char **current, t_env_node *envp_list)
 {
 	char	*ptr;
 	size_t	len;
 	char	*env_var;
-	char	*v;
+	char	*value;
 
 	ptr = *current + 1;
 	if (*ptr == '$' || (!ft_isalpha(*ptr) && *ptr != '_'))
@@ -57,14 +73,16 @@ void	handle_env_var(char **args, int i, char **current)
 	}
 	len = ft_find_end(ptr) - ptr;
 	env_var = ft_substr(ptr, 0, len);
-	v = getenv(env_var);
-	if (v)
-		append_to_args(args, i, v);
+	value = get_value_env_linked_list(env_var, envp_list);
+	if (value)
+        append_to_args(args, i, value);
+    else
+        append_to_args(args, i, "");
 	free(env_var);
 	*current += len + 1;
 }
 
-void	handle_lexem(char **args, int i, char *current, t_types type)
+void	handle_lexem(char **args, int i, char *current, t_types type, t_env_node *envp_list)
 {
 	size_t	len;
 	char	*sub;
@@ -87,6 +105,6 @@ void	handle_lexem(char **args, int i, char *current, t_types type)
 			current += len;
 		}
 		else
-			handle_env_var(args, i, &current);
+			handle_env_var(args, i, &current, envp_list);
 	}
 }

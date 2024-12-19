@@ -26,7 +26,7 @@ size_t	ft_size(t_lexems *lexes)
 	return (i);
 }
 
-void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
+void	ft_execute(t_lexems *lexems, char *cmd, char **envp, t_env_node *envp_list)
 {
 	char	**args;
 	int		i;
@@ -38,7 +38,7 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp)
 	while (lexems)
 	{
 		args[i] = NULL;
-		handle_lexem(args, i++, (char *)lexems->value, lexems->type);
+		handle_lexem(args, i++, (char *)lexems->value, lexems->type, envp_list);
 		lexems = lexems->next;
 	}
 	args[i] = NULL;
@@ -84,7 +84,7 @@ int	execute_commands(t_lexems **table, char **envp, t_env_node *envp_list)
 		{
 			pid = fork();
 			if (pid == 0)
-				ft_execute(table[i], cmd, envp);
+				ft_execute(table[i], cmd, envp, envp_list);
 			valid = true;
 		}
 		if (pid > 0)
