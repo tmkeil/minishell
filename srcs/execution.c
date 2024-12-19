@@ -52,11 +52,12 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, t_env_node *envp_list)
 
 int	ft_check_builtin(t_lexems *lexems, char **envp, t_env_node *envp_list)
 {
+	(void)envp;
 	if (ft_changedir(lexems))
 		return (1);
 	if (ft_handle_export(lexems, envp_list))
 		return (1);
-	if (ft_unset(lexems, envp))
+	if (ft_unset(lexems, envp_list))
 		return (1);
 	return (0);
 }
