@@ -9,14 +9,14 @@ SRCSDIR = srcs/
 LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
-SRCS = minishell.c display_intro.c lexer.c utils.c lexer_utils.c lexer_utils2.c recursive_descent_parser.c execution.c clear_functions.c getpath.c get_cmd_arguments.c builtins.c
-BONUS_SRCS = minishell.c display_intro.c lexer.c utils.c lexer_utils.c lexer_utils2.c recursive_descent_parser.c execution.c getpath.c get_cmd_arguments.c builtins.c
+SRCS = lexing/lexer.c lexing/lexer_utils.c lexing/lexer_utils2.c executing/execution.c executing/getpath.c executing/get_cmd_arguments.c clearing/clear_functions.c builtins/builtins.c display_intro.c minishell.c utils.c
+BONUS_SRCS = lexing/lexer.c lexing/lexer_utils.c lexing/lexer_utils2.c executing/execution.c executing/getpath.c executing/get_cmd_arguments.c clearing/clear_functions.c builtins/builtins.c display_intro.c minishell.c utils.c
 
 SRCS_PATHS = $(addprefix $(SRCSDIR), $(SRCS))
 BONUS_PATHS = $(addprefix $(SRCSDIR), $(BONUS_SRCS))
 
-OBJS = $(addprefix $(OBJSDIR), $(SRCS:.c=.o))
-OBJS_BONUS = $(addprefix $(OBJSDIR), $(BONUS_SRCS:.c=.o))
+OBJS = $(SRCS_PATHS:$(SRCSDIR)%.c=$(OBJSDIR)%.o)
+OBJS_BONUS = $(BONUS_PATHS:$(SRCSDIR)%.c=$(OBJSDIR)%.o)
 
 all: $(NAME)
 
@@ -27,7 +27,7 @@ $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(INCLUDES) $(LIBS) -o $(NAME)
 
 $(OBJSDIR)%.o: $(SRCSDIR)%.c
-	mkdir -p $(OBJSDIR)
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(LIBFT):
