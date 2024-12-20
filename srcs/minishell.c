@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 13:22:10 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 14:44:20 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,49 +39,66 @@ void	ft_test_exec_table(t_minishell minishell)
 	}
 }
 
-void	ft_set_exit_status(t_minishell *minishell)
+void	ft_set_exit_status(t_minishell **minishell)
 {
 	(void)minishell;
 	// printf("setting\n");
 }
 
-void	get_user_input(char **envp)
+void	get_user_input(char **envp, t_minishell *minishell)
 {
-	t_minishell	minishell;
-	char		*prompt;
-	char		*text_show;
+	char	*prompt;
+	char	*text_show;
 
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
 	prompt = readline(text_show);
-	minishell.tokens = NULL;
 	if (!prompt)
 		exit(0);
-	extract_envps(&minishell.envs, envp);
 	add_history(prompt);
-	create_lexes(&minishell.tokens, prompt);
+	create_lexes(&minishell->tokens, prompt);
 	create_exec_table(&minishell);
-	// ft_test_exec_table(minishell);
+	ft_test_exec_table(*minishell);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
-	execute_commands(minishell.table, envp, minishell.envs);
-	if (minishell.exit_status != 0)
+	execute_commands(minishell->table, envp, &minishell->envs);
+	if (minishell->exit_status != 0)
 		ft_set_exit_status(&minishell);
-	clr_exec_table(&minishell.table);
-	clr_lexes(&minishell.tokens);
-	free_env_list(&minishell.envs);
+	clr_exec_table(&minishell->table);
+	clr_lexes(&minishell->tokens);
+	free_env_list(&minishell->envs);
 	free(text_show);
 	free(prompt);
 }
 
 void	start_bash(char **envp)
 {
+	t_envs		*current_envp;
+	t_minishell	minishell;
+
+	minishell.tokens = NULL;
+	minishell.envs = NULL;
+	extract_envps(&minishell.envs, envp);
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
 	configure_terminal();
 	display_minishell_intro();
+	printf("test\n");
 	while (1)
 	{
-		get_user_input(envp);
+		get_user_input(envp, &minishell);
+		current_envp = (minishell.envs);
+		while (current_envp)
+		{
+			if (current_envp->value)
+			{
+				ft_printf("%s=%s\n", current_envp->name, current_envp->value);
+			}
+			else
+			{
+				ft_printf("%s\n", current_envp->name);
+			}
+			current_envp = current_envp->next;
+		}
 	}
 }
 

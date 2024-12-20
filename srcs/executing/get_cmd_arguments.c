@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 13:03:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:51:18 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	append_to_args(char **args, int i, char *value)
 char	*get_value_env_linked_list(char *env_var, t_envs *envp_list)
 {
 	t_envs	*current;
-	size_t		env_var_size;
+	size_t	env_var_size;
 
 	env_var_size = ft_strlen(env_var);
 	current = envp_list;
@@ -57,8 +57,7 @@ char	*get_value_env_linked_list(char *env_var, t_envs *envp_list)
 	return (NULL);
 }
 
-void	handle_env_var(char **args, int i, char **current,
-		t_envs *envp_list)
+void	handle_env_var(char **args, int i, char **current, t_envs *envp_list)
 {
 	char	*ptr;
 	size_t	len;

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 13:04:06 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:56:50 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,14 @@ void	clean_args(char **args)
 	args = NULL;
 }
 
-void	free_env_list(t_envs *head)
+void	free_env_list(t_envs **head)
 {
 	t_envs	*current;
 
-	while (head)
+	while (*head)
 	{
-		current = head;
-		head = head->next;
+		current = *head;
+		*head = (*head)->next;
 		free(current->name);
 		free(current->value);
 		free(current);

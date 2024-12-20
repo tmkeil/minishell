@@ -10,7 +10,7 @@ LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
 SRCS = lexing/lexer.c lexing/lexer_utils.c lexing/lexer_utils2.c executing/execution.c executing/getpath.c executing/get_cmd_arguments.c \
-		clearing/clear_functions.c builtins/builtins.c display_intro.c minishell.c utils.c utils2.c  \
+		clearing/clear_functions.c builtins/builtins.c minishell.c utils/utils.c utils/utils2.c  \
 			create_execution_table/create_exec_table.c
 
 BONUS_SRCS = lexing/lexer.c lexing/lexer_utils.c lexing/lexer_utils2.c executing/execution.c executing/getpath.c \

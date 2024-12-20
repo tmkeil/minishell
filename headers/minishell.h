@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 13:24:15 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 14:36:12 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct s_envs
 {
 	char				*name;
 	char				*value;
-	struct s_env_node	*next;
+	struct s_envs		*next;
 }						t_envs;
 
 typedef struct s_lexems
@@ -86,7 +86,7 @@ void					ft_clr(char ***ptr);
 void					clr_lexes(t_lexems **lexems);
 void					clr_exec_table(t_lexems ***table);
 void					clean_args(char **args);
-void					free_env_list(t_envs *head);
+void					free_env_list(t_envs **head);
 
 // utils
 void					configure_terminal(void);
@@ -94,7 +94,7 @@ void					handle_sigquit(int sig);
 void					handle_sigint(int sig);
 void					split_env_var(const char *env_var, char **name,
 							char **value);
-t_envs					*extract_envps(t_envs *envs, char **envp);
+void					extract_envps(t_envs **envs, char **envp);
 
 // lexing
 int						create_lexes(t_lexems **lexems, char *prompt);
@@ -116,7 +116,7 @@ void					handle_invalid_operation(char *sub);
 
 // exe
 int						execute_commands(t_lexems **table, char **envp,
-							t_envs *envp_list);
+							t_envs **envp_list);
 char					*ft_getpath(char *cmd, char **envp);
 
 // cmd arguments
@@ -130,13 +130,13 @@ char					*ft_find_end(char *ptr);
 
 // builtins
 int						ft_check_builtin(t_lexems *lexems, char **envp,
-							t_envs *envp_list);
+							t_envs **envp_list);
 int						ft_changedir(t_lexems *lexems);
-int						ft_handle_export(t_lexems *args, t_envs *envp_list);
-int						ft_unset(t_lexems *lexems, t_envs *envp_list);
+int						ft_handle_export(t_lexems *args, t_envs ***envp_list);
+int						ft_unset(t_lexems *lexems, t_envs **envp_list);
 
 // create exe table
-int						create_exec_table(t_minishell *minishell);
+int						create_exec_table(t_minishell **minishell);
 void					ft_append_node(t_lexems **table, t_lexems *lex);
 size_t					ft_table_size(t_lexems *lexems);
 

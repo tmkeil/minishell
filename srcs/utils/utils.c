@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 13:22:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 14:03:28 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,14 @@ void	split_env_var(const char *env_var, char **name, char **value)
 	}
 }
 
-t_envs	*extract_envps(t_envs *envs, char **envp)
+void	extract_envps(t_envs **envs, char **envp)
 {
-	t_envs	*head;
-	char		*name;
-	char		*value;
+	char	*name;
+	char	*value;
 	t_envs	*current;
-	int			i;
+	int		i;
 	t_envs	*new_node;
 
-	head = NULL;
 	current = NULL;
 	i = 0;
 	while (envp[i])
@@ -90,12 +88,11 @@ t_envs	*extract_envps(t_envs *envs, char **envp)
 		new_node->name = name;
 		new_node->value = value;
 		new_node->next = NULL;
-		if (!head)
-			head = new_node;
+		if (!*envs)
+			*envs = new_node;
 		else
 			current->next = new_node;
 		current = new_node;
 		i++;
 	}
-	return (head);
 }

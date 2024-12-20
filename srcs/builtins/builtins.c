@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 13:03:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 14:26:55 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,12 @@ int	is_valid_env_name(char *name)
 	return (1);
 }
 
-void	update_env_var(const char *name, const char *value,
-		t_envs **envp_list)
+void	update_env_var(const char *name, const char *value, t_envs ***envp_list)
 {
 	t_envs	*current;
 	t_envs	*new_node;
 
-	current = *envp_list;
+	current = **envp_list;
 	while (current)
 	{
 		if (ft_strncmp(current->name, name, ft_strlen(name) + 1) == 0)
@@ -59,20 +58,20 @@ void	update_env_var(const char *name, const char *value,
 	if (current)
 		current->next = new_node;
 	else
-		*envp_list = new_node;
+		**envp_list = new_node;
 }
 
-int	ft_handle_export(t_lexems *lexems, t_envs *envp_list)
+int	ft_handle_export(t_lexems *lexems, t_envs ***envp_list)
 {
 	t_lexems	*current;
 	char		**values_to_set_env;
-	t_envs	*current_envp;
+	t_envs		*current_envp;
 
 	if (ft_strncmp(lexems->value, "export", 7) == 0)
 	{
 		if (!lexems || !lexems->next || !ft_strchr(lexems->next->value, '='))
 		{
-			current_envp = envp_list;
+			current_envp = (**envp_list);
 			while (current_envp)
 			{
 				if (current_envp->value)
@@ -86,6 +85,7 @@ int	ft_handle_export(t_lexems *lexems, t_envs *envp_list)
 				}
 				current_envp = current_envp->next;
 			}
+			return (1);
 		}
 		current = lexems->next;
 		while (current && ft_strchr(current->value, '='))
@@ -93,13 +93,15 @@ int	ft_handle_export(t_lexems *lexems, t_envs *envp_list)
 			values_to_set_env = ft_split(current->value, '=');
 			if (values_to_set_env[0] && is_valid_env_name(values_to_set_env[0]))
 				update_env_var(values_to_set_env[0], values_to_set_env[1],
-					&envp_list);
+					envp_list);
 			else
 				ft_printf("export: `%s': not a valid identifier\n",
 					current->value);
 			clean_args(values_to_set_env);
+			
 			current = current->next;
 		}
+		current_envp = (**envp_list);
 		return (1);
 	}
 	return (0);
@@ -129,11 +131,11 @@ int	ft_changedir(t_lexems *lexems)
 	return (0);
 }
 
-int	ft_unset(t_lexems *lexems, t_envs *envp_list)
+int	ft_unset(t_lexems *lexems, t_envs **envp_list)
 {
-	t_envs *previous;
-	t_envs *current;
-	char *key_to_unset;
+	t_envs	*previous;
+	t_envs	*current;
+	char	*key_to_unset;
 
 	if (ft_strncmp(lexems->value, "unset", 6) == 0)
 	{
@@ -142,26 +144,25 @@ int	ft_unset(t_lexems *lexems, t_envs *envp_list)
 			ft_printf("unset: not enough arguments\n");
 			return (1);
 		}
-		
 		lexems = lexems->next;
 		while (lexems)
 		{
 			key_to_unset = lexems->value;
-
-			current = envp_list;
+			current = *envp_list;
 			previous = NULL;
 			while (current)
 			{
-				if (ft_strncmp(current->name, key_to_unset, ft_strlen(key_to_unset) + 1) == 0)
+				if (ft_strncmp(current->name, key_to_unset,
+						ft_strlen(key_to_unset) + 1) == 0)
 				{
 					if (previous)
 						previous->next = current->next;
 					else
-						envp_list = current->next;
+						*envp_list = current->next;
 					free(current->name);
 					free(current->value);
 					free(current);
-					break;
+					break ;
 				}
 				previous = current;
 				current = current->next;
