@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:04:25 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/16 16:57:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 20:47:49 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,17 @@ bool	matches(char *prompt)
 	return (true);
 }
 
-bool	is_ident(char c)
+bool	ft_is_ident(char c)
 {
 	return (c == '(' || c == ')' || c == '\'' || c == '\"');
 }
 
-bool	is_sep(char c)
+bool	ft_is_sep(char c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-int	is_op(char c)
+int	ft_is_op(char c)
 {
 	return (ft_strchr(OPERATIONS, c) != NULL);
 }

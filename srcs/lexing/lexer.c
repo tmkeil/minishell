@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 18:38:16 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 21:03:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_test_lexes(t_lexems *lex)
 	}
 }
 
-void	append_lexem(t_lexems **lexems, t_types type, void *value)
+void	ft_append_lexem(t_lexems **lexems, t_types type, void *value)
 {
 	t_lexems	*lex;
 	t_lexems	*last;
@@ -59,71 +59,69 @@ void	append_lexem(t_lexems **lexems, t_types type, void *value)
 	return ;
 }
 
-void	append_word(t_lexems **lexems, char *sub)
+void	ft_append_word(t_lexems **lexems, char *sub)
 {
 	if (ft_isalnum(*sub) || strchr("_/.-$~#+", *sub))
-		append_lexem(lexems, WORD, sub);
+		ft_append_lexem(lexems, WORD, sub);
 	else
-		append_lexem(lexems, INVALID, sub);
+		ft_append_lexem(lexems, INVALID, sub);
 }
 
-void	append_identifier(t_lexems **lexems, char *sub, char type)
+void	ft_append_identifier(t_lexems **lexems, char *sub, char type)
 {
 	if (type == '(')
-		append_lexem(lexems, O_BRACKET, sub);
+		ft_append_lexem(lexems, O_BRACKET, sub);
 	else if (type == '\'')
-		append_lexem(lexems, SINGLE_QUOTE, sub);
+		ft_append_lexem(lexems, SINGLE_QUOTE, sub);
 	else if (type == '\"')
-		append_lexem(lexems, DOUBLE_QUOTE, sub);
+		ft_append_lexem(lexems, DOUBLE_QUOTE, sub);
 	else
-		append_lexem(lexems, INVALID, sub);
+		ft_append_lexem(lexems, INVALID, sub);
 }
 
-void	append_operation(t_lexems **lexems, char *sub)
+void	ft_append_operation(t_lexems **lexems, char *sub)
 {
-	if (!strncmp(sub, "&&", 2))
-		append_lexem(lexems, AND, "&&");
-	else if (!strncmp(sub, "||", 2))
-		append_lexem(lexems, OR, "||");
-	else if (!strncmp(sub, ">>", 2))
-		append_lexem(lexems, APPEND, ">>");
-	else if (!strncmp(sub, "<<", 2))
-		append_lexem(lexems, HEREDOC, "<<");
+	if (!ft_strncmp(sub, "&&", 2))
+		ft_append_lexem(lexems, AND, "&&");
+	else if (!ft_strncmp(sub, "||", 2))
+		ft_append_lexem(lexems, OR, "||");
+	else if (!ft_strncmp(sub, ">>", 2))
+		ft_append_lexem(lexems, APPEND, ">>");
+	else if (!ft_strncmp(sub, "<<", 2))
+		ft_append_lexem(lexems, HEREDOC, "<<");
 	else if (*sub == '|')
-		append_lexem(lexems, PIPE, "|");
+		ft_append_lexem(lexems, PIPE, "|");
 	else if (*sub == '&')
-		append_lexem(lexems, AMPERSAND, "&");
+		ft_append_lexem(lexems, AMPERSAND, "&");
 	else if (*sub == '>')
-		append_lexem(lexems, OUT_REDIRECT, ">");
+		ft_append_lexem(lexems, OUT_REDIRECT, ">");
 	else if (*sub == '<')
-		append_lexem(lexems, IN_REDIRECT, "<");
+		ft_append_lexem(lexems, IN_REDIRECT, "<");
 	else
-		append_lexem(lexems, INVALID, sub);
+		ft_append_lexem(lexems, INVALID, sub);
 }
 
-int	create_lexes(t_lexems **tokens, char *prompt)
+int	ft_create_lexes(t_lexems **tokens, char *prompt)
 {
 	char	*ptr;
 	char	*sub;
 
 	sub = NULL;
-	// if (!matches(prompt))
-	// 	return (0);
 	while (*prompt)
 	{
-		handle_seperator(&prompt);
-		if (!handle_operator(tokens, &prompt))
+		ft_handle_seperator(&prompt);
+		if (!ft_handle_operator(tokens, &prompt))
 			return (0);
-		if (!handle_identifier(tokens, &prompt))
+		if (!ft_handle_identifier(tokens, &prompt))
 			return (0);
 		ptr = prompt;
-		while (*prompt && !is_sep(*prompt) && !is_op(*prompt)
-			&& !is_ident(*prompt))
+		while (*prompt && !ft_is_sep(*prompt) && !ft_is_op(*prompt)
+			&& !ft_is_ident(*prompt))
 			prompt++;
 		if (prompt > ptr)
 		{
 			sub = ft_substr(ptr, 0, prompt - ptr);
-			append_word(tokens, sub);
+			ft_append_word(tokens, sub);
 			free(sub);
 		}
 	}

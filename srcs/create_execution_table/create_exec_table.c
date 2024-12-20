@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_exec_table.c                                :+:      :+:    :+:   */
+/*   ft_create_exec_table.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -51,7 +51,7 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	return ;
 }
 
-int	create_exec_table(t_minishell **minishell)
+int	ft_create_exec_table(t_minishell **minishell)
 {
 	size_t		i;
 	size_t		size;

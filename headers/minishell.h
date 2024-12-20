@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 16:53:21 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 21:36:24 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 typedef enum s_errors
 {
 	INVALID_CMD = 127,
-}						t_errors;
+	INVALID_CD = 1,
+}					t_errors;
 
 typedef enum s_types
 {
@@ -47,7 +48,7 @@ typedef enum s_types
 	OUT_REDIRECT,
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE
-}						t_types;
+}					t_types;
 
 # include "libft.h"
 # include <readline/history.h>
@@ -59,84 +60,92 @@ typedef enum s_types
 
 typedef struct s_envs
 {
-	char				*name;
-	char				*value;
-	struct s_envs		*next;
-}						t_envs;
+	char			*name;
+	char			*value;
+	struct s_envs	*next;
+}					t_envs;
 
 typedef struct s_lexems
 {
-	t_types				type;
-	void				*value;
-	struct s_lexems		*next;
-}						t_lexems;
+	t_types			type;
+	void			*value;
+	struct s_lexems	*next;
+}					t_lexems;
 
 typedef struct s_minishell
 {
-	int					exit_status;
-	t_lexems			*tokens;
-	t_lexems			**table;
-	t_envs				*envs;
-}						t_minishell;
+	int				exit_status;
+	t_lexems		*tokens;
+	t_lexems		**table;
+	t_envs			*envs;
+}					t_minishell;
 
-void					display_minishell_intro(void);
+void				ft_display_intro(void);
 
 // cleaners
-void					ft_clr(char ***ptr);
-void					clr_lexes(t_lexems **lexems);
-void					clr_exec_table(t_lexems ***table);
-void					free_env_list(t_envs **head);
+void				ft_free_ptr(char ***ptr);
+void				ft_free_tokens(t_lexems **lexems);
+void				ft_free_table(t_lexems ***table);
+void				ft_free_envs(t_envs **head);
 
 // utils
-void					configure_terminal(void);
-void					handle_sigquit(int sig);
-void					handle_sigint(int sig);
-void					split_env_var(const char *env_var, char **name,
-							char **value);
-void					extract_envps(t_envs **envs, char **envp);
+void				ft_configure_terminal(void);
+void				ft_handle_sigquit(int sig);
+void				ft_handle_sigint(int sig);
+void				ft_split_env(const char *env_var, char **name,
+						char **value);
+void				ft_extract_envps(t_envs **envs, char **envp);
 
 // lexing
-int						create_lexes(t_lexems **lexems, char *prompt);
-int						is_op(char c);
-bool					is_sep(char c);
-bool					is_ident(char c);
-bool					matches(char *prompt);
-bool					check(char *prompt, char start, char end);
-int						handle_seperator(char **prompt);
-int						handle_operator(t_lexems **lexems, char **prompt);
-int						handle_identifier(t_lexems **lexems, char **prompt);
-void					append_word(t_lexems **lexems, char *sub);
-void					append_operation(t_lexems **lexems, char *sub);
-void					append_identifier(t_lexems **lexems, char *sub,
-							char type);
-void					append_lexem(t_lexems **lexems, t_types type,
-							void *value);
-void					handle_invalid_operation(char *sub);
+int					ft_create_lexes(t_lexems **lexems, char *prompt);
+int					ft_is_op(char c);
+bool				ft_is_sep(char c);
+bool				ft_is_ident(char c);
+int					ft_handle_seperator(char **prompt);
+int					ft_handle_operator(t_lexems **lexems, char **prompt);
+int					ft_handle_identifier(t_lexems **lexems, char **prompt);
+void				ft_append_word(t_lexems **lexems, char *sub);
+void				ft_append_operation(t_lexems **lexems, char *sub);
+void				ft_append_identifier(t_lexems **lexems, char *sub,
+						char type);
+void				ft_append_lexem(t_lexems **lexems, t_types type,
+						void *value);
+void				ft_handle_invalid_operation(char *sub);
 
 // exe
-int						execute_commands(t_minishell **minishell, char **envp);
-char					*ft_getpath(char *cmd, char **envp);
+int					ft_execute_commands(t_minishell **minishell, char **envp);
+char				*ft_getpath(char *cmd, char **envp);
+size_t				ft_size(t_lexems *lexes);
+void				ft_handle_invalid_command(t_minishell **minishell,
+						t_lexems *cmd);
+void				ft_wait_for_child(t_minishell **minishell, int pid,
+						char *cmd);
+char				*ft_find_end(char *ptr);
+char				*ft_until_next_env(char *ptr);
 
 // cmd arguments
-void					handle_lexem(char **args, int i, char *current,
-							t_types type, t_envs *envp_list);
-void					handle_env_var(char **args, int i, char **current,
-							t_envs *envp_list);
-void					append_to_args(char **args, int i, char *value);
-char					*ft_until_next_env(char *ptr);
-char					*ft_find_end(char *ptr);
+void				ft_handle_lexem(char **args, int i, char *current,
+						t_types type, t_envs *envp_list);
+void				ft_handle_env(char **args, int i, char **current,
+						t_envs *envs);
+void				ft_append_args(char **args, int i, char *value);
+char				*ft_until_next_env(char *ptr);
+char				*ft_find_end(char *ptr);
 
 // builtins
-int						ft_check_builtin(int index_lexem, char **envp,
-							t_minishell **minishell);
-int						ft_changedir(t_lexems *lexems);
-int						ft_handle_export(t_lexems *args, t_envs **envp_list);
-int						ft_unset(t_lexems *lexems, t_envs **envp_list);
-void					update_env_var(const char *name, const char *value, t_envs **envp_list);
+int					ft_check_builtin(int index_lexem, char **envp,
+						t_minishell **minishell);
+int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
+int					ft_export(t_lexems *lexems, t_envs **envp_list);
+int					ft_unset(t_lexems *lexems, t_envs **envp_list);
+void				ft_set_env(const char *name, const char *value,
+						t_envs **envp_list);
+void				ft_exit(t_lexems *lexems, int index_lexem,
+						t_minishell **minishell);
 
 // create exe table
-int						create_exec_table(t_minishell **minishell);
-void					ft_append_node(t_lexems **table, t_lexems *lex);
-size_t					ft_table_size(t_lexems *lexems);
+int					ft_create_exec_table(t_minishell **minishell);
+void				ft_append_node(t_lexems **table, t_lexems *lex);
+size_t				ft_table_size(t_lexems *lexems);
 
 #endif

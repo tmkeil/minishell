@@ -9,13 +9,18 @@ SRCSDIR = srcs/
 LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
-SRCS = lexing/lexer.c lexing/lexer_utils.c lexing/lexer_utils2.c executing/execution.c executing/getpath.c executing/get_cmd_arguments.c \
-		clearing/clear_functions.c builtins/builtins.c minishell.c utils/utils.c utils/utils2.c  \
-			create_execution_table/create_exec_table.c
+LEXING = lexer.c lexer_utils.c lexer_utils2.c
+TABLE = create_exec_table.c
+EXECUTING = execution.c get_cmd_arguments.c getpath.c execution_utils.c
+BUILTINS = cd.c env.c exit.c export.c pwd.c unset.c
+CLEARING = cleaners.c
+UTILS = utils.c utils2.c
 
-BONUS_SRCS = lexing/lexer.c lexing/lexer_utils.c lexing/lexer_utils2.c executing/execution.c executing/getpath.c \
-				executing/get_cmd_arguments.c clearing/clear_functions.c builtins/builtins.c minishell.c utils.c utils2.c \
-					create_execution_table/create_exec_table.c
+SRCS = minishell.c $(addprefix lexing/, $(LEXING)) $(addprefix create_execution_table/, $(TABLE)) $(addprefix executing/, $(EXECUTING)) \
+		$(addprefix builtins/, $(BUILTINS)) $(addprefix clearing/, $(CLEARING)) $(addprefix utils/, $(UTILS))
+
+BONUS_SRCS = minishell.c $(addprefix lexing/, $(LEXING)) $(addprefix create_execution_table/, $(TABLE)) $(addprefix executing/, $(EXECUTING)) \
+		$(addprefix builtins/, $(BUILTINS)) $(addprefix clearing/, $(CLEARING)) $(addprefix utils/, $(UTILS))
 
 SRCS_PATHS = $(addprefix $(SRCSDIR), $(SRCS))
 BONUS_PATHS = $(addprefix $(SRCSDIR), $(BONUS_SRCS))

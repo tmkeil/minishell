@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear_functions.c                                  :+:      :+:    :+:   */
+/*   cleaners.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 15:26:49 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 21:19:33 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	clr_lexes(t_lexems **lexems)
-{
-	t_lexems	*tmp;
-
-	if (!lexems || !(*lexems))
-		return ;
-	while (*lexems)
-	{
-		tmp = (*lexems)->next;
-		free((*lexems)->value);
-		free(*lexems);
-		*lexems = tmp;
-	}
-	*lexems = NULL;
-}
-
-void	ft_clr(char ***ptr)
+void	ft_free_ptr(char ***ptr)
 {
 	int	i;
 
@@ -44,7 +28,23 @@ void	ft_clr(char ***ptr)
 	*ptr = NULL;
 }
 
-void	clr_exec_table(t_lexems ***table)
+void	ft_free_tokens(t_lexems **lexems)
+{
+	t_lexems	*tmp;
+
+	if (!lexems || !(*lexems))
+		return ;
+	while (*lexems)
+	{
+		tmp = (*lexems)->next;
+		free((*lexems)->value);
+		free(*lexems);
+		*lexems = tmp;
+	}
+	*lexems = NULL;
+}
+
+void	ft_free_table(t_lexems ***table)
 {
 	int			i;
 	t_lexems	*current;
@@ -73,7 +73,7 @@ void	clr_exec_table(t_lexems ***table)
 	*table = NULL;
 }
 
-void	free_env_list(t_envs **head)
+void	ft_free_envs(t_envs **head)
 {
 	t_envs	*current;
 
@@ -85,4 +85,11 @@ void	free_env_list(t_envs **head)
 		free(current->value);
 		free(current);
 	}
+}
+
+void	ft_free_minishell(t_minishell **minishell)
+{
+	ft_free_tokens(&(*minishell)->tokens);
+	ft_free_table(&(*minishell)->table);
+	ft_free_envs(&(*minishell)->envs);
 }
