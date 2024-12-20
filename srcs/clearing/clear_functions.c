@@ -6,25 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/19 18:36:49 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:04:06 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	clr_ast(t_ast **ast)
-{
-	if (!ast || !(*ast))
-		return ;
-	if ((*ast)->left)
-		clr_ast(&(*ast)->left);
-	if ((*ast)->right)
-		clr_ast(&(*ast)->right);
-	if ((*ast)->lexem)
-		clr_lexes(&(*ast)->lexem);
-	free(*ast);
-	*ast = NULL;
-}
 
 void	clr_lexes(t_lexems **lexems)
 {
@@ -103,9 +89,9 @@ void	clean_args(char **args)
 	args = NULL;
 }
 
-void	free_env_list(t_env_node *head)
+void	free_env_list(t_envs *head)
 {
-	t_env_node	*current;
+	t_envs	*current;
 
 	while (head)
 	{

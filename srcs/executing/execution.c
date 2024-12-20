@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 18:36:26 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:03:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ size_t	ft_size(t_lexems *lexes)
 	return (i);
 }
 
-void	ft_execute(t_lexems *lexems, char *cmd, char **envp, t_env_node *envp_list)
+void	ft_execute(t_lexems *lexems, char *cmd, char **envp, t_envs *envp_list)
 {
 	char	**args;
 	int		i;
@@ -50,7 +50,7 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, t_env_node *envp_list)
 	clean_args(args);
 }
 
-int	ft_check_builtin(t_lexems *lexems, char **envp, t_env_node *envp_list)
+int	ft_check_builtin(t_lexems *lexems, char **envp, t_envs *envp_list)
 {
 	(void)envp;
 	if (ft_changedir(lexems))
@@ -62,7 +62,7 @@ int	ft_check_builtin(t_lexems *lexems, char **envp, t_env_node *envp_list)
 	return (0);
 }
 
-int	execute_commands(t_lexems **table, char **envp, t_env_node *envp_list)
+int	execute_commands(t_lexems **table, char **envp, t_envs *envp_list)
 {
 	int		i;
 	char	*cmd;

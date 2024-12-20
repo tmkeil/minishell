@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 19:44:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:03:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ int	is_valid_env_name(char *name)
 }
 
 void	update_env_var(const char *name, const char *value,
-		t_env_node **envp_list)
+		t_envs **envp_list)
 {
-	t_env_node	*current;
-	t_env_node	*new_node;
+	t_envs	*current;
+	t_envs	*new_node;
 
 	current = *envp_list;
 	while (current)
@@ -50,7 +50,7 @@ void	update_env_var(const char *name, const char *value,
 			break ;
 		current = current->next;
 	}
-	new_node = malloc(sizeof(t_env_node));
+	new_node = malloc(sizeof(t_envs));
 	if (!new_node)
 		exit(EXIT_FAILURE);
 	new_node->name = ft_strdup(name);
@@ -62,11 +62,11 @@ void	update_env_var(const char *name, const char *value,
 		*envp_list = new_node;
 }
 
-int	ft_handle_export(t_lexems *lexems, t_env_node *envp_list)
+int	ft_handle_export(t_lexems *lexems, t_envs *envp_list)
 {
 	t_lexems	*current;
 	char		**values_to_set_env;
-	t_env_node	*current_envp;
+	t_envs	*current_envp;
 
 	if (ft_strncmp(lexems->value, "export", 7) == 0)
 	{
@@ -129,10 +129,10 @@ int	ft_changedir(t_lexems *lexems)
 	return (0);
 }
 
-int	ft_unset(t_lexems *lexems, t_env_node *envp_list)
+int	ft_unset(t_lexems *lexems, t_envs *envp_list)
 {
-	t_env_node *previous;
-	t_env_node *current;
+	t_envs *previous;
+	t_envs *current;
 	char *key_to_unset;
 
 	if (ft_strncmp(lexems->value, "unset", 6) == 0)

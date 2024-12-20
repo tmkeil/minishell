@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/19 19:17:56 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:03:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void	append_to_args(char **args, int i, char *value)
 	free(tmp);
 }
 
-char	*get_value_env_linked_list(char *env_var, t_env_node *envp_list)
+char	*get_value_env_linked_list(char *env_var, t_envs *envp_list)
 {
-	t_env_node	*current;
+	t_envs	*current;
 	size_t		env_var_size;
 
 	env_var_size = ft_strlen(env_var);
@@ -58,7 +58,7 @@ char	*get_value_env_linked_list(char *env_var, t_env_node *envp_list)
 }
 
 void	handle_env_var(char **args, int i, char **current,
-		t_env_node *envp_list)
+		t_envs *envp_list)
 {
 	char	*ptr;
 	size_t	len;
@@ -84,7 +84,7 @@ void	handle_env_var(char **args, int i, char **current,
 }
 
 void	handle_lexem(char **args, int i, char *current, t_types type,
-		t_env_node *envp_list)
+		t_envs *envp_list)
 {
 	size_t	len;
 	char	*sub;

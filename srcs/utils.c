@@ -6,47 +6,96 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/18 14:52:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 13:22:17 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-long	ft_atol(char *s, int *index)
+void	handle_sigint(int sig)
 {
-	int		p;
-	long	val;
-	bool	valid;
-
-	p = 1;
-	val = 0;
-	valid = false;
-	while (s[*index] && (s[*index] == ' ' || (s[*index] >= 9
-				&& s[*index] <= 13)))
-		(*index)++;
-	if (s[*index] == '-' || s[*index] == '+')
-	{
-		if (s[*index] == '-')
-			p = -1;
-		(*index)++;
-	}
-	while (s[*index] >= '0' && s[*index] <= '9')
-	{
-		valid = true;
-		val = val * 10 + (s[*index] - '0');
-		(*index)++;
-	}
-	if (!valid || !(s[*index] >= 9 && s[*index] <= 13))
-		return (LONG_MIN);
-	return (val * p);
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-int check_array_size(char **array)
+void	handle_sigquit(int sig)
 {
-	int i;
+	(void)sig;
+	rl_redisplay();
+}
 
+void	configure_terminal(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+	{
+		perror("tcgetattr");
+		exit(EXIT_FAILURE);
+	}
+	term.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+	{
+		perror("tcsetattr");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	split_env_var(const char *env_var, char **name, char **value)
+{
+	char	*equal_sign;
+	size_t	name_len;
+
+	equal_sign = ft_strchr(env_var, '=');
+	if (equal_sign)
+	{
+		name_len = equal_sign - env_var;
+		*name = malloc(name_len + 1);
+		if (!*name)
+			exit(EXIT_FAILURE);
+		ft_memcpy(*name, env_var, name_len);
+		(*name)[name_len] = '\0';
+		*value = ft_strdup(equal_sign + 1);
+	}
+	else
+	{
+		*name = ft_strdup(env_var);
+		*value = NULL;
+	}
+}
+
+t_envs	*extract_envps(t_envs *envs, char **envp)
+{
+	t_envs	*head;
+	char		*name;
+	char		*value;
+	t_envs	*current;
+	int			i;
+	t_envs	*new_node;
+
+	head = NULL;
+	current = NULL;
 	i = 0;
-	while(array[i])
+	while (envp[i])
+	{
+		name = NULL;
+		value = NULL;
+		split_env_var(envp[i], &name, &value);
+		new_node = malloc(sizeof(t_envs));
+		if (!new_node)
+			exit(EXIT_FAILURE);
+		new_node->name = name;
+		new_node->value = value;
+		new_node->next = NULL;
+		if (!head)
+			head = new_node;
+		else
+			current->next = new_node;
+		current = new_node;
 		i++;
-	return (i);
+	}
+	return (head);
 }
