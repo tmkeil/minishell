@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 20:43:09 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/21 00:00:38 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ void	ft_append_args(char **args, int i, char *value)
 	free(tmp);
 }
 
-char	*ft_get_env(char *env_var, t_envs *envp_list)
+char	*ft_get_env(char *env_var, t_envs *envs)
 {
 	t_envs	*current;
 	size_t	env_var_size;
 
 	env_var_size = ft_strlen(env_var);
-	current = envp_list;
+	current = envs;
 	while (current)
 	{
 		if (ft_strncmp(current->name, env_var, env_var_size + 1) == 0)
@@ -63,7 +63,7 @@ void	ft_handle_env(char **args, int i, char **current, t_envs *envs)
 }
 
 void	ft_handle_lexem(char **args, int i, char *current, t_types type,
-		t_envs *envp_list)
+		t_envs *envs)
 {
 	size_t	len;
 	char	*sub;
@@ -86,6 +86,6 @@ void	ft_handle_lexem(char **args, int i, char *current, t_types type,
 			current += len;
 		}
 		else
-			ft_handle_env(args, i, &current, envp_list);
+			ft_handle_env(args, i, &current, envs);
 	}
 }

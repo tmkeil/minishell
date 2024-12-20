@@ -48,7 +48,7 @@ clean:
 	make -C $(LIBFTDIR) clean
 
 fclean: clean
-	rm -rf $(NAME) $(CHECKER)
+	rm -rf $(NAME)
 	make -C $(LIBFTDIR) fclean
 
 re: fclean all

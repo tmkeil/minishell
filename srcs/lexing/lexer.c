@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 21:03:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 22:09:02 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ void	ft_append_lexem(t_lexems **lexems, t_types type, void *value)
 	while (last->next)
 		last = last->next;
 	last->next = lex;
-	return ;
 }
 
 void	ft_append_word(t_lexems **lexems, char *sub)
@@ -121,6 +120,8 @@ int	ft_create_lexes(t_lexems **tokens, char *prompt)
 		if (prompt > ptr)
 		{
 			sub = ft_substr(ptr, 0, prompt - ptr);
+			if (!sub)
+				return (0);
 			ft_append_word(tokens, sub);
 			free(sub);
 		}

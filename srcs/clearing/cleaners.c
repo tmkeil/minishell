@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 21:19:33 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 22:21:07 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,10 @@ void	ft_free_envs(t_envs **head)
 		free(current->value);
 		free(current);
 	}
+	head = NULL;
 }
 
-void	ft_free_minishell(t_minishell **minishell)
+void	ft_free_shell(t_minishell **minishell)
 {
 	ft_free_tokens(&(*minishell)->tokens);
 	ft_free_table(&(*minishell)->table);

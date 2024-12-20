@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:57:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 20:48:54 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 22:10:13 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	ft_handle_identifier(t_lexems **lexems, char **prompt)
 		while (**prompt && **prompt != *type)
 			(*prompt)++;
 		sub = ft_substr(ptr, 0, *prompt - ptr);
+		if (!sub)
+			return (0);
 		ft_append_identifier(lexems, sub, *type);
 		free(sub);
 		(*prompt)++;

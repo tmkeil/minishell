@@ -6,62 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:04:25 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 20:47:49 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 22:09:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	check(char *prompt, char start, char end)
-{
-	int		count;
-	bool	quotes;
-
-	count = 0;
-	quotes = true;
-	while (*prompt)
-	{
-		if (start == end && *prompt == start)
-			quotes = !quotes;
-		else if (*prompt == start)
-			count++;
-		else if (*prompt == end)
-		{
-			if (count == 0)
-				return (false);
-			count--;
-		}
-		prompt++;
-	}
-	return (count == 0 && quotes);
-}
-
-bool	matches(char *prompt)
-{
-	int	i;
-	int	open;
-
-	i = 0;
-	open = 0;
-	while (prompt[i])
-	{
-		if (prompt[i] == '(')
-			open++;
-		if (prompt[i] == ')' && !open)
-		{
-			ft_putendl_fd("zsh: parse error near `)'", STDERR_FILENO);
-			return (false);
-		}
-		i++;
-	}
-	if (!check(prompt, '(', ')'))
-		return (false);
-	if (!check(prompt, '\'', '\''))
-		return (false);
-	if (!check(prompt, '\"', '\"'))
-		return (false);
-	return (true);
-}
 
 bool	ft_is_ident(char c)
 {

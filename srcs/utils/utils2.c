@@ -6,13 +6,13 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 20:56:51 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 23:28:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_split_env(const char *env_var, char **name, char **value)
+int	ft_split_env(const char *env_var, char **name, char **value)
 {
 	char	*equal_sign;
 
@@ -28,10 +28,11 @@ void	ft_split_env(const char *env_var, char **name, char **value)
 		*value = NULL;
 	}
 	if (!*name || (equal_sign && !*value))
-		exit(EXIT_FAILURE);
+		return (0);
+	return (1);
 }
 
-void	ft_extract_envps(t_envs **envs, char **envp)
+int	ft_extract_envps(t_envs **envs, char **envp)
 {
 	t_envs	*current;
 	t_envs	*new_node;
@@ -43,8 +44,9 @@ void	ft_extract_envps(t_envs **envs, char **envp)
 	{
 		new_node = malloc(sizeof(t_envs));
 		if (!new_node)
-			exit(EXIT_FAILURE);
-		ft_split_env(envp[i], &new_node->name, &new_node->value);
+			return (0);
+		if (!ft_split_env(envp[i], &new_node->name, &new_node->value))
+			return (free(new_node), 0);
 		new_node->next = NULL;
 		if (!*envs)
 			*envs = new_node;
@@ -53,5 +55,7 @@ void	ft_extract_envps(t_envs **envs, char **envp)
 		current = new_node;
 		i++;
 	}
-	ft_set_env("?", "0", envs);
+	if (!ft_set_env("?", "0", envs))
+		return (0);
+	return (1);
 }

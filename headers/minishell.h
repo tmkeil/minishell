@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 21:36:24 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/21 00:44:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,15 @@ void				ft_free_ptr(char ***ptr);
 void				ft_free_tokens(t_lexems **lexems);
 void				ft_free_table(t_lexems ***table);
 void				ft_free_envs(t_envs **head);
+void				ft_free_shell(t_minishell **minishell);
 
 // utils
 void				ft_configure_terminal(void);
 void				ft_handle_sigquit(int sig);
 void				ft_handle_sigint(int sig);
-void				ft_split_env(const char *env_var, char **name,
+int					ft_split_env(const char *env_var, char **name,
 						char **value);
-void				ft_extract_envps(t_envs **envs, char **envp);
+int					ft_extract_envps(t_envs **envs, char **envp);
 
 // lexing
 int					ft_create_lexes(t_lexems **lexems, char *prompt);
@@ -112,7 +113,7 @@ void				ft_append_lexem(t_lexems **lexems, t_types type,
 						void *value);
 void				ft_handle_invalid_operation(char *sub);
 
-// exe
+// executing
 int					ft_execute_commands(t_minishell **minishell, char **envp);
 char				*ft_getpath(char *cmd, char **envp);
 size_t				ft_size(t_lexems *lexes);
@@ -123,9 +124,9 @@ void				ft_wait_for_child(t_minishell **minishell, int pid,
 char				*ft_find_end(char *ptr);
 char				*ft_until_next_env(char *ptr);
 
-// cmd arguments
+// cmdarguments
 void				ft_handle_lexem(char **args, int i, char *current,
-						t_types type, t_envs *envp_list);
+						t_types type, t_envs *envs);
 void				ft_handle_env(char **args, int i, char **current,
 						t_envs *envs);
 void				ft_append_args(char **args, int i, char *value);
@@ -136,14 +137,14 @@ char				*ft_find_end(char *ptr);
 int					ft_check_builtin(int index_lexem, char **envp,
 						t_minishell **minishell);
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
-int					ft_export(t_lexems *lexems, t_envs **envp_list);
-int					ft_unset(t_lexems *lexems, t_envs **envp_list);
-void				ft_set_env(const char *name, const char *value,
-						t_envs **envp_list);
+int					ft_export(t_lexems *lexems, t_envs **envs);
+int					ft_unset(t_lexems *lexems, t_envs **envs);
+int					ft_set_env(const char *name, const char *value,
+						t_envs **envs);
 void				ft_exit(t_lexems *lexems, int index_lexem,
 						t_minishell **minishell);
 
-// create exe table
+// table
 int					ft_create_exec_table(t_minishell **minishell);
 void				ft_append_node(t_lexems **table, t_lexems *lex);
 size_t				ft_table_size(t_lexems *lexems);

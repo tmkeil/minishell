@@ -6,36 +6,41 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 21:17:43 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/21 00:41:52 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_set_exit_status(t_minishell **minishell)
+int	ft_set_exit_status(t_minishell **minishell)
 {
-	ft_set_env("?", ft_itoa((*minishell)->exit_status), &(*minishell)->envs);
+	return (ft_set_env("?", ft_itoa((*minishell)->exit_status), &(*minishell)->envs));
 }
 
-void	ft_get_user_input(char **envp, t_minishell *minishell)
+int	ft_get_user_input(char **envp, t_minishell *minishell)
 {
 	char	*prompt;
-	char	*text_show;
+	char	*sh;
 
-	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
-	prompt = readline(text_show);
+	sh = ft_strjoin(getenv("USER"), "@minishell $ ");
+	if (!sh)
+		return (0);
+	prompt = readline(sh);
 	if (!prompt)
-		exit(0);
+		return (free(sh), 0);
 	add_history(prompt);
-	ft_create_lexes(&minishell->tokens, prompt);
-	ft_create_exec_table(&minishell);
+	if (!ft_create_lexes(&minishell->tokens, prompt))
+		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
+	if (!ft_create_exec_table(&minishell))
+		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	// ft_test_exec_table(*minishell);
-	ft_execute_commands(&minishell, envp);
-	ft_set_exit_status(&minishell);
-	ft_free_table(&minishell->table);
+	if (!ft_execute_commands(&minishell, envp))
+		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
+	if (!ft_set_exit_status(&minishell))
+		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	ft_free_tokens(&minishell->tokens);
-	free(text_show);
-	free(prompt);
+	ft_free_table(&minishell->table);
+	return (free(sh), free(prompt), 1);
 }
 
 void	ft_start_bash(char **envp)
@@ -45,14 +50,24 @@ void	ft_start_bash(char **envp)
 	minishell.tokens = NULL;
 	minishell.table = NULL;
 	minishell.envs = NULL;
-	ft_extract_envps(&minishell.envs, envp);
+	if (!ft_extract_envps(&minishell.envs, envp))
+	{
+		ft_free_envs(&minishell.envs);
+		// system("leaks minishell");
+		exit(EXIT_FAILURE);
+	}
 	signal(SIGINT, ft_handle_sigint);
 	signal(SIGQUIT, ft_handle_sigquit);
 	ft_configure_terminal();
 	ft_display_intro();
 	while (1)
-		ft_get_user_input(envp, &minishell);
-	ft_free_envs(&minishell.envs);
+	{
+		if (!ft_get_user_input(envp, &minishell))
+		{
+			// system("leaks minishell");
+			exit(EXIT_FAILURE);
+		}
+	}
 }
 
 void	ft_finish_bash(void)
