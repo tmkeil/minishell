@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 15:14:58 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 15:16:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	get_user_input(char **envp, t_minishell *minishell)
 {
 	char	*prompt;
 	char	*text_show;
-	// t_envs		*current_envp;
 
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
 	prompt = readline(text_show);
