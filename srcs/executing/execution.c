@@ -49,23 +49,27 @@ void	ft_execute(t_lexems *lexems, char *cmd, char **envp, t_envs *envp_list)
 	}
 }
 
-int ft_first_word_exit_command(t_lexems *lexems)
+void ft_first_word_exit_command(t_lexems *lexems, int index_lexem, t_minishell **minishell)
 {
-	(void)lexems;
-	return (0);
+	if (index_lexem == 0 && ft_strncmp(lexems->value, "exit", 5) == 0)
+	{
+		if ((*minishell)->exit_status)
+			exit((*minishell)->exit_status);
+		else
+			exit(0);
+	}
 }
 
-int	ft_check_builtin(t_lexems *lexems, char **envp, t_minishell **minishell)
+int	ft_check_builtin(int index_lexem, char **envp, t_minishell **minishell)
 {
 	(void)envp;
-	if (ft_changedir(lexems))
+	if (ft_changedir((*minishell)->table[index_lexem]))
 		return (1);
-	if (ft_handle_export(lexems, &(*minishell)->envs))
+	if (ft_handle_export((*minishell)->table[index_lexem], &(*minishell)->envs))
 		return (1);
-	if (ft_unset(lexems, &(*minishell)->envs))
+	if (ft_unset((*minishell)->table[index_lexem], &(*minishell)->envs))
 		return (1);
-	if (ft_first_word_exit_command(lexems))
-		return (1);
+	ft_first_word_exit_command((*minishell)->table[index_lexem], index_lexem, minishell);
 	return (0);
 }
 
@@ -82,7 +86,7 @@ int	execute_commands(t_minishell **minishell, char **envp)
 	while ((*minishell)->table[i])
 	{
 		valid = false;
-		if (ft_check_builtin((*minishell)->table[i], envp, minishell))
+		if (ft_check_builtin(i, envp, minishell))
 		{
 			i++;
 			continue ;

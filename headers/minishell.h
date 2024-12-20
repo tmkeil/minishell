@@ -127,7 +127,7 @@ char					*ft_until_next_env(char *ptr);
 char					*ft_find_end(char *ptr);
 
 // builtins
-int						ft_check_builtin(t_lexems *lexems, char **envp,
+int						ft_check_builtin(int index_lexem, char **envp,
 							t_minishell **minishell);
 int						ft_changedir(t_lexems *lexems);
 int						ft_handle_export(t_lexems *args, t_envs **envp_list);
