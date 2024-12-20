@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 14:44:20 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 15:14:58 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	get_user_input(char **envp, t_minishell *minishell)
 {
 	char	*prompt;
 	char	*text_show;
+	// t_envs		*current_envp;
 
 	text_show = ft_strjoin(getenv("USER"), "@minishell $ ");
 	prompt = readline(text_show);
@@ -65,14 +66,12 @@ void	get_user_input(char **envp, t_minishell *minishell)
 		ft_set_exit_status(&minishell);
 	clr_exec_table(&minishell->table);
 	clr_lexes(&minishell->tokens);
-	free_env_list(&minishell->envs);
 	free(text_show);
 	free(prompt);
 }
 
 void	start_bash(char **envp)
 {
-	t_envs		*current_envp;
 	t_minishell	minishell;
 
 	minishell.tokens = NULL;
@@ -82,24 +81,11 @@ void	start_bash(char **envp)
 	signal(SIGQUIT, handle_sigquit);
 	configure_terminal();
 	display_minishell_intro();
-	printf("test\n");
 	while (1)
 	{
 		get_user_input(envp, &minishell);
-		current_envp = (minishell.envs);
-		while (current_envp)
-		{
-			if (current_envp->value)
-			{
-				ft_printf("%s=%s\n", current_envp->name, current_envp->value);
-			}
-			else
-			{
-				ft_printf("%s\n", current_envp->name);
-			}
-			current_envp = current_envp->next;
-		}
 	}
+	free_env_list(&minishell.envs);
 }
 
 void	finish_bash(void)

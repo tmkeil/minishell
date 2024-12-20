@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 14:26:55 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 15:04:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	is_valid_env_name(char *name)
 	int	i;
 
 	i = 0;
-	if (!name || !(ft_isalpha(name[0]) || ft_strchr("_?", name[0])))
+	if (!name || !(ft_isalpha(name[0]) || ft_strchr("_", name[0])))
 		return (0);
 	i = 1;
 	while (name[i])
 	{
-		if ((!ft_isalnum(name[i]) && name[i] != '_') || name[i] == '?')
+		if ((!ft_isalnum(name[i]) && name[i] != '_'))
 		{
 			return (0);
 		}
@@ -31,12 +31,12 @@ int	is_valid_env_name(char *name)
 	return (1);
 }
 
-void	update_env_var(const char *name, const char *value, t_envs ***envp_list)
+void	update_env_var(const char *name, const char *value, t_envs **envp_list)
 {
 	t_envs	*current;
 	t_envs	*new_node;
 
-	current = **envp_list;
+	current = *envp_list;
 	while (current)
 	{
 		if (ft_strncmp(current->name, name, ft_strlen(name) + 1) == 0)
@@ -58,10 +58,10 @@ void	update_env_var(const char *name, const char *value, t_envs ***envp_list)
 	if (current)
 		current->next = new_node;
 	else
-		**envp_list = new_node;
+		*envp_list = new_node;
 }
 
-int	ft_handle_export(t_lexems *lexems, t_envs ***envp_list)
+int	ft_handle_export(t_lexems *lexems, t_envs **envp_list)
 {
 	t_lexems	*current;
 	char		**values_to_set_env;
@@ -71,7 +71,7 @@ int	ft_handle_export(t_lexems *lexems, t_envs ***envp_list)
 	{
 		if (!lexems || !lexems->next || !ft_strchr(lexems->next->value, '='))
 		{
-			current_envp = (**envp_list);
+			current_envp = *envp_list;
 			while (current_envp)
 			{
 				if (current_envp->value)
@@ -101,7 +101,7 @@ int	ft_handle_export(t_lexems *lexems, t_envs ***envp_list)
 			
 			current = current->next;
 		}
-		current_envp = (**envp_list);
+		current_envp = *envp_list;
 		return (1);
 	}
 	return (0);

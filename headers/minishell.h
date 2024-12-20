@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 14:36:12 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 14:54:04 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ char					*ft_find_end(char *ptr);
 int						ft_check_builtin(t_lexems *lexems, char **envp,
 							t_envs **envp_list);
 int						ft_changedir(t_lexems *lexems);
-int						ft_handle_export(t_lexems *args, t_envs ***envp_list);
+int						ft_handle_export(t_lexems *args, t_envs **envp_list);
 int						ft_unset(t_lexems *lexems, t_envs **envp_list);
 
 // create exe table
