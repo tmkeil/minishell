@@ -12,7 +12,7 @@ LIBFT = libft/libft.a
 LEXING = lexer.c lexer_utils.c lexer_utils2.c
 TABLE = create_exec_table.c
 EXECUTING = execution.c get_cmd_arguments.c getpath.c execution_utils.c
-BUILTINS = cd.c env.c exit.c export.c pwd.c unset.c
+BUILTINS = cd.c env.c exit.c export.c pwd.c unset.c echo.c
 CLEARING = cleaners.c
 UTILS = utils.c utils2.c
 
