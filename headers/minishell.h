@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 14:54:04 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 15:57:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ void					display_minishell_intro(void);
 void					ft_clr(char ***ptr);
 void					clr_lexes(t_lexems **lexems);
 void					clr_exec_table(t_lexems ***table);
-void					clean_args(char **args);
 void					free_env_list(t_envs **head);
 
 // utils
@@ -115,8 +114,7 @@ void					append_lexem(t_lexems **lexems, t_types type,
 void					handle_invalid_operation(char *sub);
 
 // exe
-int						execute_commands(t_lexems **table, char **envp,
-							t_envs **envp_list);
+int						execute_commands(t_minishell **minishell, char **envp);
 char					*ft_getpath(char *cmd, char **envp);
 
 // cmd arguments
@@ -134,6 +132,7 @@ int						ft_check_builtin(t_lexems *lexems, char **envp,
 int						ft_changedir(t_lexems *lexems);
 int						ft_handle_export(t_lexems *args, t_envs **envp_list);
 int						ft_unset(t_lexems *lexems, t_envs **envp_list);
+void					update_env_var(const char *name, const char *value, t_envs **envp_list);
 
 // create exe table
 int						create_exec_table(t_minishell **minishell);

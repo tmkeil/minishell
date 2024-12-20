@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/20 13:56:50 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 15:26:49 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,22 +71,6 @@ void	clr_exec_table(t_lexems ***table)
 	}
 	free(*table);
 	*table = NULL;
-}
-
-void	clean_args(char **args)
-{
-	int	i;
-
-	i = 0;
-	if (!args)
-		return ;
-	while (args[i])
-	{
-		free(args[i]);
-		i++;
-	}
-	free(args);
-	args = NULL;
 }
 
 void	free_env_list(t_envs **head)

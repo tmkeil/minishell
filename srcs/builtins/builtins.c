@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 15:04:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 15:34:56 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ int	is_valid_env_name(char *name)
 	while (name[i])
 	{
 		if ((!ft_isalnum(name[i]) && name[i] != '_'))
-		{
 			return (0);
-		}
 		i++;
 	}
 	return (1);
@@ -64,44 +62,37 @@ void	update_env_var(const char *name, const char *value, t_envs **envp_list)
 int	ft_handle_export(t_lexems *lexems, t_envs **envp_list)
 {
 	t_lexems	*current;
-	char		**values_to_set_env;
-	t_envs		*current_envp;
+	char		**env_args;
+	t_envs		*envp;
 
 	if (ft_strncmp(lexems->value, "export", 7) == 0)
 	{
 		if (!lexems || !lexems->next || !ft_strchr(lexems->next->value, '='))
 		{
-			current_envp = *envp_list;
-			while (current_envp)
+			envp = *envp_list;
+			while (envp)
 			{
-				if (current_envp->value)
-				{
-					ft_printf("%s=%s\n", current_envp->name,
-						current_envp->value);
-				}
+				if (envp->value)
+					ft_printf("%s=%s\n", envp->name, envp->value);
 				else
-				{
-					ft_printf("%s\n", current_envp->name);
-				}
-				current_envp = current_envp->next;
+					ft_printf("%s\n", envp->name);
+				envp = envp->next;
 			}
 			return (1);
 		}
 		current = lexems->next;
 		while (current && ft_strchr(current->value, '='))
 		{
-			values_to_set_env = ft_split(current->value, '=');
-			if (values_to_set_env[0] && is_valid_env_name(values_to_set_env[0]))
-				update_env_var(values_to_set_env[0], values_to_set_env[1],
-					envp_list);
+			env_args = ft_split(current->value, '=');
+			if (env_args[0] && is_valid_env_name(env_args[0]))
+				update_env_var(env_args[0], env_args[1], envp_list);
 			else
 				ft_printf("export: `%s': not a valid identifier\n",
 					current->value);
-			clean_args(values_to_set_env);
-			
+			ft_clr(&env_args);
 			current = current->next;
 		}
-		current_envp = *envp_list;
+		envp = *envp_list;
 		return (1);
 	}
 	return (0);

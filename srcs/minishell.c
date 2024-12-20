@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 15:16:09 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/20 15:58:04 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	ft_test_exec_table(t_minishell minishell)
 
 void	ft_set_exit_status(t_minishell **minishell)
 {
-	(void)minishell;
-	// printf("setting\n");
+	update_env_var("?", ft_itoa((*minishell)->exit_status), &(*minishell)->envs);
 }
 
 void	get_user_input(char **envp, t_minishell *minishell)
@@ -60,9 +59,8 @@ void	get_user_input(char **envp, t_minishell *minishell)
 	ft_test_exec_table(*minishell);
 	// parse, execute are not there yet
 	// parse_lexes(&lexems);
-	execute_commands(minishell->table, envp, &minishell->envs);
-	if (minishell->exit_status != 0)
-		ft_set_exit_status(&minishell);
+	execute_commands(&minishell, envp);
+	ft_set_exit_status(&minishell);
 	clr_exec_table(&minishell->table);
 	clr_lexes(&minishell->tokens);
 	free(text_show);
