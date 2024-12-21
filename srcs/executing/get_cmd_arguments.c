@@ -57,7 +57,10 @@ void	ft_handle_env(char **args, int i, char **current, t_envs *envs)
 	if (value)
 		ft_append_args(args, i, value);
 	else
-		ft_append_args(args, i, "");
+		if (ft_isalnum(*ptr))
+			ft_append_args(args, i, ft_strdup(""));
+		else
+			ft_append_args(args, i, ft_strdup(*current));
 	free(env_var);
 	*current += len + 1;
 }
