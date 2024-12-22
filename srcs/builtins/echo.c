@@ -6,9 +6,15 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/21 00:54:43 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/22 15:54:31 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int ft_echo(t_minishell **minishell, t_lexems *lexem)
+{
+    (void)minishell;
+    (void)lexem;
+    return (0);
+}

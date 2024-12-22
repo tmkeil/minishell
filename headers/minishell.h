@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/21 00:44:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/22 16:01:40 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 // # define OPERATIONS "&& || & | < > << >>"
 # define OPERATIONS "| < > << >>"
+# define BAD_CD "cd: no such file or directory: "
 
 # include "libft.h"
 # include <readline/history.h>
@@ -117,12 +118,12 @@ void				ft_handle_invalid_operation(char *sub);
 int					ft_execute_commands(t_minishell **minishell, char **envp);
 char				*ft_getpath(char *cmd, char **envp);
 size_t				ft_size(t_lexems *lexes);
-void				ft_handle_invalid_command(t_minishell **minishell,
-						t_lexems *cmd);
 void				ft_wait_for_child(t_minishell **minishell, int pid,
 						char *cmd);
 char				*ft_find_end(char *ptr);
 char				*ft_until_next_env(char *ptr);
+char				*ft_get_env(char *env_var, t_envs *envs);
+int					ft_print_envs(t_envs *envs);
 
 // cmdarguments
 void				ft_handle_lexem(char **args, int i, char *current,
@@ -134,15 +135,17 @@ char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
 
 // builtins
-int					ft_check_builtin(int index_lexem, char **envp,
-						t_minishell **minishell);
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
 int					ft_export(t_lexems *lexems, t_envs **envs);
 int					ft_unset(t_lexems *lexems, t_envs **envs);
+int					ft_exit(t_minishell **minishell, t_lexems *lexems, int index);
+int 				ft_pwd(t_lexems *lexems);
+int 				ft_env(t_lexems *lexems, t_envs *envs);
+int 				ft_echo(t_minishell **minishell, t_lexems *lexem);
+
+// builtin utils
 int					ft_set_env(const char *name, const char *value,
 						t_envs **envs);
-void				ft_exit(t_lexems *lexems, int index_lexem,
-						t_minishell **minishell);
 
 // table
 int					ft_create_exec_table(t_minishell **minishell);
