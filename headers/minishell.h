@@ -97,6 +97,7 @@ void				ft_handle_sigint(int sig);
 int					ft_split_env(const char *env_var, char **name,
 						char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);
+char				*ft_strndup(const char *s, size_t n);
 
 // lexing
 int					ft_create_lexes(t_lexems **lexems, char *prompt);
