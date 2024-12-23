@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/23 17:36:38 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/23 18:47:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,35 @@
 
 void	ft_test_exec_table(t_minishell minishell)
 {
-	int			i;
 	t_lexems	*current;
-	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-
-	i = 0;
-	while (minishell.table[i])
+	// char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+	// 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+	// 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+	// 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+	// 			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+	// 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+	// 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+	// 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+	printf("Testing table:\n");
+	for (int i = 0; minishell.table[i]; i++)
 	{
+		printf("Table[%d]: %p\n", i, minishell.table[i]);
+		if (!minishell.table[i])
+			continue ;
 		current = minishell.table[i];
 		while (current)
 		{
-			printf("table.lexems[%i]->type = %s\n", i, types[current->type]);
-			printf("table.lexems[%i]->value = %s\n", i, (char *)current->value);
+			printf("Type: %i, Value: %s\n", current->type,
+				current->value ? current->value : "(null)");
 			current = current->next;
 		}
-		i++;
 	}
 }
 
 int	ft_set_exit_status(t_minishell **minishell)
 {
-	return (ft_set_env("?", ft_itoa((*minishell)->exit_status), &(*minishell)->envs));
+	return (ft_set_env("?", ft_itoa((*minishell)->exit_status),
+			&(*minishell)->envs));
 }
 
 int	ft_get_user_input(char **envp, t_minishell *minishell)
