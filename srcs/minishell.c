@@ -25,7 +25,10 @@ int	ft_get_user_input(char **envp, t_minishell *minishell)
 	sh = ft_strjoin(getenv("USER"), "@minishell $ ");
 	if (!sh)
 		return (0);
-	prompt = readline(sh);
+	if (isatty(STDIN_FILENO))
+		prompt = readline(sh);
+	else
+		prompt = get_next_line(STDIN_FILENO);
 	if (!prompt)
 		return (free(sh), 0);
 	add_history(prompt);
