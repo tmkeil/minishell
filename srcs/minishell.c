@@ -58,15 +58,22 @@ void	ft_start_bash(char **envp)
 	}
 	signal(SIGINT, ft_handle_sigint);
 	signal(SIGQUIT, ft_handle_sigquit);
-	ft_configure_terminal();
-	ft_display_intro();
-	while (1)
+	if (isatty(STDIN_FILENO))
+	{
+		ft_configure_terminal();
+		ft_display_intro();
+		while (1)
+		{
+			if (!ft_get_user_input(envp, &minishell))
+			{
+				// system("leaks minishell");
+				exit(EXIT_FAILURE);
+			}
+		}
+	}else
 	{
 		if (!ft_get_user_input(envp, &minishell))
-		{
-			// system("leaks minishell");
 			exit(EXIT_FAILURE);
-		}
 	}
 }
 
