@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/22 16:01:40 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/23 17:18:58 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,20 +99,22 @@ int					ft_split_env(const char *env_var, char **name,
 int					ft_extract_envps(t_envs **envs, char **envp);
 
 // lexing
-int					ft_create_lexes(t_lexems **lexems, char *prompt);
-int					ft_is_op(char c);
-bool				ft_is_sep(char c);
-bool				ft_is_ident(char c);
-int					ft_handle_seperator(char **prompt);
+int					ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs);
+int					ft_op(char c);
+bool				ft_sep(char c);
+bool				ft_ident(char c);
+int					ft_handle_seperator(t_lexems **lexems, char **prompt);
 int					ft_handle_operator(t_lexems **lexems, char **prompt);
 int					ft_handle_identifier(t_lexems **lexems, char **prompt);
 void				ft_append_word(t_lexems **lexems, char *sub);
-void				ft_append_operation(t_lexems **lexems, char *sub);
-void				ft_append_identifier(t_lexems **lexems, char *sub,
+void				ft_append_operation(t_lexems **lexems, char **sub);
+void				ft_append_identifier(t_lexems **lexems, char **sub,
 						char type);
 void				ft_append_lexem(t_lexems **lexems, t_types type,
 						void *value);
-void				ft_handle_invalid_operation(char *sub);
+void				ft_invalid(char *sub);
+int					ft_expand_escape_sequences_and_environment_variables(t_lexems **tokens,
+						t_envs *envs);
 
 // executing
 int					ft_execute_commands(t_minishell **minishell, char **envp);
@@ -138,10 +140,11 @@ char				*ft_find_end(char *ptr);
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
 int					ft_export(t_lexems *lexems, t_envs **envs);
 int					ft_unset(t_lexems *lexems, t_envs **envs);
-int					ft_exit(t_minishell **minishell, t_lexems *lexems, int index);
-int 				ft_pwd(t_lexems *lexems);
-int 				ft_env(t_lexems *lexems, t_envs *envs);
-int 				ft_echo(t_minishell **minishell, t_lexems *lexem);
+int					ft_exit(t_minishell **minishell, t_lexems *lexems,
+						int index);
+int					ft_pwd(t_lexems *lexems);
+int					ft_env(t_lexems *lexems, t_envs *envs);
+int					ft_echo(t_minishell **minishell, t_lexems *lexem);
 
 // builtin utils
 int					ft_set_env(const char *name, const char *value,

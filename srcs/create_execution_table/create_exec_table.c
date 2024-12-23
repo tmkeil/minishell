@@ -37,7 +37,9 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	if (!new_node)
 		return ;
 	new_node->type = lex->type;
+	printf("lex.value = %s\n", (char *)lex->value);
 	new_node->value = ft_strdup((char *)lex->value);
+	printf("new_node->value = %s\n", (char *)new_node->value);
 	new_node->next = NULL;
 	if (!*table)
 	{

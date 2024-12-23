@@ -9,7 +9,7 @@ SRCSDIR = srcs/
 LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
-LEXING = lexer.c lexer_utils.c lexer_utils2.c
+LEXING = lexer.c lexer_utils.c lexer_utils2.c expand_envs_and_escapes.c
 TABLE = create_exec_table.c
 EXECUTING = execution.c get_cmd_arguments.c getpath.c execution_utils.c
 BUILTINS = cd.c env.c exit.c export.c pwd.c unset.c echo.c
