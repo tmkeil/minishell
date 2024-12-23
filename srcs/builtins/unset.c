@@ -51,7 +51,7 @@ int	ft_unset(t_lexems *lexems, t_envs **envs)
 	if (!lexems->next)
 	{
 		ft_printf("unset: not enough arguments\n");
-		return (1);
+		return (0);
 	}
 	lexems = lexems->next;
 	while (lexems)
