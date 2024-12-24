@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/23 18:47:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/24 16:17:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,24 @@
 void	ft_test_exec_table(t_minishell minishell)
 {
 	t_lexems	*current;
-	// char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-	// 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-	// 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-	// 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-	// 			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-	// 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-	// 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-	// 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 	printf("Testing table:\n");
 	for (int i = 0; minishell.table[i]; i++)
 	{
-		printf("Table[%d]: %p\n", i, minishell.table[i]);
 		if (!minishell.table[i])
 			continue ;
 		current = minishell.table[i];
 		while (current)
 		{
-			printf("Type: %i, Value: %s\n", current->type,
-				current->value ? current->value : "(null)");
+			printf("Type: %s, Value: %s\n", types[current->type],
+				(char *)current->value ? (char *)current->value : (char *)"(null)");
 			current = current->next;
 		}
 	}
@@ -61,7 +60,7 @@ int	ft_get_user_input(char **envp, t_minishell *minishell)
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	if (!ft_create_exec_table(&minishell))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
-	ft_test_exec_table(*minishell);
+	// ft_test_exec_table(*minishell);
 	if (!ft_execute_commands(&minishell, envp))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	if (!ft_set_exit_status(&minishell))

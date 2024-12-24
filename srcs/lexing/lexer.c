@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/23 17:35:50 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/24 15:53:24 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ void	ft_append_word(t_lexems **lexems, char *sub)
 void	ft_append_identifier(t_lexems **lexems, char **sub, char type)
 {
 	if (type == '\'')
-		ft_append_lexem(lexems, SINGLE_QUOTE, sub);
+		ft_append_lexem(lexems, SINGLE_QUOTE, *sub);
 	else if (type == '\"')
-		ft_append_lexem(lexems, DOUBLE_QUOTE, sub);
+		ft_append_lexem(lexems, DOUBLE_QUOTE, *sub);
 	else
-		ft_append_lexem(lexems, INVALID, sub);
+		ft_append_lexem(lexems, INVALID, *sub);
 	free(*sub);
 }
 
@@ -124,11 +124,6 @@ int	ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs)
 			free(sub);
 		}
 	}
-	// (void)envs;
-	printf("test\n");
-	ft_test_lexes(*tokens);
 	ft_expand_escape_sequences_and_environment_variables(tokens, envs);
-	printf("test2\n");
-	ft_test_lexes(*tokens);
 	return (1);
 }

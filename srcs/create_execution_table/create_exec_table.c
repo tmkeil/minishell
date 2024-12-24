@@ -37,9 +37,9 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	if (!new_node)
 		return ;
 	new_node->type = lex->type;
-	printf("lex.value = %s\n", (char *)lex->value);
+	// printf("lex.value = %s\n", (char *)lex->value);
 	new_node->value = ft_strdup((char *)lex->value);
-	printf("new_node->value = %s\n", (char *)new_node->value);
+	// printf("new_node->value = %s\n", (char *)new_node->value);
 	new_node->next = NULL;
 	if (!*table)
 	{
@@ -63,14 +63,12 @@ void ft_debug_exec_table(t_minishell *minishell)
 	// 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
 	// 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
 	// 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-	printf("abcdefgh2\n");
     for (size_t i = 0; minishell->table[i]; i++)
     {
         t_lexems *current = minishell->table[i];
-        printf("Table[%zu]:\n", i);
         while (current)
         {
-            printf("  Type: %i, Value: %s\n", current->type, current->value ? current->value : "(null)");
+            printf("  Type: %i, Value: %s\n", current->type, (char *)current->value ? (char *)current->value : (char *)"(null)");
             current = current->next;
         }
     }
@@ -88,7 +86,6 @@ int	ft_create_exec_table(t_minishell **minishell)
 	(*minishell)->table = malloc(sizeof(t_lexems *) * size);
 	if (!(*minishell)->table)
 		return (0);
-	printf("size = %zu\n", size);
 	while (i < size)
 		(*minishell)->table[i++] = NULL;
 	i = 0;
@@ -101,6 +98,6 @@ int	ft_create_exec_table(t_minishell **minishell)
 		lex = lex->next;
 	}
 	(*minishell)->table[size] = NULL;
-	ft_debug_exec_table(*minishell);
+	// ft_debug_exec_table(*minishell);
 	return (1);
 }

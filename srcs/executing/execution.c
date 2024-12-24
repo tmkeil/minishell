@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/22 16:07:51 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/24 16:16:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ int	ft_execute(t_minishell **minishell, char *cmd, char **envp)
 	while (token)
 	{
 		args[i] = NULL;
-		ft_handle_lexem(args, i++, (char *)token->value, token->type, (*minishell)->envs);
+		if (ft_strncmp((char *)token->value, " ", 1) != 0)
+			ft_handle_lexem(args, i++, (char *)token->value, token->type, (*minishell)->envs);
 		token = token->next;
 	}
 	args[i] = NULL;
@@ -78,9 +79,13 @@ void	ft_exe(t_minishell **minishell, char **envp, int index)
 	int		pid;
 
 	if (ft_builtin(minishell, index))
+	{
+		// printf("test1\n");
 		(*minishell)->exit_status = EXIT_SUCCESS;
+	}
 	else
 	{
+		// printf("test2\n");
 		cmd = ft_getpath((*minishell)->table[index]->value, envp);
 		pid = fork();
 		if (pid == 0)
