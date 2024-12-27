@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/23 17:18:58 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 01:32:44 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@ typedef struct s_envs
 	struct s_envs	*next;
 }					t_envs;
 
+typedef struct	s_expander
+{
+    char			**expanded;
+    char			*current;
+    t_envs			*envs;
+}					t_expander;
+
 typedef struct s_lexems
 {
 	t_types			type;
@@ -120,8 +127,7 @@ int					ft_expand_escape_sequences_and_environment_variables(t_lexems **tokens,
 int					ft_execute_commands(t_minishell **minishell, char **envp);
 char				*ft_getpath(char *cmd, char **envp);
 size_t				ft_size(t_lexems *lexes);
-void				ft_wait_for_child(t_minishell **minishell, int pid,
-						char *cmd);
+void				ft_wait_for_child(t_minishell **minishell, int pid);
 char				*ft_find_end(char *ptr);
 char				*ft_until_next_env(char *ptr);
 char				*ft_get_env(char *env_var, t_envs *envs);
@@ -140,8 +146,7 @@ char				*ft_find_end(char *ptr);
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
 int					ft_export(t_lexems *lexems, t_envs **envs);
 int					ft_unset(t_lexems *lexems, t_envs **envs);
-int					ft_exit(t_minishell **minishell, t_lexems *lexems,
-						int index);
+int					ft_exit(t_minishell **minishell, t_lexems *lexems);
 int					ft_pwd(t_lexems *lexems);
 int					ft_env(t_lexems *lexems, t_envs *envs);
 int					ft_echo(t_minishell **minishell, t_lexems *lexem);

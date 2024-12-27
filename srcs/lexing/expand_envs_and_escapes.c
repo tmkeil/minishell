@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:52:26 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/23 17:29:55 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 02:02:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,67 +55,96 @@ int	ft_strappend_str(char **str, char *to_append)
 	return (1);
 }
 
-int	ft_expand_escape_sequences_and_environment_variables(t_lexems **tokens,
-		t_envs *envs)
+int	ft_expand_single_quotes(char **expanded, char *current, size_t *i)
 {
-	t_lexems	*lex;
-	char		*expanded_value;
-	char		*current;
-	size_t		i;
+	while (current[*i])
+	{
+		ft_strappend(expanded, current[*i]);
+		(*i)++;
+	}
+	return (1);
+}
+
+int	ft_expand_escapes(char **expanded, char *current, size_t *i)
+{
+	(*i)++;
+	if (current[*i] == '\\' || current[*i] == '\"'
+		|| current[*i] == '\'' || current[*i] == '$')
+		return (ft_strappend(expanded, current[(*i)++]));
+	else if (current[*i] == '\0')
+		return (ft_invalid("\\"), 0);
+	else
+		return (ft_strappend(expanded, current[(*i)++]));
+}
+
+int	ft_expand_environments(char **expanded, char *current, t_envs *envs, size_t *i)
+{
 	char		*env_start;
 	char		*env_end;
 	char		*env_var;
 	char		*env_value;
 
-	lex = *tokens;
-	while (lex)
+	env_start = &current[*i + 1];
+	env_end = ft_find_end(env_start);
+	if (env_end - env_start > 0)
 	{
-		expanded_value = ft_strdup("");
-		if (!expanded_value)
-			return (0);
-		i = 0;
-		current = (char *)lex->value;
-		while (current[i])
-		{
-			if (current[i] == '\\')
-			{
-				i++;
-				if (current[i] == '\\' || current[i] == '"'
-					|| current[i] == '\'' || current[i] == '$')
-				{
-					ft_strappend(&expanded_value, current[i]);
-					i++;
-				}
-				else if (current[i] == '\0')
-					return (ft_invalid("\\"), 0);
-				else
-					ft_strappend(&expanded_value, current[i++]);
-			}
-			else if (current[i] == '$')
-			{
-				env_start = &current[i + 1];
-				env_end = ft_find_end(env_start);
-				if (env_end - env_start > 0)
-				{
-					env_var = ft_substr(env_start, 0, env_end - env_start);
-					env_value = ft_get_env(env_var, envs);
-					if (env_value)
-						ft_strappend_str(&expanded_value, env_value);
-					free(env_var);
-					i += (env_end - env_start) + 1;
-				}
-				else
-				{
-					ft_strappend(&expanded_value, '$');
-					i++;
-				}
-			}
-			else
-				ft_strappend(&expanded_value, current[i++]);
-		}
-		free(lex->value);
-		lex->value = expanded_value;
-		lex = lex->next;
+		env_var = ft_substr(env_start, 0, env_end - env_start);
+		env_value = ft_get_env(env_var, envs);
+		if (env_value)
+			ft_strappend_str(expanded, env_value);
+		free(env_var);
+		*i += (env_end - env_start) + 1;
+		return (1);
 	}
-	return (1);
+	else
+		return (ft_strappend(expanded, '$'), (*i)++, 1);
+}
+
+int	ft_expander(t_expander *vars, t_types type, size_t *i)
+{
+    if (type == SINGLE_QUOTE)
+        return (ft_expand_single_quotes(vars->expanded, vars->current, i));
+    else if (vars->current[*i] && vars->current[*i] == '\\')
+        return (ft_expand_escapes(vars->expanded, vars->current, i));
+    else if (vars->current[*i] && vars->current[*i] == '$')
+        return (ft_expand_environments(vars->expanded, vars->current, vars->envs, i));
+    else
+        return (ft_strappend(vars->expanded, vars->current[(*i)++]));
+}
+
+int ft_expand_token(t_lexems *lex, t_envs *envs)
+{
+    size_t           i;
+    char            *expanded;
+    t_expander		vars;
+
+    i = 0;
+    expanded = ft_strdup("");
+    if (!expanded)
+        return (0);
+    vars.expanded = &expanded;
+    vars.current = (char *)lex->value;
+    vars.envs = envs;
+    while (vars.current[i])
+    {
+        if (!ft_expander(&vars, lex->type, &i))
+            return (free(expanded), 0);
+    }
+    free(lex->value);
+    lex->value = expanded;
+    return (1);
+}
+
+int ft_expand_escape_sequences_and_environment_variables(t_lexems **tokens, t_envs *envs)
+{
+    t_lexems *lex;
+
+    lex = *tokens;
+    while (lex)
+    {
+        if (!ft_expand_token(lex, envs))
+            return (0);
+        lex = lex->next;
+    }
+    return (1);
 }
