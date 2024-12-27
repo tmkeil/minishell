@@ -72,7 +72,6 @@ int	ft_unset(t_lexems *lexems, t_envs **envs)
 {
 	int returned_element;
 
-<<<<<<< HEAD
 	returned_element = 1;
 	if (!lexems || ft_strncmp(lexems->value, "unset", 6) != 0)
 		return (0);
@@ -82,11 +81,6 @@ int	ft_unset(t_lexems *lexems, t_envs **envs)
 		return (0);
 	}
 	lexems = lexems->next;
-=======
-	if (!lexems->next || !lexems->next->next)
-		return (1);
-	lexems = lexems->next->next;
->>>>>>> tobi
 	while (lexems)
 	{
 		ft_process_unset_key(lexems->value, envs, &returned_element);

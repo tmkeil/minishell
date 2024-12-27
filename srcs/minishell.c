@@ -102,12 +102,8 @@ void	ft_start_bash(char **envp)
 		}
 	}else
 	{
-<<<<<<< HEAD
 		if (!ft_get_user_input(envp, &minishell))
 			exit(EXIT_FAILURE);
-=======
-		ft_get_user_input(envp, &minishell);
->>>>>>> tobi
 	}
 }
 
