@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/22 16:06:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 14:36:22 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,35 +23,57 @@ int	ft_update_pwd(t_envs **envs)
 	return (1);
 }
 
-void	ft_print_fail(char *msg, void *file)
+void	ft_failed(t_minishell **minishell, char *msg, void *path)
 {
+	(*minishell)->exit_status = INVALID_CD;
 	ft_putstr_fd(msg, STDERR_FILENO);
-	ft_putendl_fd((char *)file, STDERR_FILENO);
+	ft_putendl_fd((char *)path, STDERR_FILENO);
+}
+
+void	ft_too_many(t_minishell **minishell, char *msg)
+{
+	(*minishell)->exit_status = INVALID_CD;
+	ft_putendl_fd(msg, STDERR_FILENO);
+}
+
+int	ft_cd_to(t_lexems *lexems, char **path)
+{
+	int		i;
+	char	*home;
+
+	i = 0;
+	home = getenv("HOME");
+	if (!lexems->next || !lexems->next->next)
+		return (*path = home, 1);
+	else if (lexems->next->next)
+	{
+		if (((char *)lexems->value)[0] == '~')
+		{
+			*path = ft_strjoin(*path, home);
+			if (!path)
+				return (free(home), 0);
+		}
+		lexems = lexems->next->next;
+		while (((char *)lexems->value)[++i])
+			ft_strappend(path, ((char *)lexems->value)[i]);
+	}
+	if (lexems->next)
+	{
+		if (lexems->next->next)
+			return (free(home), 0);
+	}
+	return (free(home), 1);
 }
 
 int	ft_changedir(t_minishell **minishell, t_lexems *lexems)
 {
-	char	*home;
+	char	*path;
 
-	home = NULL;
-	if (ft_strncmp((char *)lexems->value, "cd", 2) != 0)
-		return (0);
-	if (lexems->next)
-	{
-		if (chdir((char *)lexems->next->value) != 0)
-		{
-			(*minishell)->exit_status = INVALID_CD;
-			ft_print_fail(BAD_CD, lexems->next->value);
-		}
-	}
-	else
-	{
-		home = getenv("HOME");
-		if (chdir(home) != 0)
-		{
-			(*minishell)->exit_status = INVALID_CD;
-			ft_print_fail(BAD_CD, home);
-		}
-	}
+	path = NULL;
+	if (!ft_cd_to(lexems, &path))
+		return (ft_too_many(minishell, CD_TOO_MANY), free(path), 2);
+	if (chdir(path) != 0)
+		return (ft_failed(minishell, BAD_CD, path), free(path), 2);
+	free(path);
 	return (ft_update_pwd(&(*minishell)->envs));
 }

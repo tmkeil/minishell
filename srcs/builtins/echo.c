@@ -6,31 +6,35 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/24 16:16:24 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 14:42:04 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(t_minishell **minishell, t_lexems *lexem)
+int	ft_echo(t_lexems *lexem)
 {
-	// printf("vv\n");
-	// printf("lexem value is %s\nlexem len = %li\n", (char *)lexem->value, ft_strlen((char *)lexem->value));
-	if (!lexem || !lexem->next || ft_strncmp(lexem->value, "echo", 4) != 0)
-		return (0);
-	// printf("vv2\n");
+	bool	nl;
+
+	nl = true;
+	if (!lexem->next)
+		return (2);
 	lexem = lexem->next->next;
+	if (!ft_strncmp(lexem->value, "-n", 2))
+	{
+		if (lexem->next)
+			lexem = lexem->next->next;
+		else
+			return (1);
+		nl = false;
+	}
 	while (lexem)
 	{
 		if (lexem->type != INVALID)
-		{
-			// printf("lexem value is %s\nlexem len = %li\n", (char *)lexem->value, ft_strlen((char *)lexem->value));
-			write(STDOUT_FILENO, (char *)lexem->value,
-				ft_strlen((char *)lexem->value));
-		}
+			ft_putstr_fd((char *)lexem->value, STDOUT_FILENO);
 		lexem = lexem->next;
 	}
-	(void)minishell;
-	write(STDOUT_FILENO, "\n", 1);
+	if (nl)
+		write(STDOUT_FILENO, "\n", 1);
 	return (1);
 }

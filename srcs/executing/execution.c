@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/26 15:57:56 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 13:47:26 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,22 @@ int	ft_execute(t_minishell **minishell, char *cmd, char **envp, char *prompt)
 
 int	ft_builtin(t_minishell **minishell, t_lexems *lexes)
 {
-	if (ft_changedir(minishell, lexes))
-		return (1);
-	if (ft_echo(minishell, lexes))
-		return (1);
-	if (ft_env(lexes, (*minishell)->envs))
-		return (1);
-	if (ft_exit(minishell, lexes))
-		return (1);
-	if (ft_export(lexes, &(*minishell)->envs))
-		return (1);
-	if (ft_pwd(lexes))
-		return (1);
-	if (ft_unset(lexes, &(*minishell)->envs))
-		return (1);
+	if (!ft_strncmp(lexes->value, " ", 1))
+		lexes = lexes->next;
+	if (!ft_strncmp((char *)lexes->value, "cd", 2))
+		return (ft_changedir(minishell, lexes));
+	if (!ft_strncmp(lexes->value, "echo", 4))
+		return (ft_echo(lexes));
+	if (!ft_strncmp(lexes->value, "env", 3))
+		return (ft_env((*minishell)->envs));
+	if (!ft_strncmp(lexes->value, "exit", 4))
+		return (ft_exit(minishell));
+	if (!ft_strncmp(lexes->value, "export", 6))
+		return (ft_export(lexes, &(*minishell)->envs));
+	if (!ft_strncmp(lexes->value, "pwd", 3))
+		return (ft_pwd());
+	if (!ft_strncmp(lexes->value, "unset", 6))
+		return (ft_unset(lexes, &(*minishell)->envs));
 	return (0);
 }
 
@@ -75,10 +77,12 @@ void	ft_exe(t_minishell **minishell, t_lexems *lexes, char **envp)
 {
 	char		*cmd;
 	int			pid;
+	int			builtin;
 
-	if (ft_builtin(minishell, lexes))
+	builtin = ft_builtin(minishell, lexes);
+	if (builtin == 1)
 		(*minishell)->exit_status = EXIT_SUCCESS;
-	else
+	else if (builtin != 1)
 	{
 		cmd = ft_getpath(lexes->value, envp);
 		pid = fork();

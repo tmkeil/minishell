@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/21 00:14:31 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 14:31:21 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,21 +86,24 @@ int	ft_export(t_lexems *lexems, t_envs **envs)
 {
 	char	**env_args;
 
-	if (!lexems || ft_strncmp(lexems->value, "export", 6) != 0)
-		return (0);
-	if (!lexems->next || !ft_strchr(lexems->next->value, '='))
+	if (!lexems->next || !lexems->next->next)
 		return (ft_print_envs(*envs), 1);
-	lexems = lexems->next;
+	lexems = lexems->next->next;
 	while (lexems && ft_strchr(lexems->value, '='))
 	{
 		env_args = ft_split(lexems->value, '=');
 		if (ft_valid_env(env_args[0]))
 		{
 			if (!ft_set_env(env_args[0], env_args[1], envs))
-				return (ft_free_ptr(&env_args), 0);
+				return (ft_free_ptr(&env_args), 2);
 		}
 		else
-			ft_printf("export: `%s': not a valid identifier\n", lexems->value);
+		{
+			ft_putstr_fd("export: `", STDERR_FILENO);
+			ft_putstr_fd((char *)lexems->value, STDERR_FILENO);
+			ft_putendl_fd("\': not a valid identifier", STDERR_FILENO);
+			return (2);
+		}
 		ft_free_ptr(&env_args);
 		lexems = lexems->next;
 	}

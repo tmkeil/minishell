@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/21 00:42:40 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 14:32:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,9 @@ int	ft_unset(t_lexems *lexems, t_envs **envs)
 {
 	char	*key_to_unset;
 
-	if (!lexems || ft_strncmp(lexems->value, "unset", 6) != 0)
-		return (0);
-	if (!lexems->next)
-	{
-		ft_printf("unset: not enough arguments\n");
+	if (!lexems->next || !lexems->next->next)
 		return (1);
-	}
-	lexems = lexems->next;
+	lexems = lexems->next->next;
 	while (lexems)
 	{
 		key_to_unset = lexems->value;
