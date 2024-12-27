@@ -51,29 +51,77 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	return ;
 }
 
+void ft_debug_exec_table(t_minishell *minishell)
+{
+	// char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+	// 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+	// 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+	// 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+	// 			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+	// 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+	// 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+	// 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+    for (size_t i = 0; minishell->table[i]; i++)
+    {
+        t_lexems *current = minishell->table[i];
+        while (current)
+        {
+            printf("  Type: %i, Value: %s\n", current->type, (char *)current->value ? (char *)current->value : (char *)"(null)");
+            current = current->next;
+        }
+    }
+}
+
+int	ft_skip_prefix_spaces(t_lexems **lexes, bool *first)
+{
+	if (*first && *lexes)
+	{
+		*first = false;
+		if (ft_strncmp((*lexes)->value, " ", 1) == 0)
+			*lexes = (*lexes)->next;
+	}
+	return (*lexes != NULL);
+}
+
+int ft_init_table(t_minishell **minishell, size_t size)
+{
+    size_t i;
+
+    i = 0;
+    (*minishell)->table = malloc(sizeof(t_lexems *) * size);
+    if (!(*minishell)->table)
+        return (0);
+    while (i < size)
+        (*minishell)->table[i++] = NULL;
+    return (1);
+}
+
 int	ft_create_exec_table(t_minishell **minishell)
 {
+	bool		first;
 	size_t		i;
 	size_t		size;
 	t_lexems	*lex;
 
 	i = 0;
+	first = true;
 	lex = (*minishell)->tokens;
 	size = ft_table_size(lex) + 2;
-	(*minishell)->table = malloc(sizeof(t_lexems *) * size);
-	if (!(*minishell)->table)
+	if (!ft_init_table(minishell, size))
 		return (0);
-	while (i < size)
-		(*minishell)->table[i++] = NULL;
-	i = 0;
 	while (lex)
 	{
+		if (!ft_skip_prefix_spaces(&lex, &first))
+			return (0);
 		if (lex->type != PIPE)
 			ft_append_node(&(*minishell)->table[i], lex);
 		else
+		{
+			first = true;
 			i++;
+		}
 		lex = lex->next;
 	}
-	(*minishell)->table[size] = NULL;
+	// ft_debug_exec_table(*minishell);
 	return (1);
 }

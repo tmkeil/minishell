@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:29:09 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/22 13:46:07 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/24 16:05:04 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ size_t	ft_size(t_lexems *lexes)
 	i = 0;
 	while (lexes)
 	{
-		if (lexes->type != PIPE)
+		if (lexes->type != PIPE && ft_strncmp((char *)lexes->value, " ", 1) != 0)
 			i++;
 		lexes = lexes->next;
 	}

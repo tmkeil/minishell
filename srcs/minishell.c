@@ -6,15 +6,42 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/22 13:14:32 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/26 13:28:41 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	ft_test_exec_table(t_minishell minishell)
+{
+	t_lexems	*current;
+	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+	printf("Testing table:\n");
+	for (int i = 0; minishell.table[i]; i++)
+	{
+		if (!minishell.table[i])
+			continue ;
+		current = minishell.table[i];
+		while (current)
+		{
+			printf("Type: %s, Value: %s\n", types[current->type],
+				(char *)current->value ? (char *)current->value : (char *)"(null)");
+			current = current->next;
+		}
+	}
+}
+
 int	ft_set_exit_status(t_minishell **minishell)
 {
-	return (ft_set_env("?", ft_itoa((*minishell)->exit_status), &(*minishell)->envs));
+	return (ft_set_env("?", ft_itoa((*minishell)->exit_status),
+			&(*minishell)->envs));
 }
 
 int	ft_get_user_input(char **envp, t_minishell *minishell)
@@ -32,7 +59,7 @@ int	ft_get_user_input(char **envp, t_minishell *minishell)
 	if (!prompt)
 		return (free(sh), 0);
 	add_history(prompt);
-	if (!ft_create_lexes(&minishell->tokens, prompt))
+	if (!ft_create_lexes(&minishell->tokens, prompt, minishell->envs))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	if (!ft_create_exec_table(&minishell))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
@@ -75,8 +102,12 @@ void	ft_start_bash(char **envp)
 		}
 	}else
 	{
+<<<<<<< HEAD
 		if (!ft_get_user_input(envp, &minishell))
 			exit(EXIT_FAILURE);
+=======
+		ft_get_user_input(envp, &minishell);
+>>>>>>> tobi
 	}
 }
 
@@ -94,30 +125,3 @@ int	main(int argc, char **argv, char **envp)
 	// system("leaks minishell");
 	return (0);
 }
-
-// void	ft_test_exec_table(t_minishell minishell)
-// {
-// 	int			i;
-// 	t_lexems	*current;
-// 	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-// 				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-// 				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-// 				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-// 				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-// 				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-// 				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-// 				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-
-// 	i = 0;
-// 	while (minishell.table[i])
-// 	{
-// 		current = minishell.table[i];
-// 		while (current)
-// 		{
-// 			printf("table.lexems[%i]->type = %s\n", i, types[current->type]);
-// 			printf("table.lexems[%i]->value = %s\n", i, (char *)current->value);
-// 			current = current->next;
-// 		}
-// 		i++;
-// 	}
-// }

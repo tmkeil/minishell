@@ -6,27 +6,26 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:04:25 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/22 15:45:24 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/23 16:21:08 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	ft_is_ident(char c)
+bool	ft_ident(char c)
 {
 	return (c == '(' || c == ')' || c == '\'' || c == '\"');
 }
 
-bool	ft_is_sep(char c)
+bool	ft_sep(char c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-int	ft_is_op(char c)
+int	ft_op(char c)
 {
 	return (ft_strchr(OPERATIONS, c) != NULL);
 }
-
 
 void	ft_putstrn_fd(char *s, int n, int fd)
 {
@@ -44,7 +43,7 @@ void	ft_putstrn_fd(char *s, int n, int fd)
 	}
 }
 
-void	ft_handle_invalid_operation(char *sub)
+void	ft_invalid(char *sub)
 {
 	int	a;
 	int	i;

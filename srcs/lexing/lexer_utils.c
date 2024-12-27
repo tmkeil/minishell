@@ -6,21 +6,40 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:57:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/22 15:45:20 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 12:34:42 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_handle_seperator(char **prompt)
+int	ft_sub_and_join(char **sub, char *ptr, char **prompt)
+{
+	char	*to_join;
+	char	*tmp;
+
+	if (!sub || !ptr || !prompt || !*prompt)
+		return (0);
+	to_join = ft_substr(ptr, 0, *prompt - ptr);
+	if (!to_join)
+		return (0);
+	tmp = *sub;
+	*sub = ft_strjoin(*sub, to_join);
+	free(tmp);
+	free(to_join);
+	if (!*sub)
+		return (0);
+	return (1);
+}
+
+int	ft_handle_seperator(t_lexems **lexems, char **prompt)
 {
 	if (!*prompt)
 		return (1);
-	if (ft_is_sep(**prompt))
+	if (ft_sep(**prompt))
 	{
-		while (ft_is_sep(**prompt))
+		while (ft_sep(**prompt))
 			(*prompt)++;
-		return (1);
+		return (ft_append_word(lexems, " "), 1);
 	}
 	return (0);
 }
@@ -31,21 +50,22 @@ int	ft_handle_identifier(t_lexems **lexems, char **prompt)
 	char	*sub;
 	char	*type;
 
-	if (!*prompt)
-		return (1);
-	if (ft_is_ident(**prompt))
+	if (!prompt || !*prompt || !lexems)
+		return (0);
+	while (**prompt == '\'' || **prompt == '\"')
 	{
-		type = *prompt;
-		ptr = ++(*prompt);
-		if (**prompt && **prompt == *type && *prompt - type <= 1)
-			ft_append_identifier(lexems, "", *type);
-		while (**prompt && **prompt != *type)
-			(*prompt)++;
-		sub = ft_substr(ptr, 0, *prompt - ptr);
+		sub = ft_strdup("");
 		if (!sub)
 			return (0);
-		ft_append_identifier(lexems, sub, *type);
-		free(sub);
+		type = *prompt;
+		ptr = ++(*prompt);
+		while (**prompt && **prompt != *type)
+			(*prompt)++;
+		if (**prompt != *type)
+			return (ft_invalid(type), free(sub), 0);
+		if (!ft_sub_and_join(&sub, ptr, prompt))
+			return (free(sub), 0);
+		ft_append_identifier(lexems, &sub, *type);
 		(*prompt)++;
 	}
 	return (1);
@@ -58,18 +78,17 @@ int	ft_handle_operator(t_lexems **lexems, char **prompt)
 
 	if (!*prompt)
 		return (1);
-	if (ft_is_op(**prompt))
+	if (ft_op(**prompt))
 	{
 		ptr = *prompt;
-		while (**prompt && ft_is_op(**prompt))
+		while (**prompt && ft_op(**prompt))
 			(*prompt)++;
 		sub = ft_substr(ptr, 0, *prompt - ptr);
 		if (!sub)
 			return (0);
 		if (!ft_strnstr(OPERATIONS, sub, ft_strlen(OPERATIONS)))
-			return (ft_handle_invalid_operation(sub), free(sub), 0);
-		ft_append_operation(lexems, sub);
-		free(sub);
+			return (ft_invalid(sub), free(sub), 0);
+		ft_append_operation(lexems, &sub);
 	}
 	return (1);
 }
