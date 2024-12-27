@@ -53,20 +53,20 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 
 void ft_debug_exec_table(t_minishell *minishell)
 {
-	// char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-	// 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-	// 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-	// 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-	// 			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-	// 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-	// 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-	// 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
     for (size_t i = 0; minishell->table[i]; i++)
     {
         t_lexems *current = minishell->table[i];
         while (current)
         {
-            printf("  Type: %i, Value: %s\n", current->type, (char *)current->value ? (char *)current->value : (char *)"(null)");
+            printf("  Type: %s, Value: %s\n", types[current->type], (char *)current->value ? (char *)current->value : (char *)"(null)");
             current = current->next;
         }
     }

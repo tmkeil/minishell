@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 13:47:26 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 20:31:18 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	ft_exe(t_minishell **minishell, t_lexems *lexes, char **envp)
 	builtin = ft_builtin(minishell, lexes);
 	if (builtin == 1)
 		(*minishell)->exit_status = EXIT_SUCCESS;
-	else if (builtin != 1)
+	else if (builtin == 0)
 	{
 		cmd = ft_getpath(lexes->value, envp);
 		pid = fork();

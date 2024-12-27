@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 14:36:22 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 20:32:59 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,25 @@ int	ft_cd_to(t_lexems *lexems, char **path)
 	i = 0;
 	home = getenv("HOME");
 	if (!lexems->next || !lexems->next->next)
-		return (*path = home, 1);
+		return (*path = ft_strdup(home), 1);
 	else if (lexems->next->next)
 	{
 		if (((char *)lexems->value)[0] == '~')
 		{
-			*path = ft_strjoin(*path, home);
-			if (!path)
-				return (free(home), 0);
+			*path = ft_strdup(home);
+			if (!path && ++i)
+				return (0);
 		}
 		lexems = lexems->next->next;
-		while (((char *)lexems->value)[++i])
-			ft_strappend(path, ((char *)lexems->value)[i]);
+		while (((char *)lexems->value)[i])
+			ft_strappend(path, ((char *)lexems->value)[i++]);
 	}
 	if (lexems->next)
 	{
 		if (lexems->next->next)
-			return (free(home), 0);
+			return (0);
 	}
-	return (free(home), 1);
+	return (1);
 }
 
 int	ft_changedir(t_minishell **minishell, t_lexems *lexems)

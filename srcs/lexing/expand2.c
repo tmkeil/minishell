@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:36:14 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 16:58:46 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/27 20:28:50 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_strappend(char **str, char c)
 	size_t	len;
 	char	*new_str;
 
-	if (!str || !*str)
+	if (!str)
 		return (0);
 	len = ft_strlen(*str);
 	new_str = malloc(sizeof(char) * (len + 2));
