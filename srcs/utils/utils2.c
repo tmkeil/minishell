@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 16:18:23 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:41:26 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,23 @@ int	ft_extract_envps(t_envs **envs, char **envp)
 	return (1);
 }
 
-char *ft_strndup(const char *s, size_t n)
-{
-    char *dup;
-    size_t i;
+// char *ft_strndup(const char *s, size_t n)
+// {
+//     char *dup;
+//     size_t i;
 
-    dup = malloc(n + 1);
-    if (!dup)
-        return (NULL);
-    i = 0;
-    while (i < n && s[i])
-    {
-        dup[i] = s[i];
-        i++;
-    }
-    dup[i] = '\0';
-    return (dup);
-}
+//     dup = malloc(n + 1);
+//     if (!dup)
+//         return (NULL);
+//     i = 0;
+//     while (i < n && s[i])
+//     {
+//         dup[i] = s[i];
+//         i++;
+//     }
+//     dup[i] = '\0';
+//     return (dup);
+// }
 
 size_t	ft_prepare_envs(t_envs *envs, char ***envps)
 {
@@ -124,4 +124,11 @@ int	ft_update_envps(t_envs *envs, char ***envps)
 		i++;
 	}
 	return (1);
+}
+
+void	ft_put_error_str(char *msg, char *value, int *exit_status, int status)
+{
+	*exit_status = status;
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putendl_fd(value, STDERR_FILENO);
 }

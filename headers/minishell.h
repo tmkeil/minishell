@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 15:32:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:40:42 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define OPERATIONS "| < > << >>"
 # define BAD_CD "cd: no such file or directory: "
 # define CD_TOO_MANY "-bash: cd: too many arguments"
+# define ERR_EXPORT "export: not valid in this context: "
 # define BUILTINS "echo cd env exit export pwd unset"
 
 # include "libft.h"
@@ -107,7 +108,8 @@ void				ft_handle_sigint(int sig);
 int					ft_split_env(const char *env_var, char **name,
 						char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);
-char				*ft_strndup(const char *s, size_t n);
+void				ft_put_error_str(char *msg, char *value, int *exit_status, int status);
+// char				*ft_strndup(const char *s, size_t n);
 int					ft_update_envps(t_envs *envs, char ***envps);
 
 // lexing
@@ -156,7 +158,7 @@ char				*ft_find_end(char *ptr);
 
 // builtins
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
-int					ft_export(t_lexems *lexems, t_envs **envs, char ***envps);
+int					ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
 int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
 int					ft_exit(t_minishell **minishell);
 int					ft_pwd(void);

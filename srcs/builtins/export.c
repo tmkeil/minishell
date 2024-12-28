@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 16:18:51 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:39:39 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_print_envs(t_envs *envs)
 	return (1);
 }
 
-int	ft_export(t_lexems *lexems, t_envs **envs, char ***envps)
+int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps)
 {
 	char	**env_args;
 
@@ -98,12 +98,7 @@ int	ft_export(t_lexems *lexems, t_envs **envs, char ***envps)
 				return (ft_free_ptr(&env_args), 2);
 		}
 		else
-		{
-			ft_putstr_fd("export: `", STDERR_FILENO);
-			ft_putstr_fd((char *)lexems->value, STDERR_FILENO);
-			ft_putendl_fd("\': not a valid identifier", STDERR_FILENO);
-			return (2);
-		}
+			ft_put_error_str(ERR_EXPORT, (char *)lexems->value, &(*minishell)->exit_status, 1);
 		ft_free_ptr(&env_args);
 		lexems = lexems->next;
 	}
