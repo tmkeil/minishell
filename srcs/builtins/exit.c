@@ -40,9 +40,19 @@ long	ft_atol(char *s)
 	return (val * p);
 }
 
-int ft_exit(t_minishell **minishell)
+int ft_exit(t_minishell **minishell, t_lexems *lexems)
 {
-	ft_free_shell(minishell);
-	// system("leaks minishell");
-	exit((*minishell)->exit_status);
+	int value_exit;
+
+	if (!lexems->next || !lexems->next->next)
+	{
+		if (*minishell)
+			ft_free_shell(minishell);
+		exit((*minishell)->exit_status);
+	}
+	lexems = lexems->next->next;
+	value_exit = (int)ft_atol(lexems->value);
+	if (*minishell)
+		ft_free_shell(minishell);
+	exit(value_exit);
 }

@@ -160,7 +160,7 @@ char				*ft_find_end(char *ptr);
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
 int					ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
 int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
-int					ft_exit(t_minishell **minishell);
+int					ft_exit(t_minishell **minishell, t_lexems *lexems);
 int					ft_pwd(void);
 int					ft_env(t_envs *envs);
 int					ft_echo(t_lexems *lexem);
