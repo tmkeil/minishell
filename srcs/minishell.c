@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 11:10:31 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 11:24:59 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,18 +94,9 @@ int	ft_start_bash(char **envp)
 		ft_configure_terminal();
 		ft_display_intro();
 		while (1)
-		{
-			if (!ft_get_user_input(envp, &minishell))
-			{
-				// system("leaks minishell");
-				exit(EXIT_FAILURE);
-			}
-		}
+			ft_get_user_input(envp, &minishell);
 	}else
-	{
-		if (!ft_get_user_input(envp, &minishell))
-			exit(EXIT_FAILURE);
-	}
+		ft_get_user_input(envp, &minishell);
 	return (minishell.exit_status);
 }
 
