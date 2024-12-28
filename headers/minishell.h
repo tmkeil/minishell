@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 11:38:37 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 15:32:17 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_lexems
 typedef struct s_minishell
 {
 	int				exit_status;
+	char			**envps;
 	t_lexems		*tokens;
 	t_lexems		**table;
 	t_envs			*envs;
@@ -107,6 +108,7 @@ int					ft_split_env(const char *env_var, char **name,
 						char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);
 char				*ft_strndup(const char *s, size_t n);
+int					ft_update_envps(t_envs *envs, char ***envps);
 
 // lexing
 int					ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs);
@@ -134,7 +136,7 @@ int					ft_expand_escapes(char **expanded, char *current, size_t *i);
 int					ft_expand_environments(char **expanded, char *current, t_envs *envs, size_t *i);
 
 // executing
-int					ft_execute_commands(t_minishell **minishell, char **envp);
+int					ft_execute_commands(t_minishell **minishell);
 char				*ft_getpath(char *cmd, char **envp);
 size_t				ft_size(t_lexems *lexes);
 void				ft_wait_for_child(t_minishell **minishell, int pid);
@@ -154,8 +156,8 @@ char				*ft_find_end(char *ptr);
 
 // builtins
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
-int					ft_export(t_lexems *lexems, t_envs **envs);
-int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs);
+int					ft_export(t_lexems *lexems, t_envs **envs, char ***envps);
+int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
 int					ft_exit(t_minishell **minishell);
 int					ft_pwd(void);
 int					ft_env(t_envs *envs);

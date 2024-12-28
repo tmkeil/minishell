@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 14:31:21 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:18:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_print_envs(t_envs *envs)
 	return (1);
 }
 
-int	ft_export(t_lexems *lexems, t_envs **envs)
+int	ft_export(t_lexems *lexems, t_envs **envs, char ***envps)
 {
 	char	**env_args;
 
@@ -107,5 +107,5 @@ int	ft_export(t_lexems *lexems, t_envs **envs)
 		ft_free_ptr(&env_args);
 		lexems = lexems->next;
 	}
-	return (1);
+	return (ft_update_envps(*envs, envps));
 }
