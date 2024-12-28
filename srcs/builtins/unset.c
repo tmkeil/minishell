@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 14:32:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 09:19:56 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_remove_env(t_envs **envs, t_envs *current, t_envs *last)
 	free(current);
 }
 
-void	ft_unset_key(char *key_to_unset, t_envs **envs)
+int	ft_unset_key(char *key_to_unset, t_envs **envs)
 {
 	t_envs	*current;
 	t_envs	*last;
@@ -40,6 +40,7 @@ void	ft_unset_key(char *key_to_unset, t_envs **envs)
 		last = current;
 		current = current->next;
 	}
+	return (1);
 }
 
 int ft_is_valid_identifier(const char *key)
@@ -57,38 +58,26 @@ int ft_is_valid_identifier(const char *key)
     return (1);
 }
 
-void ft_process_unset_key(char *key, t_envs **envs, int *returned_elem)
+int ft_process_unset_key(char *key, t_envs **envs)
 {
-    if (*key != '\0' && !ft_is_valid_identifier(key))
-	{
-		*returned_elem = 0;
-        ft_printf("unset: `%s`: not a valid identifier\n", key);
-	}
+    if (!ft_is_valid_identifier(key))
+		return (0);
     else
-        ft_unset_key(key, envs);
+        return (ft_unset_key(key, envs));
 }
 
 int	ft_unset(t_lexems *lexems, t_envs **envs)
 {
-	int returned_element;
-
-	returned_element = 1;
-	if (!lexems || ft_strncmp(lexems->value, "unset", 6) != 0)
-		return (0);
 	if (!lexems->next)
-	{
-		ft_printf("unset: not enough arguments\n");
 		return (0);
-	}
-	lexems = lexems->next;
+	lexems = lexems->next->next;
 	while (lexems)
 	{
-		ft_process_unset_key(lexems->value, envs, &returned_element);
+		if (ft_strncmp(lexems->value, " ", 1) == 0)
+			lexems = lexems->next;
+		if (!ft_process_unset_key(lexems->value, envs))
+			break ;
 		lexems = lexems->next;
 	}
-	if (returned_element == 0)
-	{
-		exit(EXIT_FAILURE);
-	}
-	return (returned_element);
+	return (1);
 }
