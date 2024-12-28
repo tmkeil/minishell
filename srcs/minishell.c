@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 11:23:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 11:24:59 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	ft_start_bash(char **envp)
 			ft_get_user_input(envp, &minishell);
 	}
 	else
-		if (!ft_get_user_input(envp, &minishell))
+		ft_get_user_input(envp, &minishell);
 }
 
 void	ft_finish_bash(void)
