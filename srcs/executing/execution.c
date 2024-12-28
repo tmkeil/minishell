@@ -86,7 +86,7 @@ int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 	if (!ft_strncmp(cmd, "env", 3))
 		status = ft_env(*envs);
 	if (!ft_strncmp(cmd, "exit", 4))
-		status = ft_exit(minishell);
+		status = ft_exit(minishell, lexes);
 	if (!ft_strncmp(cmd, "export", 6))
 		status = ft_export(minishell, lexes, envs, &(*minishell)->envps);
 	if (!ft_strncmp(cmd, "pwd", 3))

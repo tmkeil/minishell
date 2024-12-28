@@ -19,6 +19,8 @@ long	ft_atol(char *s)
 	long	val;
 	bool	valid;
 
+	if (!s)
+		return (255);
 	i = 0;
 	p = 1;
 	val = 0;
@@ -34,15 +36,29 @@ long	ft_atol(char *s)
 	{
 		valid = true;
 		val = val * 10 + (s[i++] - '0');
+		if (val > 255)
+			val = 255;
 	}
 	if (!valid || s[i] != '\0')
-		return (LONG_MIN);
+		return (255);
 	return (val * p);
 }
 
-int ft_exit(t_minishell **minishell)
+int ft_exit(t_minishell **minishell, t_lexems *lexems)
 {
-	ft_free_shell(minishell);
-	// system("leaks minishell");
-	exit((*minishell)->exit_status);
+	int value_exit;
+
+	if (!lexems->next || !lexems->next->next)
+	{
+		if (*minishell)
+			ft_free_shell(minishell);
+		exit((*minishell)->exit_status);
+	}
+	lexems = lexems->next->next;
+	value_exit = (int)ft_atol(lexems->value);
+	if (value_exit < 0 || value_exit > 255)
+		value_exit = value_exit % 256;
+	if (*minishell)
+		ft_free_shell(minishell);
+	exit(value_exit);
 }

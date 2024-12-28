@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 18:26:53 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 18:36:31 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,9 @@ char				*ft_find_end(char *ptr);
 
 // builtins
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
-int					ft_export(t_minishell **minishell, t_lexems *lexems,
-						t_envs **envs, char ***envps);
-int					ft_unset(t_minishell **minishell, t_lexems *lexems,
-						t_envs **envs, char ***envps);
-int					ft_exit(t_minishell **minishell);
+int					ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
+int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
+int					ft_exit(t_minishell **minishell, t_lexems *lexems);
 int					ft_pwd(void);
 int					ft_env(t_envs *envs);
 int					ft_echo(t_lexems *lexem);
