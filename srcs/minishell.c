@@ -48,14 +48,27 @@ int	ft_get_user_input(char **envp, t_minishell *minishell)
 {
 	char	*prompt;
 	char	*sh;
+	int promp_length;
 
-	sh = ft_strjoin(getenv("USER"), "@minishell $ ");
-	if (!sh)
-		return (0);
+	promp_length = 0;
 	if (isatty(STDIN_FILENO))
+	{
+		sh = ft_strjoin(getenv("USER"), "@minishell $ ");
+		if (!sh)
+			return (0);
 		prompt = readline(sh);
+	}
 	else
+	{
 		prompt = get_next_line(STDIN_FILENO);
+		promp_length = ft_strlen(prompt);
+		promp_length--;
+		while(prompt[promp_length] && ft_isalnum(prompt[promp_length]))
+			promp_length--;
+		sh = ft_strndup(prompt ,promp_length);
+		free(prompt);
+		prompt = ft_strdup(sh);
+	}
 	if (!prompt)
 		return (free(sh), 0);
 	add_history(prompt);
