@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 15:19:38 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:56:27 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_get_user_input(t_minishell *minishell)
 		promp_length--;
 		while(prompt[promp_length] && ft_isalnum(prompt[promp_length]))
 			promp_length--;
-		sh = ft_strndup(prompt ,promp_length);
+		sh = ft_strndup(prompt, promp_length);
 		free(prompt);
 		prompt = ft_strdup(sh);
 	}

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 16:41:26 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:55:47 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,24 +59,6 @@ int	ft_extract_envps(t_envs **envs, char **envp)
 		return (0);
 	return (1);
 }
-
-// char *ft_strndup(const char *s, size_t n)
-// {
-//     char *dup;
-//     size_t i;
-
-//     dup = malloc(n + 1);
-//     if (!dup)
-//         return (NULL);
-//     i = 0;
-//     while (i < n && s[i])
-//     {
-//         dup[i] = s[i];
-//         i++;
-//     }
-//     dup[i] = '\0';
-//     return (dup);
-// }
 
 size_t	ft_prepare_envs(t_envs *envs, char ***envps)
 {

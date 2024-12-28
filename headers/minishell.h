@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 16:40:42 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:56:11 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int					ft_split_env(const char *env_var, char **name,
 						char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);
 void				ft_put_error_str(char *msg, char *value, int *exit_status, int status);
-// char				*ft_strndup(const char *s, size_t n);
+char				*ft_strndup(const char *s, size_t n);
 int					ft_update_envps(t_envs *envs, char ***envps);
 
 // lexing

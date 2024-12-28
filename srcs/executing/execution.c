@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 15:31:59 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:57:08 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 	if (!ft_strncmp(cmd, "exit", 4))
 		status = ft_exit(minishell);
 	if (!ft_strncmp(cmd, "export", 6))
-		status = ft_export(lexes, envs, &(*minishell)->envps);
+		status = ft_export(minishell, lexes, envs, &(*minishell)->envps);
 	if (!ft_strncmp(cmd, "pwd", 3))
 		status = ft_pwd();
 	if (!ft_strncmp(cmd, "unset", 5))
