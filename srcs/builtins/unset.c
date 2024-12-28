@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 10:56:37 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 11:05:41 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ft_process_unset_key(t_minishell **minishell, char *key, t_envs **envs, int
 			ft_putstr_fd("unset:", STDERR_FILENO);
 			ft_putstr_fd(key, STDERR_FILENO);
 			ft_putendl_fd(": invalid parameter name", STDERR_FILENO);
-			(*minishell)->exit_status = 1;
+			(*minishell)->exit_status = 127;
 			*status = 2;
 		}
 		else
