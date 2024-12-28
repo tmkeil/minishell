@@ -73,13 +73,14 @@ int	ft_get_user_input(char **envp, t_minishell *minishell)
 	return (free(sh), free(prompt), 1);
 }
 
-void	ft_start_bash(char **envp)
+int	ft_start_bash(char **envp)
 {
 	t_minishell	minishell;
 
 	minishell.tokens = NULL;
 	minishell.table = NULL;
 	minishell.envs = NULL;
+	minishell.exit_status = 0;
 	if (!ft_extract_envps(&minishell.envs, envp))
 	{
 		ft_free_envs(&minishell.envs);
@@ -94,9 +95,9 @@ void	ft_start_bash(char **envp)
 		ft_display_intro();
 		while (1)
 			ft_get_user_input(envp, &minishell);
-	}
-	else
+	}else
 		ft_get_user_input(envp, &minishell);
+	return (minishell.exit_status);
 }
 
 void	ft_finish_bash(void)
@@ -106,10 +107,12 @@ void	ft_finish_bash(void)
 
 int	main(int argc, char **argv, char **envp)
 {
+	int return_argument;
+
 	(void)argc;
 	(void)argv;
-	ft_start_bash(envp);
+	return_argument = ft_start_bash(envp);
 	ft_finish_bash();
 	// system("leaks minishell");
-	return (0);
+	return (return_argument);
 }
