@@ -58,6 +58,9 @@ int	ft_get_user_input(t_minishell *minishell)
 		if (!sh)
 			return (0);
 		prompt = readline(sh);
+		signal(SIGINT, ft_handle_sigint);
+		if (!prompt)
+			exit(minishell->exit_status);
 	}
 	else
 	{
@@ -102,12 +105,12 @@ int	ft_start_bash(char **envp)
 		ft_free_envs(&minishell.envs);
 		exit(EXIT_FAILURE);
 	}
-	signal(SIGINT, ft_handle_sigint);
-	signal(SIGQUIT, ft_handle_sigquit);
 	if (isatty(STDIN_FILENO))
 	{
 		ft_configure_terminal();
 		ft_display_intro();
+		signal(SIGINT, ft_handle_sigint);
+		signal(SIGQUIT, ft_handle_sigquit);
 		while (1)
 			ft_get_user_input(&minishell);
 	}
