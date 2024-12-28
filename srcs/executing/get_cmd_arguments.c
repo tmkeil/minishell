@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 18:27:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 21:33:35 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,24 @@ void	ft_append_args(char **args, char *value)
 	free(tmp);
 }
 
-void	ft_handle_lexem(char **args, char *current)
+int	ft_handle_lexem(char **args, t_lexems *lexem, char *cmd)
 {
-	size_t	len;
-	char	*sub;
+	int		i;
+	char	**check;
 
-	while (*current)
+	i = 0;
+	check = ft_split(cmd, '/');
+	if (!check)
+		return (0);
+	while (check[i])
+		i++;
+	if (ft_strncmp("echo", check[i - 1], 5))
+		return (ft_echo(lexem), ft_free_ptr(&check), 0);
+	while (lexem)
 	{
-		len = ft_until_next_env(current) - current;
-		sub = ft_substr(current, 0, len);
-		ft_append_args(args, sub);
-		free(sub);
-		current += len;
+		if (ft_strncmp((char *)lexem->value, " ", 1) != 0)
+			ft_append_args(args, (char *)lexem->value);
+		lexem = lexem->next;
 	}
+	return (1);
 }

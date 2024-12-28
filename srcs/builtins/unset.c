@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 15:31:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 19:34:33 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,5 @@ int	ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***e
 	}
 	if (!count)
 		return (ft_putendl_fd("unset: not enough arguments", STDERR_FILENO), 2);
-	ft_update_envps(*envs, envps);
-	return (status);
+	return (ft_update_envps(*envs, envps), status);
 }

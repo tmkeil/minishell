@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 18:27:02 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 21:32:39 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,10 @@ int	ft_execute(t_minishell **minishell, char *cmd, char **envp, char *prompt)
 	if (!args)
 		exit(EXIT_FAILURE);
 	i = 0;
-	while (token)
-	{
-		args[i] = NULL;
-		if (ft_strncmp((char *)token->value, " ", 1) != 0)
-			ft_handle_lexem(&args[i++], (char *)token->value);
-		token = token->next;
-	}
-	args[i] = NULL;
+	while (args[i])
+		args[i++] = NULL;
+	if (!ft_handle_lexem(args, token, cmd))
+		return (ft_free_ptr(&args), EXIT_SUCCESS);
 	if (execve(cmd, args, envp) == -1)
 	{
 		ft_putstr_fd(prompt, STDERR_FILENO);
@@ -79,19 +75,19 @@ int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 	cmd = ft_is_builtin(*minishell, lexes->value, (*minishell)->envps);
 	if (!cmd)
 		return (0);
-	if (!ft_strncmp(cmd, "cd", 2))
+	if (!ft_strncmp(cmd, "cd", 3))
 		status = ft_changedir(minishell, lexes);
-	if (!ft_strncmp(cmd, "echo", 4))
+	if (!ft_strncmp(cmd, "echo", 5))
 		status = ft_echo(lexes);
-	if (!ft_strncmp(cmd, "env", 3))
+	if (!ft_strncmp(cmd, "env", 4))
 		status = ft_env(*envs);
-	if (!ft_strncmp(cmd, "exit", 4))
+	if (!ft_strncmp(cmd, "exit", 5))
 		status = ft_exit(minishell, lexes);
-	if (!ft_strncmp(cmd, "export", 6))
+	if (!ft_strncmp(cmd, "export", 7))
 		status = ft_export(minishell, lexes, envs, &(*minishell)->envps);
-	if (!ft_strncmp(cmd, "pwd", 3))
+	if (!ft_strncmp(cmd, "pwd", 4))
 		status = ft_pwd();
-	if (!ft_strncmp(cmd, "unset", 5))
+	if (!ft_strncmp(cmd, "unset", 6))
 		status = ft_unset(minishell, lexes, envs, &(*minishell)->envps);
 	return (free(cmd), status);
 }

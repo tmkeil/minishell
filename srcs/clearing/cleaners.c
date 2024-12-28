@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 15:16:11 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 21:21:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,11 @@ void	ft_free_tokens(t_lexems **lexems)
 	while (*lexems)
 	{
 		tmp = (*lexems)->next;
-		free((*lexems)->value);
-		free(*lexems);
+		if ((*lexems) && (*lexems)->value)
+		{
+			free((*lexems)->value);
+			free(*lexems);
+		}
 		*lexems = tmp;
 	}
 	*lexems = NULL;

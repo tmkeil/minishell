@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 18:36:31 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 21:31:43 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ char				*ft_get_env(char *env_var, t_envs *envs);
 int					ft_print_envs(t_envs *envs);
 
 // cmdarguments
-void				ft_handle_lexem(char **args, char *current);
+int					ft_handle_lexem(char **args, t_lexems *lexem, char *cmd);
 void				ft_append_args(char **args, char *value);
 char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
