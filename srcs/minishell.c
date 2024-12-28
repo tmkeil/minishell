@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 13:08:52 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 15:19:38 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_test_exec_table(t_minishell minishell)
 				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
 				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
 				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+
 	printf("Testing table:\n");
 	for (int i = 0; minishell.table[i]; i++)
 	{
@@ -44,7 +45,7 @@ int	ft_set_exit_status(t_minishell **minishell)
 			&(*minishell)->envs));
 }
 
-int	ft_get_user_input(char **envp, t_minishell *minishell)
+int	ft_get_user_input(t_minishell *minishell)
 {
 	char	*prompt;
 	char	*sh;
@@ -64,7 +65,7 @@ int	ft_get_user_input(char **envp, t_minishell *minishell)
 	if (!ft_create_exec_table(&minishell))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	// ft_test_exec_table(*minishell);
-	if (!ft_execute_commands(&minishell, envp))
+	if (!ft_execute_commands(&minishell))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	if (!ft_set_exit_status(&minishell))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
@@ -80,11 +81,12 @@ int	ft_start_bash(char **envp)
 	minishell.tokens = NULL;
 	minishell.table = NULL;
 	minishell.envs = NULL;
+	minishell.envps = NULL;
 	minishell.exit_status = 0;
-	if (!ft_extract_envps(&minishell.envs, envp))
+	if (!ft_extract_envps(&minishell.envs, envp)
+		|| !ft_update_envps(minishell.envs, &minishell.envps))
 	{
 		ft_free_envs(&minishell.envs);
-		// system("leaks minishell");
 		exit(EXIT_FAILURE);
 	}
 	signal(SIGINT, ft_handle_sigint);
@@ -94,9 +96,10 @@ int	ft_start_bash(char **envp)
 		ft_configure_terminal();
 		ft_display_intro();
 		while (1)
-			ft_get_user_input(envp, &minishell);
-	}else
-		ft_get_user_input(envp, &minishell);
+			ft_get_user_input(&minishell);
+	}
+	else
+		ft_get_user_input(&minishell);
 	return (minishell.exit_status);
 }
 
@@ -107,7 +110,7 @@ void	ft_finish_bash(void)
 
 int	main(int argc, char **argv, char **envp)
 {
-	int return_argument;
+	int	return_argument;
 
 	(void)argc;
 	(void)argv;

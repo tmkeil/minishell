@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 23:28:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 16:18:23 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,52 @@ char *ft_strndup(const char *s, size_t n)
     }
     dup[i] = '\0';
     return (dup);
+}
+
+size_t	ft_prepare_envs(t_envs *envs, char ***envps)
+{
+	size_t	size;
+
+	size = 0;
+	ft_free_ptr(envps);
+	while (envs)
+	{
+		envs = envs->next;
+		size++;
+	}
+	*envps = malloc(sizeof(char *) * (size + 1));
+	if (!*envps)
+		return (0);
+	while (size)
+	{
+		(*envps)[size] = NULL;
+		size--;
+	}
+	return (1);
+}
+
+int	ft_update_envps(t_envs *envs, char ***envps)
+{
+	size_t	i;
+	char	*tmp;
+	t_envs	*ptr;
+	
+	i = 0;
+	ptr = envs;
+	if (!ft_prepare_envs(ptr, envps))
+		return (0);
+	ptr = envs;
+	while (ptr)
+	{
+		tmp = ft_strjoin(ptr->name, "=");
+		if (!tmp)
+			return (ft_free_ptr(envps), 0);
+		(*envps)[i] = ft_strjoin(tmp, ptr->value);
+		free(tmp);
+		if (!(*envps)[i])
+			return (ft_free_ptr(envps), 0);
+		ptr = ptr->next;
+		i++;
+	}
+	return (1);
 }
