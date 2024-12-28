@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 10:39:07 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 11:38:37 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define OPERATIONS "| < > << >>"
 # define BAD_CD "cd: no such file or directory: "
 # define CD_TOO_MANY "-bash: cd: too many arguments"
+# define BUILTINS "echo cd env exit export pwd unset"
 
 # include "libft.h"
 # include <readline/history.h>

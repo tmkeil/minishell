@@ -6,22 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 11:20:16 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 13:08:34 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_wait_for_child(t_minishell **minishell, int pid)
-{
-	int	status;
-
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		(*minishell)->exit_status = WEXITSTATUS(status);
-	else
-		(*minishell)->exit_status = INVALID_CMD;
-}
 
 int	ft_execute(t_minishell **minishell, char *cmd, char **envp, char *prompt)
 {
@@ -52,25 +41,59 @@ int	ft_execute(t_minishell **minishell, char *cmd, char **envp, char *prompt)
 	return (ft_free_ptr(&args), EXIT_SUCCESS);
 }
 
-int	ft_builtin(t_minishell **minishell, t_lexems *lexes)
+char	*ft_is_builtin(t_minishell *minishell, void *value, char **envp)
 {
-	if (!ft_strncmp(lexes->value, " ", 1))
+	int		i;
+	char	*path;
+	char	**cmd_path;
+
+	(void)minishell;
+	if (ft_strnstr(BUILTINS, (char *)value, ft_strlen(BUILTINS)))
+		return (ft_strdup((char *)value));
+	path = ft_getpath((char *)value, envp);
+	if (!path)
+		return (NULL);
+	cmd_path = ft_split(path, '/');
+	free(path);
+	if (!cmd_path)
+		return (NULL);
+	i = 0;
+	while (cmd_path[i])
+		i++;
+	if (ft_strnstr(BUILTINS, cmd_path[i - 1], ft_strlen(BUILTINS)))
+	{
+		path = ft_strdup(cmd_path[i - 1]);
+		return (ft_free_ptr(&cmd_path), path);
+	}
+	return (ft_free_ptr(&cmd_path), NULL);
+}
+
+int	ft_builtin(t_minishell **minishell, t_lexems *lexes, char **envp)
+{
+	int		status;
+	char	*cmd;
+	
+	status = 0;
+	if (!ft_strncmp((char *)lexes->value, " ", 1))
 		lexes = lexes->next;
-	if (!ft_strncmp((char *)lexes->value, "cd", 2))
-		return (ft_changedir(minishell, lexes));
-	if (!ft_strncmp(lexes->value, "echo", 4))
-		return (ft_echo(lexes));
-	if (!ft_strncmp(lexes->value, "env", 3))
-		return (ft_env((*minishell)->envs));
-	if (!ft_strncmp(lexes->value, "exit", 4))
-		return (ft_exit(minishell));
-	if (!ft_strncmp(lexes->value, "export", 6))
-		return (ft_export(lexes, &(*minishell)->envs));
-	if (!ft_strncmp(lexes->value, "pwd", 3))
-		return (ft_pwd());
-	if (!ft_strncmp(lexes->value, "unset", 6))
-		return (ft_unset(minishell, lexes, &(*minishell)->envs));
-	return (0);
+	cmd = ft_is_builtin(*minishell, lexes->value, envp);
+	if (!cmd)
+		return (0);
+	if (!ft_strncmp(cmd, "cd", 2))
+		status = ft_changedir(minishell, lexes);
+	if (!ft_strncmp(cmd, "echo", 4))
+		status = ft_echo(lexes);
+	if (!ft_strncmp(cmd, "env", 3))
+		status = ft_env((*minishell)->envs);
+	if (!ft_strncmp(cmd, "exit", 4))
+		status = ft_exit(minishell);
+	if (!ft_strncmp(cmd, "export", 6))
+		status = ft_export(lexes, &(*minishell)->envs);
+	if (!ft_strncmp(cmd, "pwd", 3))
+		status = ft_pwd();
+	if (!ft_strncmp(cmd, "unset", 5))
+		status = ft_unset(minishell, lexes, &(*minishell)->envs);
+	return (free(cmd), status);
 }
 
 void	ft_exe(t_minishell **minishell, t_lexems *lexes, char **envp)
@@ -79,12 +102,11 @@ void	ft_exe(t_minishell **minishell, t_lexems *lexes, char **envp)
 	int			pid;
 	int			builtin;
 
-	builtin = ft_builtin(minishell, lexes);
+	builtin = ft_builtin(minishell, lexes, envp);
 	if (builtin == 1)
 		(*minishell)->exit_status = EXIT_SUCCESS;
 	else if (builtin == 0)
 	{
-		printf("abcdefgh\n");
 		cmd = ft_getpath(lexes->value, envp);
 		pid = fork();
 		if (pid == 0)
