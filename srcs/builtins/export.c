@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 16:39:39 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 18:28:00 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,25 +82,33 @@ int	ft_print_envs(t_envs *envs)
 	return (1);
 }
 
-int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps)
+int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs,
+		char ***envps)
 {
+	int		status;
 	char	**env_args;
 
+	status = 1;
 	if (!lexems->next || !lexems->next->next)
 		return (ft_print_envs(*envs), 1);
 	lexems = lexems->next->next;
-	while (lexems && ft_strchr(lexems->value, '='))
+	while (lexems)
 	{
+		if (!ft_strncmp((char *)lexems->value, " ", 1))
+			lexems = lexems->next;
+		if (!lexems)
+			break ;
 		env_args = ft_split(lexems->value, '=');
-		if (ft_valid_env(env_args[0]))
+		if (ft_valid_env(env_args[0]) && ft_strchr(lexems->value, '='))
 		{
 			if (!ft_set_env(env_args[0], env_args[1], envs))
 				return (ft_free_ptr(&env_args), 2);
 		}
-		else
-			ft_put_error_str(ERR_EXPORT, (char *)lexems->value, &(*minishell)->exit_status, 1);
+		else if (!ft_valid_env(env_args[0]))
+			ft_put_error_str(ERR_EXPORT, (char *)lexems->value,
+				&(*minishell)->exit_status, &status);
 		ft_free_ptr(&env_args);
 		lexems = lexems->next;
 	}
-	return (ft_update_envps(*envs, envps));
+	return (ft_update_envps(*envs, envps), status);
 }

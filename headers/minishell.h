@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 16:56:11 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 18:26:53 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ typedef struct s_envs
 	struct s_envs	*next;
 }					t_envs;
 
-typedef struct	s_expander
+typedef struct s_expander
 {
-    char			*expanded;
-    char			*current;
-    t_envs			*envs;
+	char			*expanded;
+	char			*current;
+	t_envs			*envs;
 }					t_expander;
 
 typedef struct s_lexems
@@ -108,7 +108,8 @@ void				ft_handle_sigint(int sig);
 int					ft_split_env(const char *env_var, char **name,
 						char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);
-void				ft_put_error_str(char *msg, char *value, int *exit_status, int status);
+void				ft_put_error_str(char *msg, char *value, int *exit_status,
+						int *status);
 char				*ft_strndup(const char *s, size_t n);
 int					ft_update_envps(t_envs *envs, char ***envps);
 
@@ -129,13 +130,16 @@ void				ft_append_lexem(t_lexems **lexems, t_types type,
 void				ft_invalid(char *sub);
 // expander
 int					ft_expand_escapes_envs(t_lexems **tokens, t_envs *envs);
-int 				ft_expand_token(t_lexems *lex, t_envs *envs);
+int					ft_expand_token(t_lexems *lex, t_envs *envs);
 int					ft_expander(t_expander *vars, t_types type, size_t *i);
 int					ft_strappend(char **str, char c);
 int					ft_join(char **str, char *to_join);
-int					ft_expand_single_quotes(char **expanded, char *current, size_t *i);
-int					ft_expand_escapes(char **expanded, char *current, size_t *i);
-int					ft_expand_environments(char **expanded, char *current, t_envs *envs, size_t *i);
+int					ft_expand_single_quotes(char **expanded, char *current,
+						size_t *i);
+int					ft_expand_escapes(char **expanded, char *current,
+						size_t *i);
+int					ft_expand_environments(char **expanded, char *current,
+						t_envs *envs, size_t *i);
 
 // executing
 int					ft_execute_commands(t_minishell **minishell);
@@ -148,18 +152,17 @@ char				*ft_get_env(char *env_var, t_envs *envs);
 int					ft_print_envs(t_envs *envs);
 
 // cmdarguments
-void				ft_handle_lexem(char **args, int i, char *current,
-						t_types type, t_envs *envs);
-void				ft_handle_env(char **args, int i, char **current,
-						t_envs *envs);
-void				ft_append_args(char **args, int i, char *value);
+void				ft_handle_lexem(char **args, char *current);
+void				ft_append_args(char **args, char *value);
 char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
 
 // builtins
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
-int					ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
-int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
+int					ft_export(t_minishell **minishell, t_lexems *lexems,
+						t_envs **envs, char ***envps);
+int					ft_unset(t_minishell **minishell, t_lexems *lexems,
+						t_envs **envs, char ***envps);
 int					ft_exit(t_minishell **minishell);
 int					ft_pwd(void);
 int					ft_env(t_envs *envs);

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 16:57:08 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 18:27:02 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_execute(t_minishell **minishell, char *cmd, char **envp, char *prompt)
 	{
 		args[i] = NULL;
 		if (ft_strncmp((char *)token->value, " ", 1) != 0)
-			ft_handle_lexem(args, i++, (char *)token->value, token->type, (*minishell)->envs);
+			ft_handle_lexem(&args[i++], (char *)token->value);
 		token = token->next;
 	}
 	args[i] = NULL;
