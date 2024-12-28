@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 14:42:04 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/28 14:31:11 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_echo(t_lexems *lexem)
 
 	nl = true;
 	if (!lexem->next)
-		return (2);
+		return (write(STDOUT_FILENO, "\n", 1), 2);
 	lexem = lexem->next->next;
 	if (!ft_strncmp(lexem->value, "-n", 2))
 	{
