@@ -58,6 +58,12 @@ int ft_exit(t_minishell **minishell, t_lexems *lexems)
 	value_exit = (int)ft_atol(lexems->value);
 	if (value_exit < 0 || value_exit > 255)
 		value_exit = value_exit % 256;
+	if (value_exit == 255)
+	{
+		ft_putstr_fd("exit: ", STDERR_FILENO);
+		ft_putstr_fd(lexems->value, STDERR_FILENO);
+		ft_putstr_fd(": numeric argument required", STDERR_FILENO);
+	}
 	if (*minishell)
 		ft_free_shell(minishell);
 	exit(value_exit);
