@@ -44,6 +44,20 @@ long	ft_atol(char *s)
 	return (val * p);
 }
 
+int check_if_more_arguments(t_lexems *lexems)
+{
+	t_lexems *current;
+
+	current = lexems->next;
+	while(current)
+	{
+		if (ft_isalnum(((char *)(current->value))[0]))
+			return (1);
+		current = current->next;
+	}
+	return (0);
+}
+
 int ft_exit(t_minishell **minishell, t_lexems *lexems)
 {
 	int value_exit;
@@ -64,6 +78,8 @@ int ft_exit(t_minishell **minishell, t_lexems *lexems)
 		ft_putstr_fd(lexems->value, STDERR_FILENO);
 		ft_putstr_fd(": numeric argument required", STDERR_FILENO);
 	}
+	if (check_if_more_arguments(lexems))
+		ft_putstr_fd("exit: too many arguments", STDERR_FILENO);
 	if (*minishell)
 		ft_free_shell(minishell);
 	exit(value_exit);
