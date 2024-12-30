@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:36:14 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:01:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 20:51:41 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_expand_tilde(char **expanded, char *current, size_t *i)
 		ft_join(expanded, getenv("HOME"));
 		return ((*i) += (c + 1), free(sub), 1);
 	}
-	return (ft_strappend(expanded, current[(*i)++]), 1);
+	return (ft_strappend(expanded, current[(*i)++]), free(sub), 1);
 }
 
 int	ft_expand_single_quotes(char **expanded, char *current, size_t *i)

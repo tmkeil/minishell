@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:48:32 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 20:48:35 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	ft_handle_lexem(char ***args, t_lexems *lexem, char *cmd)
 	i = 0;
 	while (lexem)
 	{
+		if (ft_strnstr(OPERATIONS, (char *)lexem->value, ft_strlen(OPERATIONS)))
+			break ;
 		if (lexem->type != SEPERATOR)
 			ft_append_args(&(*args)[i++], (char *)lexem->value);
 		lexem = lexem->next;

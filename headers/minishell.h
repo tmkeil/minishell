@@ -6,14 +6,14 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/30 19:41:28 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 20:47:45 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 // # define OPERATIONS "&& || & | < > << >>"
-# define OPERATIONS "| < > << >>"
+# define OPERATIONS "|<><<>>"
 # define BAD_CD "cd: no such file or directory: "
 # define CD_TOO_MANY "-bash: cd: too many arguments"
 # define ERR_EXPORT "export: not valid in this context: "

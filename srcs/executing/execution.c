@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:47:53 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 20:49:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,13 +119,13 @@ void	ft_exe(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 int	ft_execute_commands(t_minishell **minishell)
 {
 	int			i;
-	t_lexems	**lexes;
+	t_lexems	**row;
 
 	i = 0;
-	lexes = (*minishell)->table;
-	while (lexes[i])
+	row = (*minishell)->table;
+	while (row[i])
 	{
-		ft_exe(minishell, lexes[i], &(*minishell)->envs);
+		ft_exe(minishell, row[i], &(*minishell)->envs);
 		i++;
 	}
 	return (1);
