@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 15:57:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 16:18:06 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ int	ft_execute(t_minishell **minishell, char *cmd, char **envp, char *prompt)
 	while (size + 1)
 		args[size--] = NULL;
 	if (ft_handle_lexem(&args, token, cmd) == 2)
-		return (ft_free_ptr(&args), EXIT_SUCCESS);
+	{
+		ft_free_ptr(&args);
+		exit(EXIT_SUCCESS);
+	}
 	if (execve(cmd, args, envp) == -1)
 	{
 		ft_putstr_fd(prompt, STDERR_FILENO);
