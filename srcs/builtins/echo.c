@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 14:59:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 15:15:40 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	ft_is_only_minus_n(t_lexems *lexem)
 
 	i = 2;
 	current = (char *)lexem->value;
+	if (ft_strncmp(current, "-n", 2) != 0)
+		return (0);
 	if (!ft_strncmp(current, "-n", 2))
 	{
 		while (current[i])
@@ -56,6 +58,7 @@ int	ft_echo(t_lexems *lexem)
 	bool	nl;
 
 	nl = true;
+	
 	if (!lexem->next)
 		return (write(STDOUT_FILENO, "\n", 1), 2);
 	lexem = lexem->next->next;

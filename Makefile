@@ -51,6 +51,9 @@ fclean: clean
 	rm -rf $(NAME)
 	make -C $(LIBFTDIR) fclean
 
+ct:
+	rm -rf tmp_err_bash tmp_err_minishell tmp_out_bash tmp_out_minishell
+
 re: fclean all
 
 .PHONY: all clean fclean re bonus
