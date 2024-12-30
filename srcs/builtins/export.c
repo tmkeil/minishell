@@ -94,6 +94,13 @@ int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs,
 	lexems = lexems->next->next;
 	while (lexems)
 	{
+		if (((char *)(lexems->value))[0] == '\0')
+		{
+			if (lexems->next)
+				lexems = lexems->next;
+			else
+				break;
+		}
 		if (lexems->type == SEPERATOR)
 			lexems = lexems->next;
 		if (!lexems)
