@@ -115,6 +115,7 @@ char				*ft_strndup(const char *s, size_t n);
 int					ft_update_envps(t_envs *envs, char ***envps);
 int					ft_strappend(char **str, char c);
 int					ft_join(char **str, char *to_join);
+char				**ft_split_once(char *str, char delimiter);
 
 // lexing
 int					ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs);
