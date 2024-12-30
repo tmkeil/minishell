@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:52:26 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/29 14:14:43 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 14:33:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	ft_expander(t_expander *vars, t_types type, size_t *i)
         return (ft_expand_escapes(&vars->expanded, vars->current, i));
     else if (vars->current[*i] && vars->current[*i] == '$')
         return (ft_expand_environments(&vars->expanded, vars->current, vars->envs, i));
+	else if (vars->current[*i] && vars->current[*i] == '~' && type == WORD)
+		return ((*i)++, ft_join(&vars->expanded, getenv("HOME")));
     else
         return (ft_strappend(&vars->expanded, vars->current[(*i)++]));
 }
