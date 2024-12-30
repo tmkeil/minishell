@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/30 15:54:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 17:29:16 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ void				ft_put_error_str(char *msg, char *value, int *exit_status,
 						int *status);
 char				*ft_strndup(const char *s, size_t n);
 int					ft_update_envps(t_envs *envs, char ***envps);
+int					ft_strappend(char **str, char c);
+int					ft_join(char **str, char *to_join);
 
 // lexing
 int					ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs);
@@ -132,8 +134,6 @@ void				ft_invalid(char *sub);
 int					ft_expand_escapes_envs(t_lexems **tokens, t_envs *envs);
 int					ft_expand_token(t_lexems *lex, t_envs *envs);
 int					ft_expander(t_expander *vars, t_types type, size_t *i);
-int					ft_strappend(char **str, char c);
-int					ft_join(char **str, char *to_join);
 int					ft_expand_single_quotes(char **expanded, char *current,
 						size_t *i);
 int					ft_expand_escapes(char **expanded, char *current,

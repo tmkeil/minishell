@@ -6,44 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:36:14 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 14:35:07 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 17:28:13 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_strappend(char **str, char c)
-{
-	size_t	len;
-	char	*new_str;
-
-	if (!str)
-		return (0);
-	len = ft_strlen(*str);
-	new_str = malloc(sizeof(char) * (len + 2));
-	if (!new_str)
-		return (0);
-	ft_memcpy(new_str, *str, len);
-	new_str[len] = c;
-	new_str[len + 1] = '\0';
-	free(*str);
-	*str = new_str;
-	return (1);
-}
-
-int	ft_join(char **str, char *to_join)
-{
-	char	*tmp;
-
-	if (!str || !to_join)
-		return (0);
-	tmp = *str;
-	*str = ft_strjoin(*str, to_join);
-	free(tmp);
-	if (!*str)
-		return (0);
-	return (1);
-}
 
 int	ft_expand_single_quotes(char **expanded, char *current, size_t *i)
 {
