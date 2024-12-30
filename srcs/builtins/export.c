@@ -98,7 +98,7 @@ int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs,
 			lexems = lexems->next;
 		if (!lexems)
 			break ;
-		env_args = ft_split(lexems->value, '=');
+		env_args = ft_split_once(lexems->value, '=');
 		if (ft_valid_env(env_args[0]) && ft_strchr(lexems->value, '='))
 		{
 			if (!ft_set_env(env_args[0], env_args[1], envs))
