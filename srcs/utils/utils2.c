@@ -117,5 +117,4 @@ void	ft_put_error_str(char *msg, char *value, int *exit_status, int *status)
 		ft_putstr_fd(msg, STDERR_FILENO);
 		ft_putendl_fd(value, STDERR_FILENO);
 	}
-	printf("status = %i\n", *status);
 }
