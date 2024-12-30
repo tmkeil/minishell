@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 22:50:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 15:54:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int					ft_expand_environments(char **expanded, char *current,
 
 // executing
 int					ft_execute_commands(t_minishell **minishell);
-char				*ft_getpath(char *cmd, char **envp);
+char				*ft_getpath(char *cmd, char **envp, bool absolute);
 size_t				ft_size(t_lexems *lexes);
 void				ft_wait_for_child(t_minishell **minishell, int pid);
 char				*ft_find_end(char *ptr);
@@ -164,7 +164,7 @@ int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char 
 int					ft_exit(t_minishell **minishell, t_lexems *lexems);
 int					ft_pwd(void);
 int					ft_env(t_envs *envs);
-int					ft_echo(t_lexems *lexem);
+int					ft_echo(t_lexems *lexem, bool absolute);
 
 // builtin utils
 int					ft_set_env(const char *name, const char *value,

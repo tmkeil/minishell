@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:49:09 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 19:32:22 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 16:00:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,24 @@ static char	*ft_check_paths(char **env, char *cmd)
 	return (ft_free_ptr(&env), NULL);
 }
 
-char	*ft_getpath(char *cmd, char **envp)
+void	ft_to_lower(char **cmd)
+{
+	int	i;
+
+	i = 0;
+	while ((*cmd)[i])
+	{
+		(*cmd)[i] = ft_tolower((*cmd)[i]);
+		i++;
+	}
+}
+char	*ft_getpath(char *cmd, char **envp, bool absolute)
 {
 	char	**ptr;
 	char	**env;
 
+	if (absolute)
+		ft_to_lower(&cmd);
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	if (!envp || !*envp)

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/29 13:08:38 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 15:57:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*ft_is_builtin(t_minishell *minishell, void *value, char **envp)
 	(void)minishell;
 	if (ft_strnstr(BUILTINS, (char *)value, ft_strlen(BUILTINS)))
 		return (ft_strdup((char *)value));
-	path = ft_getpath((char *)value, envp);
+	path = ft_getpath((char *)value, envp, false);
 	if (!path)
 		return (NULL);
 	cmd_path = ft_split(path, '/');
@@ -78,7 +78,7 @@ int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 	if (!ft_strncmp(cmd, "cd", 3))
 		status = ft_changedir(minishell, lexes);
 	if (!ft_strncmp(cmd, "echo", 5))
-		status = ft_echo(lexes);
+		status = ft_echo(lexes, false);
 	if (!ft_strncmp(cmd, "env", 4))
 		status = ft_env(*envs);
 	if (!ft_strncmp(cmd, "exit", 5))
@@ -103,7 +103,7 @@ void	ft_exe(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 		(*minishell)->exit_status = EXIT_SUCCESS;
 	else if (builtin == 0)
 	{
-		cmd = ft_getpath(lexes->value, (*minishell)->envps);
+		cmd = ft_getpath(lexes->value, (*minishell)->envps, true);
 		pid = fork();
 		if (pid == 0)
 			ft_execute(minishell, cmd, (*minishell)->envps, (char *)lexes->value);
