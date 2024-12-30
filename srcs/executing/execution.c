@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 16:18:06 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:47:53 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 	char	*cmd;
 	
 	status = 0;
-	if (!ft_strncmp((char *)lexes->value, " ", 1))
+	if (lexes->type == SEPERATOR)
 		lexes = lexes->next;
 	cmd = ft_is_builtin(*minishell, lexes->value, (*minishell)->envps);
 	if (!cmd)

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 18:28:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:45:06 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs,
 			else
 				break;
 		}
-		if (!ft_strncmp((char *)lexems->value, " ", 1))
+		if (lexems->type == SEPERATOR)
 			lexems = lexems->next;
 		if (!lexems)
 			break ;

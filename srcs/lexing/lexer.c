@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 17:05:56 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:52:50 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_test_lexes(t_lexems *lex)
 {
 	int		i;
-	char	*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
@@ -60,8 +60,10 @@ void	ft_append_lexem(t_lexems **lexems, t_types type, void *value)
 
 void	ft_append_word(t_lexems **lexems, char *sub)
 {
-	if (ft_isalnum(*sub) || strchr("_/.-$~#+\\ ", *sub))
+	if (ft_isalnum(*sub) || strchr("_/.-$~#+\\", *sub))
 		ft_append_lexem(lexems, WORD, sub);
+	else if (*sub == ' ')
+		ft_append_lexem(lexems, SEPERATOR, sub);
 	else
 		ft_append_lexem(lexems, INVALID, sub);
 }
@@ -124,7 +126,5 @@ int	ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs)
 			free(sub);
 		}
 	}
-	// ft_test_lexes(*tokens);
 	return (ft_expand_escapes_envs(tokens, envs));
-	// ft_test_lexes(*tokens);
 }

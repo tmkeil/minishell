@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 15:58:23 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:44:13 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_minus_n(t_lexems **lexem, bool *nl, bool absolute)
 	{
 		if (!(*lexem)->next)
 			return (0);
-		if (!ft_strncmp((*lexem)->next->value, " ", 1))
+		if ((*lexem)->next->type == SEPERATOR)
 		{
 			*nl = false;
 			(*lexem) = (*lexem)->next->next;

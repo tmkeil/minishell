@@ -77,7 +77,7 @@ int	ft_skip_prefix_spaces(t_lexems **lexes, bool *first)
 	if (*first && *lexes)
 	{
 		*first = false;
-		if (ft_strncmp((*lexes)->value, " ", 1) == 0)
+		if ((*lexes)->type == SEPERATOR)
 			*lexes = (*lexes)->next;
 	}
 	return (*lexes != NULL);
