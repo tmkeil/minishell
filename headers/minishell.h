@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/30 17:29:16 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:41:28 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef enum s_types
 	ENV_VAR,
 	INVALID,
 	LINEFEED,
+	SEPERATOR,
 	O_BRACKET,
 	C_BRACKET,
 	AMPERSAND,
@@ -140,6 +141,7 @@ int					ft_expand_escapes(char **expanded, char *current,
 						size_t *i);
 int					ft_expand_environments(char **expanded, char *current,
 						t_envs *envs, size_t *i);
+int					ft_expand_tilde(char **expanded, char *current, size_t *i);
 
 // executing
 int					ft_execute_commands(t_minishell **minishell);
@@ -159,8 +161,10 @@ char				*ft_find_end(char *ptr);
 
 // builtins
 int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
-int					ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
-int					ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps);
+int					ft_export(t_minishell **minishell, t_lexems *lexems,
+						t_envs **envs, char ***envps);
+int					ft_unset(t_minishell **minishell, t_lexems *lexems,
+						t_envs **envs, char ***envps);
 int					ft_exit(t_minishell **minishell, t_lexems *lexems);
 int					ft_pwd(void);
 int					ft_env(t_envs *envs);

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 15:15:50 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:55:56 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_test_exec_table(t_minishell minishell)
 {
 	t_lexems	*current;
-	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+	char		*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
 				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
 				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
 				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 19:34:33 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:46:14 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***e
 	lexems = lexems->next->next;
 	while (lexems)
 	{
-		if (ft_strncmp(lexems->value, " ", 1) == 0)
+		if (lexems->type == SEPERATOR)
 			lexems = lexems->next;
 		ft_process_unset_key(minishell, lexems->value, envs, &status, &count);
 		lexems = lexems->next;

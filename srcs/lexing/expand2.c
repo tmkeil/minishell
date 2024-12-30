@@ -6,11 +6,34 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:36:14 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 17:28:13 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/30 19:01:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_expand_tilde(char **expanded, char *current, size_t *i)
+{
+	int		c;
+	char	*sub;
+	char	*user;
+	
+	c = *i;
+	user = getenv("USER");
+	if (current[c + 1] == ' ' || current[c + 1] == '/')
+		return ((*i)++, ft_join(expanded, getenv("HOME")), 1);
+	while (current[c + 1] && ft_isalnum(current[c + 1]))
+		c++;
+	sub = ft_substr(current, 1, &current[c + 1] - current);
+	if (!sub)
+		return (0);
+	if (!ft_strncmp(sub, user, ft_strlen(sub)))
+	{
+		ft_join(expanded, getenv("HOME"));
+		return ((*i) += (c + 1), free(sub), 1);
+	}
+	return (ft_strappend(expanded, current[(*i)++]), 1);
+}
 
 int	ft_expand_single_quotes(char **expanded, char *current, size_t *i)
 {
