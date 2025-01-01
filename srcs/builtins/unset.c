@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:46:14 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 20:35:32 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,48 +59,46 @@ int	ft_is_valid_identifier(const char *key)
 	return (1);
 }
 
-void	ft_process_unset_key(t_minishell **minishell, char *key, t_envs **envs, int *status, int *n)
+void	ft_process_unset_key(char *key, t_envs **envs, int *n)
 {
-	if (ft_strncmp(key, " ", 1) == 0)
-		ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
-	else
+	// if (ft_strncmp(key, " ", 1) == 0)
+	// 	ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
+	if (ft_strncmp(key, " ", 1) != 0)
 	{
 		++(*n);
 		if (!ft_is_valid_identifier(key))
 		{
-			ft_putstr_fd("unset:", STDERR_FILENO);
-			ft_putstr_fd(key, STDERR_FILENO);
-			ft_putendl_fd(": invalid parameter name", STDERR_FILENO);
-			(*minishell)->exit_status = 1;
-			*status = 2;
+			ft_put_error_str("unset:", NULL);
+			ft_put_error_str(key, ": invalid parameter name");
 		}
 		else
 			ft_unset_key(key, envs);
 	}
 }
 
-int	ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps)
+void	ft_unset(t_lexems *lexems, t_envs **envs, char ***envps)
 {
-	int	status;
 	int	count;
 
-	status = 1;
 	count = 0;
 	if (!lexems->next)
 	{
-		(*minishell)->exit_status = 1;
-		ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
-		return (2);
+		// ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
+		exit(EXIT_SUCCESS);
 	}
 	lexems = lexems->next->next;
 	while (lexems)
 	{
 		if (lexems->type == SEPERATOR)
 			lexems = lexems->next;
-		ft_process_unset_key(minishell, lexems->value, envs, &status, &count);
+		ft_process_unset_key(lexems->value, envs, &count);
 		lexems = lexems->next;
 	}
 	if (!count)
-		return (ft_putendl_fd("unset: not enough arguments", STDERR_FILENO), 2);
-	return (ft_update_envps(*envs, envps), status);
+	{
+		ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
+		exit(EXIT_FAILURE);
+	}
+	ft_update_envps(*envs, envps);
+	exit(EXIT_SUCCESS);
 }

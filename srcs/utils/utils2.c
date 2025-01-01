@@ -6,11 +6,28 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 14:48:10 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 21:04:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_print_envs(t_lexems *lexems, t_envs *envs)
+{
+	if (!lexems->next || !lexems->next->next)
+	{
+		while (envs)
+		{
+			if (envs->value)
+				ft_printf("%s=%s\n", envs->name, envs->value);
+			else
+				ft_printf("%s\n", envs->name);
+			envs = envs->next;
+		}
+		exit(EXIT_SUCCESS);
+	}
+	return (1);
+}
 
 int	ft_split_env(const char *env_var, char **name, char **value)
 {
@@ -106,10 +123,4 @@ int	ft_update_envps(t_envs *envs, char ***envps)
 		i++;
 	}
 	return (1);
-}
-
-void	ft_put_error_str(char *msg, char *value)
-{
-	ft_putstr_fd(msg, STDERR_FILENO);
-	ft_putendl_fd(value, STDERR_FILENO);
 }

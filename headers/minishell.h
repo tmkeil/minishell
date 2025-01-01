@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/01 15:33:15 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 21:04:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int					ft_update_envps(t_envs *envs, char ***envps);
 int					ft_strappend(char **str, char c);
 int					ft_join(char **str, char *to_join);
 char				**ft_split_once(char *str, char delimiter);
+int					ft_print_envs(t_lexems *lexems, t_envs *envs);
 
 // lexing
 int					ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs);
@@ -151,7 +152,6 @@ size_t				ft_size(t_lexems *lexes);
 char				*ft_find_end(char *ptr);
 char				*ft_until_next_env(char *ptr);
 char				*ft_get_env(char *env_var, t_envs *envs);
-int					ft_print_envs(t_lexems *lexems, t_envs *envs);
 
 // cmdarguments
 int					ft_handle_lexem(char ***args, t_lexems *lexem, char *cmd);
@@ -160,14 +160,14 @@ char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
 
 // builtins
-int					ft_changedir(t_minishell **minishell, t_lexems *lexems);
-int					ft_export(t_lexems *lexems,
+void				ft_changedir(t_minishell **minishell, t_lexems *lexems);
+void				ft_export(t_lexems *lexems,
 						t_envs **envs, char ***envps);
-int					ft_unset(t_minishell **minishell, t_lexems *lexems,
+void				ft_unset(t_lexems *lexems,
 						t_envs **envs, char ***envps);
-int					ft_exit(t_minishell **minishell, t_lexems *lexems);
-int					ft_pwd(void);
-int					ft_env(t_envs *envs);
+void				ft_exit(t_minishell **minishell, t_lexems *lexems);
+void				ft_pwd(void);
+void				ft_env(t_envs *envs);
 void				ft_echo(t_lexems *lexem, char ***args, bool absolute);
 
 // builtin utils

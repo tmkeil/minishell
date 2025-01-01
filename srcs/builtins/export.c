@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 15:33:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 21:15:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,56 +69,36 @@ int	ft_set_env(const char *name, const char *value, t_envs **envs)
 	return (ft_add_env(name, value, envs));
 }
 
-int	ft_print_envs(t_lexems *lexems, t_envs *envs)
+void	ft_handle_args(char *value, t_envs **envs)
 {
-	if (!lexems->next || !lexems->next->next)
+	char	**env_args;
+	
+	env_args = ft_split_once(value, '=');
+	if (ft_valid_env(env_args[0]) && ft_strchr(value, '='))
 	{
-		while (envs)
-		{
-			if (envs->value)
-				ft_printf("%s=%s\n", envs->name, envs->value);
-			else
-				ft_printf("%s\n", envs->name);
-			envs = envs->next;
-		}
-		exit(EXIT_SUCCESS);
+		if (!ft_set_env(env_args[0], env_args[1], envs))
+			ft_free_ptr(&env_args);
 	}
-	return (1);
+	else if (!ft_valid_env(env_args[0]))
+		ft_put_error_str(ERR_EXPORT, value);
+	ft_free_ptr(&env_args);
 }
 
-int	ft_export(t_lexems *lexems, t_envs **envs,
+void	ft_export(t_lexems *lexems, t_envs **envs,
 		char ***envps)
 {
-	int		status;
-	char	**env_args;
-
-	status = 1;
 	if (!lexems->next || !lexems->next->next)
-		return (ft_print_envs(lexems, *envs), 1);
+		ft_print_envs(lexems, *envs);
 	lexems = lexems->next->next;
 	while (lexems)
 	{
-		// if (((char *)(lexems->value))[0] == '\0')
-		// {
-		// 	if (lexems->next)
-		// 		lexems = lexems->next;
-		// 	else
-		// 		break;
-		// }
 		if (lexems->type == SEPERATOR)
 			lexems = lexems->next;
 		if (!lexems)
 			break ;
-		env_args = ft_split_once(lexems->value, '=');
-		if (ft_valid_env(env_args[0]) && ft_strchr(lexems->value, '='))
-		{
-			if (!ft_set_env(env_args[0], env_args[1], envs))
-				return (ft_free_ptr(&env_args), 2);
-		}
-		else if (!ft_valid_env(env_args[0]))
-			ft_put_error_str(ERR_EXPORT, (char *)lexems->value);
-		ft_free_ptr(&env_args);
+		ft_handle_args((char *)lexems->value, envs);
 		lexems = lexems->next;
 	}
-	return (ft_update_envps(*envs, envps), status);
+	ft_update_envps(*envs, envps);
+	exit(EXIT_SUCCESS);
 }

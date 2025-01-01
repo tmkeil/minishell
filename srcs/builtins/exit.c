@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:05:49 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 16:46:28 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 19:53:17 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int check_if_more_arguments(t_lexems *lexems)
 	return (0);
 }
 
-int ft_exit(t_minishell **minishell, t_lexems *lexems)
+void ft_exit(t_minishell **minishell, t_lexems *lexems)
 {
 	int value_exit;
 

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 15:33:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 20:29:23 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 	if (!ft_strncmp(cmd, "pwd", 4))
 		ft_pwd();
 	if (!ft_strncmp(cmd, "unset", 6))
-		ft_unset(minishell, lexes, envs, &(*minishell)->envps);
+		ft_unset(lexes, envs, &(*minishell)->envps);
 	return (free(cmd), 0);
 }
 

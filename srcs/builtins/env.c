@@ -6,13 +6,14 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:21:34 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 12:16:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 19:51:15 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_env(t_envs *envs)
+void    ft_env(t_envs *envs)
 {
-    return (ft_print_envs(NULL, envs));
+    ft_print_envs(NULL, envs);
+    exit(EXIT_SUCCESS);
 }

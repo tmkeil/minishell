@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/20 20:49:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 21:04:27 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,10 @@ void	ft_display_intro(void)
 	printf("  ___) | | | |  __/ | |  \n");
 	printf(" |____/|_| |_|\\___|_|_|  \n");
 	printf("\n");
+}
+
+void	ft_put_error_str(char *msg, char *value)
+{
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putendl_fd(value, STDERR_FILENO);
 }
