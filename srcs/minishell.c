@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 20:48:43 by tkeil            ###   ########.fr       */
+/*   Updated: 2024/12/31 15:22:35 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	ft_test_exec_table(t_minishell minishell)
 		current = minishell.table[i];
 		while (current)
 		{
-			printf("Type: %s, Value: %s\n", types[current->type],
-				(char *)current->value ? (char *)current->value : (char *)"(null)");
+			printf("minishell.table[%i].Type: %s, minishell.table[%i].Value: %s\n", i, types[current->type],
+				i, (char *)current->value ? (char *)current->value : (char *)"(null)");
 			current = current->next;
 		}
 	}
@@ -52,6 +52,7 @@ int	ft_get_user_input(t_minishell *minishell)
 	int promp_length;
 
 	promp_length = 0;
+	ft_set_exit_status(&minishell);
 	if (isatty(STDIN_FILENO))
 	{
 		sh = ft_strjoin(getenv("USER"), "@minishell $ ");
@@ -80,7 +81,7 @@ int	ft_get_user_input(t_minishell *minishell)
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	if (!ft_create_exec_table(&minishell))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
-	// ft_test_exec_table(*minishell);
+	ft_test_exec_table(*minishell);
 	if (!ft_execute_commands(&minishell))
 		return (ft_free_shell(&minishell), free(prompt), free(sh), 0);
 	if (!ft_set_exit_status(&minishell))
