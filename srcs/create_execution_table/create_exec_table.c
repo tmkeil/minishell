@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-size_t	ft_table_size(t_lexems *lexems)
+size_t	ft_table_size(t_minishell **minishell, t_lexems *lexems)
 {
 	size_t	size;
 
@@ -25,6 +25,7 @@ size_t	ft_table_size(t_lexems *lexems)
 			size++;
 		lexems = lexems->next;
 	}
+	(*minishell)->number_of_pipes = size;
 	return (size);
 }
 
@@ -106,7 +107,7 @@ int	ft_create_exec_table(t_minishell **minishell)
 	i = 0;
 	first = true;
 	lex = (*minishell)->tokens;
-	size = ft_table_size(lex) + 2;
+	size = ft_table_size(minishell, lex) + 2;
 	if (!ft_init_table(minishell, size))
 		return (0);
 	while (lex)
@@ -122,6 +123,5 @@ int	ft_create_exec_table(t_minishell **minishell)
 		}
 		lex = lex->next;
 	}
-	// ft_debug_exec_table(*minishell);
 	return (1);
 }

@@ -6,47 +6,40 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 20:49:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 15:33:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_execute(t_minishell **minishell, char *cmd, char **envp, char *prompt)
+void	ft_execute(t_minishell **minishell, char *cmd, t_lexems *lexem)
 {
-	t_lexems	*token;
 	char		**args;
 	size_t		size;
 
-	token = (*minishell)->tokens;
-	size = ft_size(token);
+	size = ft_size(lexem);
 	args = malloc(sizeof(char *) * (size + 1));
 	if (!args)
 		exit(EXIT_FAILURE);
 	while (size + 1)
 		args[size--] = NULL;
-	if (ft_handle_lexem(&args, token, cmd) == 2)
+	if (!ft_handle_lexem(&args, lexem, cmd))
 	{
 		ft_free_ptr(&args);
-		exit(EXIT_SUCCESS);
+		exit(EXIT_FAILURE);
 	}
-	if (execve(cmd, args, envp) == -1)
-	{
-		ft_putstr_fd(prompt, STDERR_FILENO);
-		ft_putendl_fd(": command not found", STDERR_FILENO);
-		ft_free_ptr(&args);
-		exit(INVALID_CMD);
-	}
-	return (ft_free_ptr(&args), EXIT_SUCCESS);
+	if (execve(cmd, args, (*minishell)->envps) == -1)
+		ft_put_error_str((char *)lexem->value, ": command not found");
+	ft_free_ptr(&args);
+	exit(EXIT_FAILURE);
 }
 
-char	*ft_is_builtin(t_minishell *minishell, void *value, char **envp)
+char	*ft_is_builtin(void *value, char **envp)
 {
 	int		i;
 	char	*path;
 	char	**cmd_path;
 
-	(void)minishell;
 	if (ft_strnstr(BUILTINS, (char *)value, ft_strlen(BUILTINS)))
 		return (ft_strdup((char *)value));
 	path = ft_getpath((char *)value, envp, false);
@@ -69,63 +62,109 @@ char	*ft_is_builtin(t_minishell *minishell, void *value, char **envp)
 
 int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
 {
-	int		status;
 	char	*cmd;
 	
-	status = 0;
 	if (lexes->type == SEPERATOR)
 		lexes = lexes->next;
-	cmd = ft_is_builtin(*minishell, lexes->value, (*minishell)->envps);
+	cmd = ft_is_builtin(lexes->value, (*minishell)->envps);
 	if (!cmd)
 		return (0);
 	if (!ft_strncmp(cmd, "cd", 3))
-		status = ft_changedir(minishell, lexes);
+		ft_changedir(minishell, lexes);
 	if (!ft_strncmp(cmd, "echo", 5))
-		status = ft_echo(lexes, false);
+		ft_echo(lexes, NULL, false);
 	if (!ft_strncmp(cmd, "env", 4))
-		status = ft_env(*envs);
+		ft_env(*envs);
 	if (!ft_strncmp(cmd, "exit", 5))
-		status = ft_exit(minishell, lexes);
+		ft_exit(minishell, lexes);
 	if (!ft_strncmp(cmd, "export", 7))
-		status = ft_export(minishell, lexes, envs, &(*minishell)->envps);
+		ft_export(lexes, envs, &(*minishell)->envps);
 	if (!ft_strncmp(cmd, "pwd", 4))
-		status = ft_pwd();
+		ft_pwd();
 	if (!ft_strncmp(cmd, "unset", 6))
-		status = ft_unset(minishell, lexes, envs, &(*minishell)->envps);
-	return (free(cmd), status);
+		ft_unset(minishell, lexes, envs, &(*minishell)->envps);
+	return (free(cmd), 0);
 }
 
-void	ft_exe(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
+void	ft_exe(t_minishell **minishell, t_lexems *lexem, t_envs **envs)
 {
 	char		*cmd;
-	int			pid;
-	int			builtin;
 
-	builtin = ft_builtin(minishell, lexes, envs);
-	if (builtin == 1)
-		(*minishell)->exit_status = EXIT_SUCCESS;
-	else if (builtin == 0)
+	if (lexem->type == SEPERATOR)
+		lexem = lexem->next;
+	if (!lexem)
+		exit(EXIT_FAILURE);
+	// ft_redirections(lexem);
+	// ft_heredoc(lexem);
+	if (!ft_builtin(minishell, lexem, envs))
 	{
-		cmd = ft_getpath(lexes->value, (*minishell)->envps, true);
-		pid = fork();
-		if (pid == 0)
-			ft_execute(minishell, cmd, (*minishell)->envps, (char *)lexes->value);
-		else if (pid > 0)
-			ft_wait_for_child(minishell, pid);
-		free(cmd);
+		cmd = ft_getpath(lexem->value, (*minishell)->envps, true);
+		if (!cmd)
+			exit(INVALID_CMD);
+		ft_execute(minishell, cmd, lexem);
 	}
+}
+
+void	ft_close_write(int wr)
+{
+	if (wr != -1)
+		close(wr);
+}
+
+void	ft_close_read(int re)
+{
+	if (re != -1)
+		close(re);
+}
+
+void	ft_redirect_pipe(int number, int *fd, int *read, int i)
+{
+	if (*read != -1)
+		dup2(*read, STDIN_FILENO);
+	if (i < number)
+		dup2(fd[1], STDOUT_FILENO);
+}
+
+void	ft_child(t_minishell **minishell, int *fd, int *read, int i)
+{
+	ft_redirect_pipe((*minishell)->number_of_pipes, fd, read, i);
+	ft_close_read(fd[0]);
+	ft_exe(minishell, (*minishell)->table[i], &(*minishell)->envs);
+	exit(EXIT_FAILURE);
+}
+
+void	ft_parent(t_minishell **minishell, int *read, int *fd, pid_t pid)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		(*minishell)->exit_status = WEXITSTATUS(status);
+	else
+		(*minishell)->exit_status = INVALID_CMD;
+	ft_close_read(*read);
+	ft_close_write(fd[1]);
+	*read = fd[0];
 }
 
 int	ft_execute_commands(t_minishell **minishell)
 {
 	int			i;
-	t_lexems	**row;
+	int			pipe_fd[2];
+	int			new_read;
+	pid_t		pid;
 
 	i = 0;
-	row = (*minishell)->table;
-	while (row[i])
+	new_read = -1;
+	while ((*minishell)->table[i])
 	{
-		ft_exe(minishell, row[i], &(*minishell)->envs);
+		if (i < (*minishell)->number_of_pipes && pipe(pipe_fd) == -1)
+			perror("pipe error");
+		pid = fork();
+		if (pid == 0)
+			ft_child(minishell, pipe_fd, &new_read, i);
+		else
+			ft_parent(minishell, &new_read, pipe_fd, pid);
 		i++;
 	}
 	return (1);

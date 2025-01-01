@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:55:50 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:32:16 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 11:54:35 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,28 @@ int	ft_join(char **str, char *to_join)
 	if (!*str)
 		return (0);
 	return (1);
+}
+
+char **ft_split_once(char *str, char delimiter) 
+{
+    char *pos;
+    char **result;
+    
+    pos = ft_strchr(str, delimiter);
+    result = (char **)malloc(3 * sizeof(char *));
+    if (!result)
+    {
+        ft_printf("Memory allocation failed\n");
+        exit(1);
+    }
+    if (!pos)
+    {
+        result[0] = ft_strdup(str);
+        result[1] = NULL;
+        return (result);
+    }
+    result[0] = ft_strndup(str, pos - str);
+    result[1] = ft_strdup(pos + 1);
+    result[2] = NULL;
+    return (result);
 }

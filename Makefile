@@ -14,7 +14,7 @@ TABLE = create_exec_table.c
 EXECUTING = execution.c get_cmd_arguments.c getpath.c execution_utils.c pipes.c
 BUILTINS = cd.c env.c exit.c export.c pwd.c unset.c echo.c
 CLEARING = cleaners.c
-UTILS = utils.c utils2.c utils3.c utils4.c
+UTILS = utils.c utils2.c utils3.c
 
 SRCS = minishell.c $(addprefix lexing/, $(LEXING)) $(addprefix create_execution_table/, $(TABLE)) $(addprefix executing/, $(EXECUTING)) \
 		$(addprefix builtins/, $(BUILTINS)) $(addprefix clearing/, $(CLEARING)) $(addprefix utils/, $(UTILS))

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:45:06 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 15:33:00 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,24 @@ int	ft_set_env(const char *name, const char *value, t_envs **envs)
 	return (ft_add_env(name, value, envs));
 }
 
-int	ft_print_envs(t_envs *envs)
+int	ft_print_envs(t_lexems *lexems, t_envs *envs)
 {
-	while (envs)
+	if (!lexems->next || !lexems->next->next)
 	{
-		if (envs->value)
-			ft_printf("%s=%s\n", envs->name, envs->value);
-		else
-			ft_printf("%s\n", envs->name);
-		envs = envs->next;
+		while (envs)
+		{
+			if (envs->value)
+				ft_printf("%s=%s\n", envs->name, envs->value);
+			else
+				ft_printf("%s\n", envs->name);
+			envs = envs->next;
+		}
+		exit(EXIT_SUCCESS);
 	}
 	return (1);
 }
 
-int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs,
+int	ft_export(t_lexems *lexems, t_envs **envs,
 		char ***envps)
 {
 	int		status;
@@ -90,17 +94,17 @@ int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs,
 
 	status = 1;
 	if (!lexems->next || !lexems->next->next)
-		return (ft_print_envs(*envs), 1);
+		return (ft_print_envs(lexems, *envs), 1);
 	lexems = lexems->next->next;
 	while (lexems)
 	{
-		if (((char *)(lexems->value))[0] == '\0')
-		{
-			if (lexems->next)
-				lexems = lexems->next;
-			else
-				break;
-		}
+		// if (((char *)(lexems->value))[0] == '\0')
+		// {
+		// 	if (lexems->next)
+		// 		lexems = lexems->next;
+		// 	else
+		// 		break;
+		// }
 		if (lexems->type == SEPERATOR)
 			lexems = lexems->next;
 		if (!lexems)
@@ -112,8 +116,7 @@ int	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs,
 				return (ft_free_ptr(&env_args), 2);
 		}
 		else if (!ft_valid_env(env_args[0]))
-			ft_put_error_str(ERR_EXPORT, (char *)lexems->value,
-				&(*minishell)->exit_status, &status);
+			ft_put_error_str(ERR_EXPORT, (char *)lexems->value);
 		ft_free_ptr(&env_args);
 		lexems = lexems->next;
 	}

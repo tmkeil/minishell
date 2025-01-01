@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/28 18:05:14 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 14:48:10 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,8 @@ int	ft_update_envps(t_envs *envs, char ***envps)
 	return (1);
 }
 
-void	ft_put_error_str(char *msg, char *value, int *exit_status, int *status)
+void	ft_put_error_str(char *msg, char *value)
 {
-	if (*status != -1)
-	{
-		*status = -1;
-		*exit_status = 1;
-		ft_putstr_fd(msg, STDERR_FILENO);
-		ft_putendl_fd(value, STDERR_FILENO);
-	}
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putendl_fd(value, STDERR_FILENO);
 }

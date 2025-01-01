@@ -6,19 +6,17 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:44:13 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 15:45:12 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_is_only_minus_n(t_lexems *lexem, bool absolute)
+int	ft_is_only_minus_n(char *current, bool absolute)
 {
 	int		i;
-	char	*current;
 
 	i = 2;
-	current = (char *)lexem->value;
 	if (!ft_strncmp(current, "-n", 3) && absolute)
 		return (1);
 	if (!ft_strncmp(current, "-n", 2))
@@ -36,7 +34,7 @@ int	ft_is_only_minus_n(t_lexems *lexem, bool absolute)
 
 int	ft_minus_n(t_lexems **lexem, bool *nl, bool absolute)
 {
-	if (ft_is_only_minus_n(*lexem, absolute))
+	if (ft_is_only_minus_n((*lexem)->value, absolute))
 	{
 		if (!(*lexem)->next)
 			return (0);
@@ -53,20 +51,54 @@ int	ft_minus_n(t_lexems **lexem, bool *nl, bool absolute)
 	return (1);
 }
 
-int	ft_echo(t_lexems *lexem, bool absolute)
+void	ft_run_absolute_echo(char ***args)
+{
+	int		i;
+	bool	nl;
+
+	if (!*args || !**args || !***args)
+		exit(EXIT_FAILURE);
+	i = 0;
+	nl = true;
+	while (*args[++i])
+	{
+		if (i == 1 && ft_is_only_minus_n(*args[i], true))
+		{
+			nl = false;
+			continue ;
+		}
+		ft_putstr_fd(*args[i], STDOUT_FILENO);
+	}
+	if (nl)
+		write(STDOUT_FILENO, "\n", 1);
+	ft_free_ptr(args);
+	exit(EXIT_SUCCESS);
+}
+
+void	ft_if_no_args(t_lexems *lexem)
+{
+	if (!lexem->next)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		exit(EXIT_SUCCESS);
+	}
+}
+
+void	ft_echo(t_lexems *lexem, char ***args, bool absolute)
 {
 	int		minusn;
 	bool	nl;
 
 	nl = true;
-	if (!lexem->next)
-		return (write(STDOUT_FILENO, "\n", 1), 2);
+	if (absolute)
+		ft_run_absolute_echo(args);
+	ft_if_no_args(lexem);
 	lexem = lexem->next->next;
 	while (1)
 	{
 		minusn = ft_minus_n(&lexem, &nl, absolute);
 		if (!minusn)
-			return (1);
+			exit(EXIT_SUCCESS);
 		if (minusn == 1 || absolute)
 			break ;
 	}
@@ -77,5 +109,5 @@ int	ft_echo(t_lexems *lexem, bool absolute)
 	}
 	if (nl)
 		write(STDOUT_FILENO, "\n", 1);
-	return (1);
+	exit(EXIT_SUCCESS);
 }

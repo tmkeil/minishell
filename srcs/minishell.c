@@ -6,11 +6,13 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/31 15:22:35 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 12:39:44 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	exit_code = 0;
 
 void	ft_test_exec_table(t_minishell minishell)
 {

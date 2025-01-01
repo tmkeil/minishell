@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:21:34 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 14:10:11 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 12:16:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 int ft_env(t_envs *envs)
 {
-    return (ft_print_envs(envs));
+    return (ft_print_envs(NULL, envs));
 }

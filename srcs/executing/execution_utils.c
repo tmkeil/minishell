@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:29:09 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:47:31 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/01 13:34:50 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,4 @@ char	*ft_until_next_env(char *ptr)
 	while (ptr[i] && ptr[i] != '$')
 		i++;
 	return (&ptr[i]);
-}
-
-void	ft_wait_for_child(t_minishell **minishell, int pid)
-{
-	int	status;
-
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		(*minishell)->exit_status = WEXITSTATUS(status);
-	else
-		(*minishell)->exit_status = INVALID_CMD;
 }
