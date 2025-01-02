@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 21:04:27 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/02 14:04:10 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,30 @@
 
 void	ft_handle_sigint(int sig)
 {
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+    (void)sig;
+    write(1, "\nCaught SIGINT. Resetting prompt...\n", 36);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay();
 }
 
 void	ft_handle_sigquit(int sig)
 {
 	(void)sig;
+	write(1, "\nCaught SIGQUIT. Ignored.\n", 26);
 	rl_redisplay();
+}
+
+void ft_init_sig(void)
+{
+    signal(SIGINT, ft_handle_sigint);
+    signal(SIGQUIT, ft_handle_sigquit);
+}
+
+void ft_set_execution_signals(void)
+{
+    signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
 }
 
 void	ft_configure_terminal(void)

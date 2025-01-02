@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/01 21:04:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/02 14:04:43 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void				ft_free_envs(t_envs **head);
 void				ft_free_shell(t_minishell **minishell);
 
 // utils
+void 				ft_init_sig(void);
 void				ft_configure_terminal(void);
 void				ft_handle_sigquit(int sig);
 void				ft_handle_sigint(int sig);

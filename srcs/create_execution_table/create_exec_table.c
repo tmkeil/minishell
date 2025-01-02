@@ -62,15 +62,17 @@ void ft_debug_exec_table(t_minishell *minishell)
 				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
 				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
 				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-    for (size_t i = 0; minishell->table[i]; i++)
+	int i = 0;
+    for (i = 0; minishell->table[i]; i++)
     {
         t_lexems *current = minishell->table[i];
         while (current)
         {
-            printf("  Type: %s, Value: %s\n", types[current->type], (char *)current->value ? (char *)current->value : (char *)"(null)");
+            printf("table[%i].Type: %s, table[%i].Value: %s\n", i, types[current->type], i, (char *)current->value ? (char *)current->value : (char *)"(null)");
             current = current->next;
         }
     }
+	printf("table[%i] = %p\n", i, minishell->table[i]);
 }
 
 int	ft_skip_prefix_spaces(t_lexems **lexes, bool *first)
@@ -123,5 +125,6 @@ int	ft_create_exec_table(t_minishell **minishell)
 		}
 		lex = lex->next;
 	}
+	// ft_debug_exec_table(*minishell);
 	return (1);
 }
