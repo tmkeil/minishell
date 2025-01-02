@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/02 15:03:30 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/02 17:26:05 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int is_interactive(void)
         return 1;
     if (is_wsl_environment())
     {
-        printf("WSL erkannt: Standardannahme ist interaktiver Modus.\n");
+        // printf("WSL erkannt: Standardannahme ist interaktiver Modus.\n");
         return 1; // Für WSL interaktiven Modus erzwingen
     }
     return 0; // Nicht-interaktiv
@@ -93,105 +93,95 @@ char *ft_get_prompt(void)
 char *ft_get_input(char *prompt)
 {
     char *input;
-	
-	signal(SIGINT, ft_handle_sigint);
-	signal(SIGQUIT, ft_handle_sigquit);
+
+	// signal(SIGINT, ft_handle_sigint);
+	// signal(SIGQUIT, ft_handle_sigquit);
     input = readline(prompt);
-	if (!input)
-	{
-		write(1, "\n", 1);
-		return (NULL);
-	}
 	return (input);
 }
 
 int	ft_handle_input(t_minishell **minishell, char *input)
 {
-	printf("abc1\n");
 	if (!ft_create_lexes(&(*minishell)->tokens, input, (*minishell)->envs))
 		return (0);
 	if (!ft_create_exec_table(minishell))
 		return (0);
-	// printf("abc111\n");
 	if (!ft_execute_commands(minishell))
 		return (0);
-	// printf("abc22\n");
 	if (!ft_set_exit_status(minishell))
 		return (ft_free_shell(minishell), 0);
 	ft_free_tokens(&(*minishell)->tokens);
 	ft_free_table(&(*minishell)->table);
-	printf("abc2\n");
 	return (1);
 }
 
-int	ft_get_user_input(t_minishell *minishell)
-{
-	char	*prompt;
-	char	*input;
+// int ft_check_empty_input(char *input)
+// {
+//     if (!input)
+//     {
+//         write(1, "exit\n", 5);
+//         return (0);
+//     }
+//     if (*input == '\0')
+//     {
+//         free(input);
+//         return (1);
+//     }
+//     return (2);
+// }
 
-	if (is_interactive())
-	{
-		printf("isatty\n");
-		prompt = ft_get_prompt();
-		printf("prompt = %s\n", prompt);
-		if (!prompt)
-			return (printf("test2\n"), -1);
-		printf("test3\n");
-		input = ft_get_input(prompt);
-		printf("test4\n");
-		free(prompt);
-		printf("test\n");
-	}
-	else
-	{
-		printf("else\n");
-		input = get_next_line(STDIN_FILENO);
-		if (!input || *input == '\0')
-		{
-			printf("no in\n");
-			return (free(input), 0);
-		}
-	}
-	printf("zwo\n");
+int ft_get_user_input(t_minishell *minishell)
+{
+    char 	*prompt;
+    char 	*input;
+
+	prompt = ft_get_prompt();
+	if (!prompt)
+		return (0);
+	input = ft_get_input(prompt);
+	printf("input = %s\n", input);
+	free(prompt);
+    if (!input)
+		return (0);
+    if (*input == '\0')
+    {
+        free(input);
+        return (1);
+    }
 	add_history(input);
-	printf("zwo2\n");
-	if (!ft_handle_input(&minishell, input))
-	{
-		printf("is 0\n");
-		return (free(input), 1);
-	}
-	printf("success\n");
-	return (free(input), 1);
+    if (!ft_handle_input(&minishell, input))
+    {
+        free(input);
+        return (1);
+    }
+    free(input);
+    return (1);
 }
 
-int	ft_start_bash(char **envp)
+int ft_start_bash(char **envp)
 {
-	t_minishell	minishell;
+    t_minishell minishell;
 
-	minishell.tokens = NULL;
-	minishell.table = NULL;
-	minishell.envs = NULL;
-	minishell.envps = NULL;
-	minishell.exit_status = 0;
-	if (!ft_extract_envps(&minishell.envs, envp)
-		|| !ft_update_envps(minishell.envs, &minishell.envps))
-	{
-		ft_free_envs(&minishell.envs);
-		exit(EXIT_FAILURE);
-	}
-	ft_configure_terminal();
-	ft_display_intro();
-	ft_init_sig();
-	while (1)
-	{
-		if (!ft_get_user_input(&minishell))
-		{
-			printf("beendet\n");
-			if (!isatty(STDIN_FILENO))
-				break ;
-		}
-	}
-	return (minishell.exit_status);
+    minishell.tokens = NULL;
+    minishell.table = NULL;
+    minishell.envs = NULL;
+    minishell.envps = NULL;
+    minishell.exit_status = 0;
+    if (!ft_extract_envps(&minishell.envs, envp) || !ft_update_envps(minishell.envs, &minishell.envps))
+    {
+        ft_free_envs(&minishell.envs);
+        exit(EXIT_FAILURE);
+    }
+    ft_configure_terminal();
+    ft_display_intro();
+    ft_init_sig();
+    while (1)
+    {
+        if (!ft_get_user_input(&minishell))
+            break ;
+    }
+    ft_free_envs(&minishell.envs);
+    return (minishell.exit_status);
 }
 
 void	ft_finish_bash(void)
@@ -199,14 +189,13 @@ void	ft_finish_bash(void)
 	rl_clear_history();
 }
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	int	return_argument;
-
-	(void)argc;
 	(void)argv;
-	return_argument = ft_start_bash(envp);
-	ft_finish_bash();
-	// system("leaks minishell");
-	return (return_argument);
+    if (argc > 1)
+    {
+        write(2, "Error: minishell does not accept arguments.\n", 44);
+        return EXIT_FAILURE;
+    }
+    return (ft_start_bash(envp));
 }

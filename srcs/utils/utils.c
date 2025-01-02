@@ -6,32 +6,32 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/02 14:04:10 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/02 17:26:26 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_handle_sigint(int sig)
+void ft_handle_sigint(int sig)
 {
     (void)sig;
-    write(1, "\nCaught SIGINT. Resetting prompt...\n", 36);
-    rl_replace_line("", 0);
+    write(1, "\n", 1);
     rl_on_new_line();
+    rl_replace_line("", 0);
     rl_redisplay();
-}
-
-void	ft_handle_sigquit(int sig)
-{
-	(void)sig;
-	write(1, "\nCaught SIGQUIT. Ignored.\n", 26);
-	rl_redisplay();
 }
 
 void ft_init_sig(void)
 {
     signal(SIGINT, ft_handle_sigint);
     signal(SIGQUIT, ft_handle_sigquit);
+}
+
+void	ft_handle_sigquit(int sig)
+{
+	(void)sig;
+	// write(1, "\nCaught SIGQUIT. Ignored.\n", 26);
+	// rl_redisplay();
 }
 
 void ft_set_execution_signals(void)
