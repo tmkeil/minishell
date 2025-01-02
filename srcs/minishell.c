@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/02 14:47:45 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/02 15:03:30 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,23 +100,27 @@ char *ft_get_input(char *prompt)
 	if (!input)
 	{
 		write(1, "\n", 1);
-		exit(EXIT_SUCCESS);
+		return (NULL);
 	}
 	return (input);
 }
 
 int	ft_handle_input(t_minishell **minishell, char *input)
 {
+	printf("abc1\n");
 	if (!ft_create_lexes(&(*minishell)->tokens, input, (*minishell)->envs))
 		return (0);
 	if (!ft_create_exec_table(minishell))
 		return (0);
+	// printf("abc111\n");
 	if (!ft_execute_commands(minishell))
 		return (0);
+	// printf("abc22\n");
 	if (!ft_set_exit_status(minishell))
 		return (ft_free_shell(minishell), 0);
 	ft_free_tokens(&(*minishell)->tokens);
-	ft_free_table(&(*minishell)->table);;
+	ft_free_table(&(*minishell)->table);
+	printf("abc2\n");
 	return (1);
 }
 
@@ -129,10 +133,14 @@ int	ft_get_user_input(t_minishell *minishell)
 	{
 		printf("isatty\n");
 		prompt = ft_get_prompt();
+		printf("prompt = %s\n", prompt);
 		if (!prompt)
-			return (-1);
+			return (printf("test2\n"), -1);
+		printf("test3\n");
 		input = ft_get_input(prompt);
+		printf("test4\n");
 		free(prompt);
+		printf("test\n");
 	}
 	else
 	{
@@ -144,12 +152,15 @@ int	ft_get_user_input(t_minishell *minishell)
 			return (free(input), 0);
 		}
 	}
+	printf("zwo\n");
 	add_history(input);
+	printf("zwo2\n");
 	if (!ft_handle_input(&minishell, input))
 	{
 		printf("is 0\n");
 		return (free(input), 1);
 	}
+	printf("success\n");
 	return (free(input), 1);
 }
 
