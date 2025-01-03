@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 01:52:07 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 02:10:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,50 +104,26 @@ int ft_get_user_input(t_minishell *minishell)
     char 		*input;
 	char		*line;
 
-	printf("test2\n");
 	input = NULL;
 	prompt = NULL;
 	prompt = ft_get_prompt();
-	printf("test3\n");
 	if (!prompt)
 		return (0);
-	printf("test4\n");
 	if (ft_is_interactive())
-	{
-		printf("test5\n");
 		input = readline(prompt);
-		printf("test55\n");
-	}
 	else
 	{
-		printf("test6\n");
 		line = get_next_line(STDIN_FILENO);
 		input = ft_strndup(line, ft_strchr(line, '\n') - line);
 		free(line);
 	}
-	printf("input = %s\n", input);
 	if (!input)
 		return (free(prompt), prompt = NULL, 0);
 	free(prompt);
 	prompt = NULL;
 	add_history(input);
-	ft_set_execution_sig();
 	ft_handle_input(&minishell, input);
     return (free(input), input = NULL, 1);
-}
-
-void ft_reset_terminal(void)
-{
-    struct termios term;
-
-    if (tcgetattr(STDIN_FILENO, &term) == -1)
-    {
-        perror("tcgetattr");
-        return ;
-    }
-    term.c_lflag |= (ICANON | ECHO);
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
-		perror("tcsetattr");
 }
 
 int ft_input_loop(t_minishell *minishell)
@@ -156,13 +132,10 @@ int ft_input_loop(t_minishell *minishell)
 
     while (1)
     {
-		printf("test\n");
         if (!ft_get_user_input(minishell))
             break ;
 		ft_free_tokens(&minishell->tokens);
 		ft_free_table(&minishell->table);
-		ft_reset_terminal();
-		ft_init_sig();
     }
 	exit_status = minishell->exit_status;
 	ft_free_ptr(&minishell->envps);
