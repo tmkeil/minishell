@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 16:01:08 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 17:33:44 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	ft_update_pwd(t_envs **envs)
 {
-	char    buffer[1024];
-	
+	char	buffer[1024];
+
 	if (!getcwd(buffer, sizeof(buffer)))
 		return (perror("getcwd"), 0);
 	ft_set_env("OLDPWD", ft_get_env("PWD", *envs), envs);
@@ -40,7 +40,7 @@ int	ft_cd_to(t_lexems *lexems, char **path)
 	return (1);
 }
 
-void	ft_changedir(t_minishell **minishell, t_lexems *lexems)
+void	ft_changedir(t_minishell **minishell, t_lexems *lexems, int ipc)
 {
 	char	*path;
 
@@ -59,6 +59,8 @@ void	ft_changedir(t_minishell **minishell, t_lexems *lexems)
 	}
 	free(path);
 	ft_update_pwd(&(*minishell)->envs);
+	ft_update_envps((*minishell)->envs, &(*minishell)->envps);
+	ft_send_to_ipc((*minishell)->envps, ipc);
 	ft_update_envps((*minishell)->envs, &(*minishell)->envps);
 	exit(EXIT_SUCCESS);
 }

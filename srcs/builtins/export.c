@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 16:01:21 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 17:33:20 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int	ft_add_env(const char *name, const char *value, t_envs **envs)
 	while (current && current->next)
 		current = current->next;
 	current->next = new_node;
-	// printf("new.name = %s, new.value = %s\n", new_node->name, new_node->value);
 	return (1);
 }
 
@@ -58,7 +57,6 @@ int	ft_set_env(const char *name, const char *value, t_envs **envs)
 	t_envs	*current;
 
 	current = *envs;
-	// printf("name = %s, value = %s\n", name, value);
 	while (current)
 	{
 		if (!ft_strncmp(current->name, name, ft_strlen(name) + 1))
@@ -75,7 +73,7 @@ int	ft_set_env(const char *name, const char *value, t_envs **envs)
 void	ft_process_args(char *value, t_envs **envs)
 {
 	char	**env_args;
-	
+
 	env_args = ft_split_once(value, '=');
 	if (ft_valid_env(env_args[0]) && ft_strchr(value, '='))
 	{
@@ -87,8 +85,7 @@ void	ft_process_args(char *value, t_envs **envs)
 	ft_free_ptr(&env_args);
 }
 
-void	ft_export(t_lexems *lexems, t_envs **envs,
-		char ***envps)
+void	ft_export(t_lexems *lexems, t_envs **envs, char ***envps, int ipc)
 {
 	if (!lexems->next || !lexems->next->next)
 		ft_print_envs(*envs);
@@ -102,6 +99,8 @@ void	ft_export(t_lexems *lexems, t_envs **envs,
 		ft_process_args((char *)lexems->value, envs);
 		lexems = lexems->next;
 	}
+	ft_update_envps(*envs, envps);
+	ft_send_to_ipc(*envps, ipc);
 	ft_update_envps(*envs, envps);
 	exit(EXIT_SUCCESS);
 }

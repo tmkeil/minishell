@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 16:15:39 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 17:09:25 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_execute(t_minishell **minishell, char *cmd, t_lexems *lexem)
 {
-	char		**args;
-	size_t		size;
+	char	**args;
+	size_t	size;
 
 	size = ft_size(lexem);
 	args = malloc(sizeof(char *) * (size + 1));
@@ -60,35 +60,36 @@ char	*ft_is_builtin(void *value, char **envp)
 	return (ft_free_ptr(&cmd_path), NULL);
 }
 
-int	ft_builtin(t_minishell **minishell, t_lexems *lexes, t_envs **envs)
+int	ft_builtin(t_minishell **m_shell, t_lexems *lexes, t_envs **envs, int ipc)
 {
 	char	*cmd;
-	
+
 	if (lexes->type == SEPERATOR)
 		lexes = lexes->next;
-	cmd = ft_is_builtin(lexes->value, (*minishell)->envps);
+	cmd = ft_is_builtin(lexes->value, (*m_shell)->envps);
 	if (!cmd)
 		return (0);
 	if (!ft_strncmp(cmd, "cd", 3))
-		ft_changedir(minishell, lexes);
+		ft_changedir(m_shell, lexes, ipc);
 	if (!ft_strncmp(cmd, "echo", 5))
 		ft_echo(lexes, NULL, false);
 	if (!ft_strncmp(cmd, "env", 4))
 		ft_env(*envs);
 	if (!ft_strncmp(cmd, "exit", 5))
-		ft_exit(minishell, lexes);
+		ft_exit(m_shell, lexes);
 	if (!ft_strncmp(cmd, "export", 7))
-		ft_export(lexes, envs, &(*minishell)->envps);
+		ft_export(lexes, envs, &(*m_shell)->envps, ipc);
 	if (!ft_strncmp(cmd, "pwd", 4))
 		ft_pwd();
 	if (!ft_strncmp(cmd, "unset", 6))
-		ft_unset(lexes, envs, &(*minishell)->envps);
+		ft_unset(lexes, envs, &(*m_shell)->envps, ipc);
 	return (free(cmd), 0);
 }
 
-void	ft_exe(t_minishell **minishell, t_lexems *lexem, t_envs **envs)
+void	ft_exe(t_minishell **minishell, t_lexems *lexem, t_envs **envs,
+		int ipc)
 {
-	char		*cmd;
+	char	*cmd;
 
 	if (lexem->type == SEPERATOR)
 		lexem = lexem->next;
@@ -96,7 +97,7 @@ void	ft_exe(t_minishell **minishell, t_lexems *lexem, t_envs **envs)
 		exit(EXIT_FAILURE);
 	// ft_redirections(lexem);
 	// ft_heredoc(lexem);
-	if (!ft_builtin(minishell, lexem, envs))
+	if (!ft_builtin(minishell, lexem, envs, ipc))
 	{
 		cmd = ft_getpath(lexem->value, (*minishell)->envps, true);
 		if (!cmd)
@@ -133,13 +134,16 @@ void	ft_redirect_pipe(int number, int *fd, int *read, int i)
 	}
 }
 
-void	ft_child(t_minishell **minishell, int *fd, int *read, int i)
+void	ft_child(t_minishell **minishell, int *read, int i, int ipc)
 {
-	ft_redirect_pipe((*minishell)->number_of_pipes, fd, read, i);
-	ft_close_read(fd[0]);
+	int	*fds;
+
+	fds = (*minishell)->pipe;
+	ft_redirect_pipe((*minishell)->nbr_pipes, fds, read, i);
+	ft_close_read(fds[0]);
 	ft_close_read(*read);
-	ft_close_write(fd[1]);
-	ft_exe(minishell, (*minishell)->table[i], &(*minishell)->envs);
+	ft_close_write(fds[1]);
+	ft_exe(minishell, (*minishell)->table[i], &(*minishell)->envs, ipc);
 	exit(EXIT_FAILURE);
 }
 
@@ -159,29 +163,33 @@ void	ft_parent(t_minishell **minishell, int *read, int *fd, pid_t pid)
 
 int	ft_execute_commands(t_minishell **minishell)
 {
-	int			i;
-	int			pipe_fd[2];
-	int			new_read;
-	pid_t		pid;
+	int		i;
+	int		new_read;
+	pid_t	pid;
 
 	i = 0;
+	if (pipe((*minishell)->ipc) == -1)
+		perror("pipe error");
 	new_read = -1;
 	while ((*minishell)->table[i])
 	{
-		if (i < (*minishell)->number_of_pipes && pipe(pipe_fd) == -1)
+		if (i < (*minishell)->nbr_pipes && pipe((*minishell)->pipe) == -1)
 			perror("pipe error");
 		pid = fork();
 		if (pid == 0)
 		{
+			close((*minishell)->ipc[0]);
 			ft_set_execution_sig();
-			ft_child(minishell, pipe_fd, &new_read, i);
+			ft_child(minishell, &new_read, i, (*minishell)->ipc[1]);
 		}
 		else
 		{
-			ft_parent(minishell, &new_read, pipe_fd, pid);
+			close((*minishell)->ipc[1]);
+			ft_parent(minishell, &new_read, (*minishell)->pipe, pid);
+			ft_transfer_child_parent(&(*minishell)->envs, (*minishell)->ipc[0]);
 			ft_init_sig();
 		}
 		i++;
 	}
-	return (1);
+	return (close((*minishell)->ipc[0]), 1);
 }

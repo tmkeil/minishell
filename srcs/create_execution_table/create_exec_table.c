@@ -25,7 +25,7 @@ size_t	ft_table_size(t_minishell **minishell, t_lexems *lexems)
 			size++;
 		lexems = lexems->next;
 	}
-	(*minishell)->number_of_pipes = size;
+	(*minishell)->nbr_pipes = size;
 	return (size);
 }
 
