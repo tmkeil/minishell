@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 15:09:27 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 13:40:46 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ int	ft_append_args(char **args, char *value)
 {
 	char	*tmp;
 
+	if (!args || !value)
+		return (0);
 	tmp = *args;
 	*args = ft_strjoin(*args, value);
-	if (!args)
-		return (0);
 	if (tmp)
 		free(tmp);
 	return (1);
@@ -36,8 +36,9 @@ int	ft_get_args(char ***args, t_lexems *lexem)
 			break ;
 		if (lexem->type != SEPERATOR)
 		{
-			if (!ft_append_args(&(*args)[i++], (char *)lexem->value))
+			if (!ft_append_args(&(*args)[i], (char *)lexem->value))
 				return (0);
+			i++;
 		}
 		lexem = lexem->next;
 	}
@@ -51,7 +52,7 @@ int	ft_handle_lexem(char ***args, t_lexems *lexem, char *cmd)
 
 	i = 0;
 	if (!ft_get_args(args, lexem))
-		return (ft_free_ptr(args), ft_free_ptr(&ptr), 0);
+		return (ft_free_ptr(args), ft_free_ptr(&ptr), 0);	
 	ptr = ft_split(cmd, '/');
 	if (!ptr)
 		return (ft_free_ptr(args), 0);

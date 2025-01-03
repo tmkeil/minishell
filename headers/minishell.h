@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/03 01:03:36 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 16:01:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef struct s_minishell
 	t_envs			*envs;
 }					t_minishell;
 
+void disable_ctrl_chars(void);
 void				ft_display_intro(void);
 
 // cleaners
@@ -109,7 +110,7 @@ int					ft_update_envps(t_envs *envs, char ***envps);
 int					ft_strappend(char **str, char c);
 int					ft_join(char **str, char *to_join);
 char				**ft_split_once(char *str, char delimiter);
-int					ft_print_envs(t_lexems *lexems, t_envs *envs);
+int					ft_print_envs(t_envs *envs);
 
 // lexing
 int					ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs);

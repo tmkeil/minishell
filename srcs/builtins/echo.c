@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 15:45:12 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 13:40:30 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_is_only_minus_n(char *current, bool absolute)
 	i = 2;
 	if (!ft_strncmp(current, "-n", 3) && absolute)
 		return (1);
-	if (!ft_strncmp(current, "-n", 2))
+	if (!ft_strncmp(current, "-n", 2) && !absolute)
 	{
 		while (current[i])
 		{
@@ -60,14 +60,16 @@ void	ft_run_absolute_echo(char ***args)
 		exit(EXIT_FAILURE);
 	i = 0;
 	nl = true;
-	while (*args[++i])
+	while ((*args)[++i])
 	{
-		if (i == 1 && ft_is_only_minus_n(*args[i], true))
+		if (i == 1 && ft_is_only_minus_n((*args)[i], true))
 		{
 			nl = false;
 			continue ;
 		}
-		ft_putstr_fd(*args[i], STDOUT_FILENO);
+		ft_putstr_fd((*args)[i], STDOUT_FILENO);
+		if ((*args)[i + 1])
+			ft_putstr_fd(" ", STDOUT_FILENO);
 	}
 	if (nl)
 		write(STDOUT_FILENO, "\n", 1);

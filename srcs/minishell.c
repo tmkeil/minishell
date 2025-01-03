@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 02:57:52 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 13:59:23 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 // void	ft_test_exec_table(t_minishell minishell)
 // {
 // 	t_lexems	*current;
-// 	char		*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+// 	char		*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR",
+				// [AND] = "AND", [PIPE] = "PIPE",
 // 				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
 // 				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
 // 				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
@@ -32,44 +33,46 @@
 // 		current = minishell.table[i];
 // 		while (current)
 // 		{
-// 			printf("minishell.table[%i].Type: %s, minishell.table[%i].Value: %s\n", i, types[current->type],
-// 				i, (char *)current->value ? (char *)current->value : (char *)"(null)");
+// 			printf("minishell.table[%i].Type: %s, minishell.table[%i].Value:
+				// %s\n", i, types[current->type],
+// 				i,
+					// (char *)current->value ? (char *)current->value : (char *)"(null)");
 // 			current = current->next;
 // 		}
 // 	}
 // }
 
-int ft_is_wsl_environment(void)
+int	ft_is_wsl_environment(void)
 {
-    if (getenv("WSLENV"))
-        return (1);
-    return (0);
+	if (getenv("WSLENV"))
+		return (1);
+	return (0);
 }
 
-int ft_is_interactive(void)
+int	ft_is_interactive(void)
 {
-    if (isatty(STDIN_FILENO))
+	if (isatty(fileno(stdin)))
 		return (1);
 	return (ft_is_wsl_environment());
 }
 
-int ft_set_exit_status(t_minishell *minishell)
+int	ft_set_exit_status(t_minishell *minishell)
 {
-    char	*exit_status_str;
+	char	*exit_status_str;
 
-    exit_status_str = ft_itoa(minishell->exit_status);
-    if (!exit_status_str)
-        return (0);
-    if (!ft_set_env("?", exit_status_str, &minishell->envs))
-        return (free(exit_status_str), 0);
-    return (free(exit_status_str), 1);
+	exit_status_str = ft_itoa(minishell->exit_status);
+	if (!exit_status_str)
+		return (0);
+	if (!ft_set_env("?", exit_status_str, &minishell->envs))
+		return (free(exit_status_str), 0);
+	return (free(exit_status_str), 1);
 }
 
-char *ft_get_prompt(void)
+char	*ft_get_prompt(void)
 {
-	char 	*user;
+	char	*user;
 	char	*prompt;
-	
+
 	user = getenv("USER");
 	prompt = ft_strjoin(user, "@minishell $ ");
 	if (!prompt)
@@ -77,11 +80,11 @@ char *ft_get_prompt(void)
 	return (prompt);
 }
 
-char *ft_get_input(const char *prompt)
+char	*ft_get_input(const char *prompt)
 {
-    char *input;
+	char	*input;
 
-    input = readline(prompt);
+	input = readline(prompt);
 	return (input);
 }
 
@@ -98,75 +101,70 @@ int	ft_handle_input(t_minishell **minishell, char *input)
 	return (1);
 }
 
-int ft_get_user_input(t_minishell *minishell)
+int	ft_get_user_input(t_minishell *minishell)
 {
-    char		*prompt;
-    char 		*input;
-	char		*line;
+	char	*prompt;
+	char	*input;
+	char	*line;
 
-	input = NULL;
-	prompt = NULL;
 	prompt = ft_get_prompt();
 	if (!prompt)
 		return (0);
 	if (ft_is_interactive())
-	{
 		input = readline(prompt);
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
-	}
 	else
 	{
-		line = get_next_line(STDIN_FILENO);
-		input = ft_strndup(line, ft_strchr(line, '\n') - line);
+		line = get_next_line(fileno(stdin));
+		input = ft_strtrim(line, "\n");
 		free(line);
 	}
 	if (!input || *input == '\0')
-		return (free(prompt), prompt = NULL, 0);
+		return (free(prompt), free(input), prompt = NULL, input = NULL, 0);
 	free(prompt);
-	prompt = NULL;
 	if (input)
 	{
-		// add_history(input);
+		add_history(input);
 		ft_handle_input(&minishell, input);
 	}
-    return (free(input), input = NULL, 1);
+	return (free(input), input = NULL, prompt = NULL, 1);
 }
 
-int ft_input_loop(t_minishell *minishell)
+int	ft_input_loop(t_minishell *minishell)
 {
 	int	exit_status;
 
-    while (1)
-    {
-        if (!ft_get_user_input(minishell))
-            break ;
+	while (1)
+	{
+		if (!ft_get_user_input(minishell))
+			break ;
 		ft_free_tokens(&minishell->tokens);
 		ft_free_table(&minishell->table);
-    }
+	}
 	exit_status = minishell->exit_status;
 	ft_free_ptr(&minishell->envps);
-    ft_free_shell(&minishell);
-    return (exit_status);
+	ft_free_shell(&minishell);
+	return (exit_status);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_minishell minishell;
+	t_minishell	minishell;
 
 	(void)argv;
-    if (argc > 1)
+	if (argc > 1)
 		return (EXIT_FAILURE);
-    minishell.tokens = NULL;
-    minishell.table = NULL;
-    minishell.envs = NULL;
-    minishell.envps = NULL;
-    minishell.exit_status = 0;
-    if (!ft_extract_envps(&minishell.envs, envp) || !ft_update_envps(minishell.envs, &minishell.envps))
+	disable_ctrl_chars();
+	minishell.tokens = NULL;
+	minishell.table = NULL;
+	minishell.envs = NULL;
+	minishell.envps = NULL;
+	minishell.exit_status = 0;
+	if (!ft_extract_envps(&minishell.envs, envp)
+		|| !ft_update_envps(minishell.envs, &minishell.envps))
 		return (ft_free_envs(&minishell.envs), EXIT_FAILURE);
 	ft_init_sig();
-	ft_display_intro();
+	// ft_display_intro();
 	ft_set_exit_status(&minishell);
 	rl_clear_history();
-    return (ft_input_loop(&minishell));
+	return (ft_input_loop(&minishell));
 }

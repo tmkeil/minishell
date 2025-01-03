@@ -6,25 +6,21 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 21:04:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 14:08:48 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_print_envs(t_lexems *lexems, t_envs *envs)
+int	ft_print_envs(t_envs *envs)
 {
-	if (!lexems->next || !lexems->next->next)
+	while (envs)
 	{
-		while (envs)
-		{
-			if (envs->value)
-				ft_printf("%s=%s\n", envs->name, envs->value);
-			else
-				ft_printf("%s\n", envs->name);
-			envs = envs->next;
-		}
-		exit(EXIT_SUCCESS);
+		if (envs->value)
+			ft_printf("%s=%s\n", envs->name, envs->value);
+		else
+			ft_printf("%s\n", envs->name);
+		envs = envs->next;
 	}
 	return (1);
 }
@@ -104,7 +100,7 @@ int	ft_update_envps(t_envs *envs, char ***envps)
 	size_t	i;
 	char	*tmp;
 	t_envs	*ptr;
-	
+
 	i = 0;
 	ptr = envs;
 	if (!ft_prepare_envs(ptr, envps))

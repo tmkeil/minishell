@@ -56,4 +56,7 @@ ct:
 
 re: fclean all
 
+valgrind: re
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./$(NAME) < valgrind_test.txt
+
 .PHONY: all clean fclean re bonus

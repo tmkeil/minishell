@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 21:15:36 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 16:01:21 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	ft_add_env(const char *name, const char *value, t_envs **envs)
 	t_envs	*current;
 	t_envs	*new_node;
 
+	// printf("will be added: name = %s, value = %s\n", name, value);
 	new_node = malloc(sizeof(t_envs));
 	if (!new_node)
 		return (0);
@@ -48,6 +49,7 @@ int	ft_add_env(const char *name, const char *value, t_envs **envs)
 	while (current && current->next)
 		current = current->next;
 	current->next = new_node;
+	// printf("new.name = %s, new.value = %s\n", new_node->name, new_node->value);
 	return (1);
 }
 
@@ -56,6 +58,7 @@ int	ft_set_env(const char *name, const char *value, t_envs **envs)
 	t_envs	*current;
 
 	current = *envs;
+	// printf("name = %s, value = %s\n", name, value);
 	while (current)
 	{
 		if (!ft_strncmp(current->name, name, ft_strlen(name) + 1))
@@ -69,7 +72,7 @@ int	ft_set_env(const char *name, const char *value, t_envs **envs)
 	return (ft_add_env(name, value, envs));
 }
 
-void	ft_handle_args(char *value, t_envs **envs)
+void	ft_process_args(char *value, t_envs **envs)
 {
 	char	**env_args;
 	
@@ -88,7 +91,7 @@ void	ft_export(t_lexems *lexems, t_envs **envs,
 		char ***envps)
 {
 	if (!lexems->next || !lexems->next->next)
-		ft_print_envs(lexems, *envs);
+		ft_print_envs(*envs);
 	lexems = lexems->next->next;
 	while (lexems)
 	{
@@ -96,7 +99,7 @@ void	ft_export(t_lexems *lexems, t_envs **envs,
 			lexems = lexems->next;
 		if (!lexems)
 			break ;
-		ft_handle_args((char *)lexems->value, envs);
+		ft_process_args((char *)lexems->value, envs);
 		lexems = lexems->next;
 	}
 	ft_update_envps(*envs, envps);

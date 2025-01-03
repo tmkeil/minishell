@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 02:46:11 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 16:15:39 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,6 @@ int	ft_execute_commands(t_minishell **minishell)
 	{
 		if (i < (*minishell)->number_of_pipes && pipe(pipe_fd) == -1)
 			perror("pipe error");
-		ft_set_execution_sig();
 		pid = fork();
 		if (pid == 0)
 		{
