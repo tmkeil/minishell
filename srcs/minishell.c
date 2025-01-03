@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 02:47:39 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 02:57:52 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ int ft_get_user_input(t_minishell *minishell)
 	if (ft_is_interactive())
 	{
 		input = readline(prompt);
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 	}
 	else
 	{
@@ -125,7 +127,7 @@ int ft_get_user_input(t_minishell *minishell)
 	prompt = NULL;
 	if (input)
 	{
-		add_history(input);
+		// add_history(input);
 		ft_handle_input(&minishell, input);
 	}
     return (free(input), input = NULL, 1);
@@ -160,7 +162,6 @@ int main(int argc, char **argv, char **envp)
     minishell.envs = NULL;
     minishell.envps = NULL;
     minishell.exit_status = 0;
-	rl_clear_history();
     if (!ft_extract_envps(&minishell.envs, envp) || !ft_update_envps(minishell.envs, &minishell.envps))
 		return (ft_free_envs(&minishell.envs), EXIT_FAILURE);
 	ft_init_sig();
