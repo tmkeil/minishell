@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/02 14:04:43 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 01:03:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <termios.h>
+// # include <bits/termios-c_lflag.h>
+// # include <asm-generic/termbits.h>
 
 typedef enum s_errors
 {
@@ -54,14 +56,6 @@ typedef enum s_types
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE
 }					t_types;
-
-# include "libft.h"
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <signal.h>
-# include <stdio.h>
-# include <sys/wait.h>
-# include <termios.h>
 
 typedef struct s_envs
 {
@@ -105,9 +99,7 @@ void				ft_free_shell(t_minishell **minishell);
 
 // utils
 void 				ft_init_sig(void);
-void				ft_configure_terminal(void);
-void				ft_handle_sigquit(int sig);
-void				ft_handle_sigint(int sig);
+void 				ft_set_execution_sig(void);
 int					ft_split_env(const char *env_var, char **name,
 						char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/02 15:02:34 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 01:01:27 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,5 @@ int	ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs)
 		}
 	}
 	ft_expand_escapes_envs(tokens, envs);
-	ft_test_lexes(*tokens);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/02 15:03:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 01:02:43 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int	ft_execute_commands(t_minishell **minishell)
 
 	i = 0;
 	new_read = -1;
-	printf("exe\n");
+	ft_set_execution_sig();
 	while ((*minishell)->table[i])
 	{
 		if (i < (*minishell)->number_of_pipes && pipe(pipe_fd) == -1)
@@ -168,5 +168,6 @@ int	ft_execute_commands(t_minishell **minishell)
 			ft_parent(minishell, &new_read, pipe_fd, pid);
 		i++;
 	}
+	ft_init_sig();
 	return (1);
 }
