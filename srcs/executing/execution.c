@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
+/*   By: tkeil <tkeil@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 02:12:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 02:29:23 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,27 +149,6 @@ void	ft_parent(t_minishell **minishell, int *read, int *fd, pid_t pid)
 	*read = fd[0];
 }
 
-void ft_reset_terminal(void)
-{
-    struct termios term;
-
-    if (!isatty(STDIN_FILENO))
-    {
-        perror("Not a terminal");
-        return;
-    }
-    if (tcgetattr(STDIN_FILENO, &term) == -1)
-    {
-        perror("tcgetattr");
-        return;
-    }
-    term.c_lflag |= (ICANON | ECHO);
-    if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
-    {
-        perror("tcsetattr");
-    }
-}
-
 int	ft_execute_commands(t_minishell **minishell)
 {
 	int			i;
@@ -194,6 +173,5 @@ int	ft_execute_commands(t_minishell **minishell)
 		}
 		i++;
 	}
-	ft_reset_terminal();
 	return (1);
 }
