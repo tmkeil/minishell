@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/03 17:07:46 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 21:42:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_minishell
 	int				nbr_pipes;
 	int				exit_status;
 	char			**envps;
+	char			**cached_envps;
 	t_lexems		*tokens;
 	t_lexems		**table;
 	t_envs			*envs;
@@ -101,8 +102,8 @@ void				ft_free_envs(t_envs **head);
 void				ft_free_shell(t_minishell **minishell);
 
 // utils
-void				ft_send_to_ipc(char **envps, int ipc);
-void				ft_transfer_child_parent(t_envs **envs, int ipc);
+void				ft_send_to_ipc(t_minishell **minishell, char **envps, int ipc);
+void				ft_transfer_child_parent(t_minishell **minishell, t_envs **envs, int ipc, char ***envps);
 void				ft_init_sig(void);
 void				ft_set_execution_sig(void);
 int					ft_split_env(const char *env_var, char **name,
@@ -160,9 +161,9 @@ char				*ft_find_end(char *ptr);
 // builtins
 void				ft_changedir(t_minishell **minishell, t_lexems *lexems,
 						int ipc);
-void				ft_export(t_lexems *lexems, t_envs **envs, char ***envps,
+void				ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps,
 						int ipc);
-void				ft_unset(t_lexems *lexems, t_envs **envs, char ***envps,
+void				ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps,
 						int ipc);
 void				ft_exit(t_minishell **minishell, t_lexems *lexems);
 void				ft_pwd(void);

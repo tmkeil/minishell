@@ -6,41 +6,39 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 13:59:23 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 23:43:26 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	ft_test_exec_table(t_minishell minishell)
-// {
-// 	t_lexems	*current;
-// 	char		*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR",
-				// [AND] = "AND", [PIPE] = "PIPE",
-// 				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-// 				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-// 				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-// 				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-// 				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-// 				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-// 				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+void	ft_test_exec_table(t_minishell *minishell)
+{
+	t_lexems	*current;
+	char		*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR",
+				[AND] = "AND", [PIPE] = "PIPE",
+				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
 
-// 	printf("Testing table:\n");
-// 	for (int i = 0; minishell.table[i]; i++)
-// 	{
-// 		if (!minishell.table[i])
-// 			continue ;
-// 		current = minishell.table[i];
-// 		while (current)
-// 		{
-// 			printf("minishell.table[%i].Type: %s, minishell.table[%i].Value:
-				// %s\n", i, types[current->type],
-// 				i,
-					// (char *)current->value ? (char *)current->value : (char *)"(null)");
-// 			current = current->next;
-// 		}
-// 	}
-// }
+	printf("Testing table:\n");
+	for (int i = 0; minishell->table[i]; i++)
+	{
+		if (!minishell->table[i])
+			continue ;
+		current = minishell->table[i];
+		while (current)
+		{
+			printf("minishell.table[%i].Type: %s, minishell.table[%i].Value: %s\n", i, types[current->type], i, (char *)current->value ? (char *)current->value : (char *)"(null)");
+			current = current->next;
+		}
+	}
+}
+
 
 int	ft_is_wsl_environment(void)
 {
@@ -94,6 +92,7 @@ int	ft_handle_input(t_minishell **minishell, char *input)
 		return (0);
 	if (!ft_create_exec_table(minishell))
 		return (0);
+	ft_test_exec_table(*minishell);
 	if (!ft_execute_commands(minishell))
 		return (0);
 	if (!ft_set_exit_status(*minishell))
@@ -142,6 +141,7 @@ int	ft_input_loop(t_minishell *minishell)
 	}
 	exit_status = minishell->exit_status;
 	ft_free_ptr(&minishell->envps);
+	ft_free_ptr(&minishell->cached_envps);
 	ft_free_shell(&minishell);
 	return (exit_status);
 }
@@ -158,12 +158,12 @@ int	main(int argc, char **argv, char **envp)
 	minishell.table = NULL;
 	minishell.envs = NULL;
 	minishell.envps = NULL;
+	minishell.cached_envps = NULL;
 	minishell.exit_status = 0;
 	if (!ft_extract_envps(&minishell.envs, envp)
 		|| !ft_update_envps(minishell.envs, &minishell.envps))
 		return (ft_free_envs(&minishell.envs), EXIT_FAILURE);
 	ft_init_sig();
-	// ft_display_intro();
 	ft_set_exit_status(&minishell);
 	rl_clear_history();
 	return (ft_input_loop(&minishell));

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2024/12/28 21:21:19 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 23:56:38 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,25 @@ void	ft_free_ptr(char ***ptr)
 	}
 	free(*ptr);
 	*ptr = NULL;
+}
+
+void	ft_free_envs(t_envs **head)
+{
+	t_envs	*current;
+
+	// printf("clean envs1\n");
+	while (*head)
+	{
+		current = *head;
+		*head = (*head)->next;
+		free(current->name);
+		free(current->value);
+		current->name = NULL;
+		current->value = NULL;
+		free(current);
+	}
+	// printf("clean envs2\n");
+	head = NULL;
 }
 
 void	ft_free_tokens(t_lexems **lexems)
@@ -74,21 +93,6 @@ void	ft_free_table(t_lexems ***table)
 	}
 	free(*table);
 	*table = NULL;
-}
-
-void	ft_free_envs(t_envs **head)
-{
-	t_envs	*current;
-
-	while (*head)
-	{
-		current = *head;
-		*head = (*head)->next;
-		free(current->name);
-		free(current->value);
-		free(current);
-	}
-	head = NULL;
 }
 
 void	ft_free_shell(t_minishell **minishell)

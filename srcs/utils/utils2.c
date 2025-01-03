@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 14:08:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 22:23:00 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,18 @@
 
 int	ft_print_envs(t_envs *envs)
 {
+	// printf("print envs1\n");
+	t_envs *env;
+	env = envs;
 	while (envs)
 	{
-		if (envs->value)
-			ft_printf("%s=%s\n", envs->name, envs->value);
+		if (env->value)
+			ft_printf("%s=%s\n", env->name, env->value);
 		else
-			ft_printf("%s\n", envs->name);
-		envs = envs->next;
+			ft_printf("%s=\n", env->name);
+		env = env->next;
 	}
+	// printf("print envs2\n");
 	return (1);
 }
 

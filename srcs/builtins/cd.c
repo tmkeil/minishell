@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 17:33:44 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 22:59:27 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	ft_changedir(t_minishell **minishell, t_lexems *lexems, int ipc)
 	free(path);
 	ft_update_pwd(&(*minishell)->envs);
 	ft_update_envps((*minishell)->envs, &(*minishell)->envps);
-	ft_send_to_ipc((*minishell)->envps, ipc);
-	ft_update_envps((*minishell)->envs, &(*minishell)->envps);
+	ft_send_to_ipc(minishell, (*minishell)->envps, ipc);
 	exit(EXIT_SUCCESS);
 }

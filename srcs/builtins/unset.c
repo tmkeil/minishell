@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 17:33:27 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 23:19:25 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_remove_env(t_envs **envs, t_envs *current, t_envs *last)
 	free(current);
 }
 
-int	ft_unset_key(char *key_to_unset, t_envs **envs)
+int	ft_unset_key(char *key, t_envs **envs)
 {
 	t_envs	*current;
 	t_envs	*last;
@@ -32,8 +32,7 @@ int	ft_unset_key(char *key_to_unset, t_envs **envs)
 	last = NULL;
 	while (current)
 	{
-		if (ft_strncmp(current->name, key_to_unset, !ft_strlen(key_to_unset)
-				+ 1) == 0)
+		if (ft_strncmp(current->name, key, ft_strlen(key) + 1) == 0)
 		{
 			ft_remove_env(envs, current, last);
 			break ;
@@ -66,6 +65,7 @@ void	ft_process_unset_key(char *key, t_envs **envs, int *n)
 	if (ft_strncmp(key, " ", 1) != 0)
 	{
 		++(*n);
+		printf("key that should be unset: %s\n", key);
 		if (!ft_is_valid_identifier(key))
 		{
 			ft_put_error_str("unset:", NULL);
@@ -76,11 +76,12 @@ void	ft_process_unset_key(char *key, t_envs **envs, int *n)
 	}
 }
 
-void	ft_unset(t_lexems *lexems, t_envs **envs, char ***envps, int ipc)
+void	ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps, int ipc)
 {
 	int	count;
 
 	count = 0;
+	printf("in unset func\n");
 	if (!lexems->next)
 		exit(EXIT_SUCCESS);
 	lexems = lexems->next->next;
@@ -97,7 +98,7 @@ void	ft_unset(t_lexems *lexems, t_envs **envs, char ***envps, int ipc)
 		exit(EXIT_FAILURE);
 	}
 	ft_update_envps(*envs, envps);
-	ft_send_to_ipc(*envps, ipc);
-	ft_update_envps(*envs, envps);
+	ft_send_to_ipc(minishell, *envps, ipc);
+	
 	exit(EXIT_SUCCESS);
 }

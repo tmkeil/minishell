@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 17:09:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 23:55:28 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ int	ft_builtin(t_minishell **m_shell, t_lexems *lexes, t_envs **envs, int ipc)
 	if (!ft_strncmp(cmd, "exit", 5))
 		ft_exit(m_shell, lexes);
 	if (!ft_strncmp(cmd, "export", 7))
-		ft_export(lexes, envs, &(*m_shell)->envps, ipc);
+		ft_export(m_shell, lexes, envs, &(*m_shell)->envps, ipc);
 	if (!ft_strncmp(cmd, "pwd", 4))
 		ft_pwd();
 	if (!ft_strncmp(cmd, "unset", 6))
-		ft_unset(lexes, envs, &(*m_shell)->envps, ipc);
+		ft_unset(m_shell, lexes, envs, &(*m_shell)->envps, ipc);
 	return (free(cmd), 0);
 }
 
@@ -170,6 +170,7 @@ int	ft_execute_commands(t_minishell **minishell)
 	i = 0;
 	if (pipe((*minishell)->ipc) == -1)
 		perror("pipe error");
+    // ft_send_to_ipc(minishell, (*minishell)->envps, (*minishell)->ipc[1]);
 	new_read = -1;
 	while ((*minishell)->table[i])
 	{
@@ -186,7 +187,7 @@ int	ft_execute_commands(t_minishell **minishell)
 		{
 			close((*minishell)->ipc[1]);
 			ft_parent(minishell, &new_read, (*minishell)->pipe, pid);
-			ft_transfer_child_parent(&(*minishell)->envs, (*minishell)->ipc[0]);
+			ft_transfer_child_parent(minishell, &(*minishell)->envs, (*minishell)->ipc[0], &(*minishell)->envps);
 			ft_init_sig();
 		}
 		i++;
