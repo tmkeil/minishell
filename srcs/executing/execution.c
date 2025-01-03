@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkeil <tkeil@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 02:29:23 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 02:46:11 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,17 @@ void	ft_close_read(int re)
 void	ft_redirect_pipe(int number, int *fd, int *read, int i)
 {
 	if (*read != -1)
+	{
 		dup2(*read, STDIN_FILENO);
+		close(*read);
+		*read = -1;
+	}
 	if (i < number)
+	{
 		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		fd[1] = -1;
+	}
 }
 
 void	ft_child(t_minishell **minishell, int *fd, int *read, int i)
@@ -165,7 +173,10 @@ int	ft_execute_commands(t_minishell **minishell)
 		ft_set_execution_sig();
 		pid = fork();
 		if (pid == 0)
+		{
+			ft_set_execution_sig();
 			ft_child(minishell, pipe_fd, &new_read, i);
+		}
 		else
 		{
 			ft_parent(minishell, &new_read, pipe_fd, pid);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkeil <tkeil@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 02:28:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/03 02:47:39 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,7 @@ int ft_get_user_input(t_minishell *minishell)
 		return (0);
 	if (ft_is_interactive())
 	{
-		printf("before readline\n");
 		input = readline(prompt);
-		printf("after readline\n");
 	}
 	else
 	{
@@ -121,7 +119,7 @@ int ft_get_user_input(t_minishell *minishell)
 		input = ft_strndup(line, ft_strchr(line, '\n') - line);
 		free(line);
 	}
-	if (!input)
+	if (!input || *input == '\0')
 		return (free(prompt), prompt = NULL, 0);
 	free(prompt);
 	prompt = NULL;
