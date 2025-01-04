@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:05:49 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 19:53:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:46:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,29 +58,31 @@ int check_if_more_arguments(t_lexems *lexems)
 	return (0);
 }
 
-void ft_exit(t_minishell **minishell, t_lexems *lexems)
+void ft_exit(t_minishell **minishell, char **args)
 {
-	int value_exit;
+	(void)minishell;
+	(void)args;
+	// int value_exit;
 
-	if (!lexems->next || !lexems->next->next)
-	{
-		if (*minishell)
-			ft_free_shell(minishell);
-		exit((*minishell)->exit_status);
-	}
-	lexems = lexems->next->next;
-	value_exit = (int)ft_atol(lexems->value);
-	if (value_exit < 0 || value_exit > 255)
-		value_exit = value_exit % 256;
-	if (value_exit == 255 && !ft_isdigit(((char *)(lexems->value))[0]))
-	{
-		ft_putstr_fd("exit: ", STDERR_FILENO);
-		ft_putstr_fd(lexems->value, STDERR_FILENO);
-		ft_putstr_fd(": numeric argument required", STDERR_FILENO);
-	}
-	if (check_if_more_arguments(lexems))
-		ft_putstr_fd("exit: too many arguments", STDERR_FILENO);
-	if (*minishell)
-		ft_free_shell(minishell);
-	exit(value_exit);
+	// if (!lexems->next || !lexems->next->next)
+	// {
+	// 	if (*minishell)
+	// 		ft_free_shell(minishell);
+	// 	exit((*minishell)->exit_status);
+	// }
+	// lexems = lexems->next->next;
+	// value_exit = (int)ft_atol(lexems->value);
+	// if (value_exit < 0 || value_exit > 255)
+	// 	value_exit = value_exit % 256;
+	// if (value_exit == 255 && !ft_isdigit(((char *)(lexems->value))[0]))
+	// {
+	// 	ft_putstr_fd("exit: ", STDERR_FILENO);
+	// 	ft_putstr_fd(lexems->value, STDERR_FILENO);
+	// 	ft_putstr_fd(": numeric argument required", STDERR_FILENO);
+	// }
+	// if (check_if_more_arguments(lexems))
+	// 	ft_putstr_fd("exit: too many arguments", STDERR_FILENO);
+	// if (*minishell)
+	// 	ft_free_shell(minishell);
+	// exit(value_exit);
 }

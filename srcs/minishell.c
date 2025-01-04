@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 23:43:26 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:03:32 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,9 @@ int	ft_handle_input(t_minishell **minishell, char *input)
 		return (0);
 	if (!ft_create_exec_table(minishell))
 		return (0);
-	ft_test_exec_table(*minishell);
+	if (!ft_create_command_list(&(*minishell)->cmds, (*minishell)->table))
+		return (0);
+	// ft_test_exec_table(*minishell);
 	if (!ft_execute_commands(minishell))
 		return (0);
 	if (!ft_set_exit_status(*minishell))
@@ -141,7 +143,6 @@ int	ft_input_loop(t_minishell *minishell)
 	}
 	exit_status = minishell->exit_status;
 	ft_free_ptr(&minishell->envps);
-	ft_free_ptr(&minishell->cached_envps);
 	ft_free_shell(&minishell);
 	return (exit_status);
 }
@@ -154,11 +155,13 @@ int	main(int argc, char **argv, char **envp)
 	if (argc > 1)
 		return (EXIT_FAILURE);
 	disable_ctrl_chars();
+	minishell.in_fd = STDIN_FILENO;
+	minishell.out_fd = STDOUT_FILENO;
 	minishell.tokens = NULL;
 	minishell.table = NULL;
 	minishell.envs = NULL;
 	minishell.envps = NULL;
-	minishell.cached_envps = NULL;
+	minishell.cmds = NULL;
 	minishell.exit_status = 0;
 	if (!ft_extract_envps(&minishell.envs, envp)
 		|| !ft_update_envps(minishell.envs, &minishell.envps))

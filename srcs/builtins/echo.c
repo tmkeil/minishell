@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 13:40:30 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:44:41 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,30 +86,32 @@ void	ft_if_no_args(t_lexems *lexem)
 	}
 }
 
-void	ft_echo(t_lexems *lexem, char ***args, bool absolute)
+void	ft_echo(char **args, bool absolute)
 {
-	int		minusn;
-	bool	nl;
+	(void)args;
+	(void)absolute;
+	// int		minusn;
+	// bool	nl;
 
-	nl = true;
-	if (absolute)
-		ft_run_absolute_echo(args);
-	ft_if_no_args(lexem);
-	lexem = lexem->next->next;
-	while (1)
-	{
-		minusn = ft_minus_n(&lexem, &nl, absolute);
-		if (!minusn)
-			exit(EXIT_SUCCESS);
-		if (minusn == 1 || absolute)
-			break ;
-	}
-	while (lexem)
-	{
-		ft_putstr_fd((char *)lexem->value, STDOUT_FILENO);
-		lexem = lexem->next;
-	}
-	if (nl)
-		write(STDOUT_FILENO, "\n", 1);
-	exit(EXIT_SUCCESS);
+	// nl = true;
+	// if (absolute)
+	// 	ft_run_absolute_echo(args);
+	// // ft_if_no_args(lexem);
+	// lexem = lexem->next->next;
+	// while (1)
+	// {
+	// 	minusn = ft_minus_n(&lexem, &nl, absolute);
+	// 	if (!minusn)
+	// 		exit(EXIT_SUCCESS);
+	// 	if (minusn == 1 || absolute)
+	// 		break ;
+	// }
+	// while (lexem)
+	// {
+	// 	ft_putstr_fd((char *)lexem->value, STDOUT_FILENO);
+	// 	lexem = lexem->next;
+	// }
+	// if (nl)
+	// 	write(STDOUT_FILENO, "\n", 1);
+	// exit(EXIT_SUCCESS);
 }

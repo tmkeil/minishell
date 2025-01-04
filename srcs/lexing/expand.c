@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:52:26 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 19:55:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 13:05:12 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	ft_join_word_neighbours(t_lexems **tokens)
 				return (0);
 			to_delete = lex->next;
 			lex->next = lex->next->next;
+			lex->type = WORD;
 			free(to_delete);
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:57:49 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 13:40:46 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:58:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,23 @@ int	ft_get_args(char ***args, t_lexems *lexem)
 	return (1);
 }
 
-int	ft_handle_lexem(char ***args, t_lexems *lexem, char *cmd)
-{
-	int		i;
-	char	**ptr;
+// int	ft_handle_lexem(char ***args, t_lexems *lexem, char *cmd)
+// {
+// 	int		i;
+// 	char	**ptr;
 
-	i = 0;
-	if (!ft_get_args(args, lexem))
-		return (ft_free_ptr(args), ft_free_ptr(&ptr), 0);	
-	ptr = ft_split(cmd, '/');
-	if (!ptr)
-		return (ft_free_ptr(args), 0);
-	while (ptr[i])
-		i++;
-	if (!ft_strncmp("echo", ptr[i - 1], 5))
-	{
-		ft_free_ptr(&ptr);
-		ft_echo(lexem, args, true);		
-	}
-	return (ft_free_ptr(&ptr), 1);
-}
+// 	i = 0;
+// 	if (!ft_get_args(args, lexem))
+// 		return (ft_free_ptr(args), ft_free_ptr(&ptr), 0);	
+// 	ptr = ft_split(cmd, '/');
+// 	if (!ptr)
+// 		return (ft_free_ptr(args), 0);
+// 	while (ptr[i])
+// 		i++;
+// 	if (!ft_strncmp("echo", ptr[i - 1], 5))
+// 	{
+// 		ft_free_ptr(&ptr);
+// 		ft_echo(lexem, args, true);		
+// 	}
+// 	return (ft_free_ptr(&ptr), 1);
+// }

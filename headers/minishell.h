@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/03 21:42:19 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:52:37 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,19 +78,32 @@ typedef struct s_lexems
 	struct s_lexems	*next;
 }					t_lexems;
 
+typedef struct s_cmds
+{
+	char			*cmd;
+    char			**args;
+    char			*input_file;
+    char			*output_file;
+    int				append;
+    char			*heredoc_end;
+    struct s_cmds	*next;
+}					t_cmds;
+
 typedef struct s_minishell
 {
-	int				ipc[2];
+	int				in_fd;
+	int				out_fd;
 	int				pipe[2];
-	int				nbr_pipes;
 	int				exit_status;
 	char			**envps;
-	char			**cached_envps;
 	t_lexems		*tokens;
 	t_lexems		**table;
 	t_envs			*envs;
+	t_cmds			*cmds;
 }					t_minishell;
 
+int 				ft_create_command_list(t_cmds **cmds, t_lexems **table);
+void 				ft_handle_redirections(t_cmds *cmd, int *in_fd);
 void				disable_ctrl_chars(void);
 void				ft_display_intro(void);
 
@@ -159,16 +172,13 @@ char				*ft_until_next_env(char *ptr);
 char				*ft_find_end(char *ptr);
 
 // builtins
-void				ft_changedir(t_minishell **minishell, t_lexems *lexems,
-						int ipc);
-void				ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps,
-						int ipc);
-void				ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps,
-						int ipc);
-void				ft_exit(t_minishell **minishell, t_lexems *lexems);
+void				ft_changedir(t_minishell **minishell, char **args);
+void				ft_export(t_minishell **minishell, char **args, t_envs **envs, char ***envps);
+void				ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps);
+void 				ft_exit(t_minishell **minishell, char **args);
 void				ft_pwd(void);
 void				ft_env(t_envs *envs);
-void				ft_echo(t_lexems *lexem, char ***args, bool absolute);
+void				ft_echo(char **args, bool absolute);
 
 // builtin utils
 int					ft_set_env(const char *name, const char *value,
@@ -177,6 +187,6 @@ int					ft_set_env(const char *name, const char *value,
 // table
 int					ft_create_exec_table(t_minishell **minishell);
 void				ft_append_node(t_lexems **table, t_lexems *lex);
-size_t				ft_table_size(t_minishell **minishell, t_lexems *lexems);
+size_t				ft_table_size(t_lexems *lexems);
 
 #endif

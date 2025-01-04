@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 22:59:27 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:44:06 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,27 @@ int	ft_cd_to(t_lexems *lexems, char **path)
 	return (1);
 }
 
-void	ft_changedir(t_minishell **minishell, t_lexems *lexems, int ipc)
+void	ft_changedir(t_minishell **minishell, char **args)
 {
-	char	*path;
+	(void)minishell;
+	(void)args;
+	// char	*path;
 
-	path = NULL;
-	if (!ft_cd_to(lexems, &path))
-	{
-		ft_put_error_str(CD_TOO_MANY, NULL);
-		free(path);
-		exit(EXIT_FAILURE);
-	}
-	if (chdir(path) != 0)
-	{
-		ft_put_error_str(BAD_CD, path);
-		free(path);
-		exit(EXIT_FAILURE);
-	}
-	free(path);
-	ft_update_pwd(&(*minishell)->envs);
-	ft_update_envps((*minishell)->envs, &(*minishell)->envps);
-	ft_send_to_ipc(minishell, (*minishell)->envps, ipc);
-	exit(EXIT_SUCCESS);
+	// path = NULL;
+	// if (!ft_cd_to(lexems, &path))
+	// {
+	// 	ft_put_error_str(CD_TOO_MANY, NULL);
+	// 	free(path);
+	// 	exit(EXIT_FAILURE);
+	// }
+	// if (chdir(path) != 0)
+	// {
+	// 	ft_put_error_str(BAD_CD, path);
+	// 	free(path);
+	// 	exit(EXIT_FAILURE);
+	// }
+	// free(path);
+	// ft_update_pwd(&(*minishell)->envs);
+	// ft_update_envps((*minishell)->envs, &(*minishell)->envps);
+	// exit(EXIT_SUCCESS);
 }

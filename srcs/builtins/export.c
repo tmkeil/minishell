@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 22:59:32 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:48:33 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,41 +85,24 @@ void	ft_process_args(char *value, t_envs **envs)
 	ft_free_ptr(&env_args);
 }
 
-void	ft_export(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps, int ipc)
+void	ft_export(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
 {
-	if (!lexems->next || !lexems->next->next)
-		ft_print_envs(*envs);
-	lexems = lexems->next->next;
-	while (lexems)
-	{
-		if (lexems->type == SEPERATOR)
-			lexems = lexems->next;
-		if (!lexems)
-			break ;
-		ft_process_args((char *)lexems->value, envs);
-		lexems = lexems->next;
-	}
-	ft_update_envps(*envs, envps);
-	ft_send_to_ipc(minishell, *envps, ipc);
-	// int k = 0;
-	
-	// printf("in exp\n\n\n");
-	// while ((*envps)[k])
+	(void)minishell;
+	(void)args;
+	(void)envps;
+	(void)envs;
+	// if (!lexems->next || !lexems->next->next)
+	// 	ft_print_envs(*envs);
+	// lexems = lexems->next->next;
+	// while (lexems)
 	// {
-	// 	printf("%s\n", (*envps)[k]);
-	// 	k++;
+	// 	if (lexems->type == SEPERATOR)
+	// 		lexems = lexems->next;
+	// 	if (!lexems)
+	// 		break ;
+	// 	ft_process_args((char *)lexems->value, envs);
+	// 	lexems = lexems->next;
 	// }
-
-	// int k = 0;
-	
-	// printf("in exp123\n\n\n");
-	// while (((*minishell)->cached_envps)[k])
-	// {
-	// 	printf("%s\n", ((*minishell)->cached_envps)[k]);
-	// 	k++;
-	// }
-	
-	// printf("in exp\n\n\n");
-	// ft_print_envs(*envs);
-	exit(EXIT_SUCCESS);
+	// ft_update_envps(*envs, envps);
+	// exit(EXIT_SUCCESS);
 }

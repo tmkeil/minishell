@@ -10,7 +10,7 @@ LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
 LEXING = lexer.c lexer_utils.c lexer_utils2.c expand.c expand2.c
-TABLE = create_exec_table.c
+TABLE = create_exec_table.c create_command_list.c
 EXECUTING = execution.c get_cmd_arguments.c getpath.c execution_utils.c pipes.c
 BUILTINS = cd.c env.c exit.c export.c pwd.c unset.c echo.c
 CLEARING = cleaners.c

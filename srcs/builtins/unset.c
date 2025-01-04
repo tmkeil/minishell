@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 23:19:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 15:49:54 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,29 +76,31 @@ void	ft_process_unset_key(char *key, t_envs **envs, int *n)
 	}
 }
 
-void	ft_unset(t_minishell **minishell, t_lexems *lexems, t_envs **envs, char ***envps, int ipc)
+void	ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
 {
-	int	count;
+	(void)minishell;
+	(void)args;
+	(void)envps;
+	(void)envs;
+	// int	count;
 
-	count = 0;
-	printf("in unset func\n");
-	if (!lexems->next)
-		exit(EXIT_SUCCESS);
-	lexems = lexems->next->next;
-	while (lexems)
-	{
-		if (lexems->type == SEPERATOR)
-			lexems = lexems->next;
-		ft_process_unset_key(lexems->value, envs, &count);
-		lexems = lexems->next;
-	}
-	if (!count)
-	{
-		ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
-		exit(EXIT_FAILURE);
-	}
-	ft_update_envps(*envs, envps);
-	ft_send_to_ipc(minishell, *envps, ipc);
-	
-	exit(EXIT_SUCCESS);
+	// count = 0;
+	// printf("in unset func\n");
+	// if (!lexems->next)
+	// 	exit(EXIT_SUCCESS);
+	// lexems = lexems->next->next;
+	// while (lexems)
+	// {
+	// 	if (lexems->type == SEPERATOR)
+	// 		lexems = lexems->next;
+	// 	ft_process_unset_key(lexems->value, envs, &count);
+	// 	lexems = lexems->next;
+	// }
+	// if (!count)
+	// {
+	// 	ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
+	// 	exit(EXIT_FAILURE);
+	// }
+	// ft_update_envps(*envs, envps);
+	// exit(EXIT_SUCCESS);
 }
