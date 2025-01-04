@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 15:49:54 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 20:33:56 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,49 +58,28 @@ int	ft_is_valid_identifier(const char *key)
 	return (1);
 }
 
-void	ft_process_unset_key(char *key, t_envs **envs, int *n)
+int	ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
 {
-	// if (ft_strncmp(key, " ", 1) == 0)
-	// 	ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
-	if (ft_strncmp(key, " ", 1) != 0)
+	int	i;
+
+	i = 1;
+	while (args[i])
 	{
-		++(*n);
-		printf("key that should be unset: %s\n", key);
-		if (!ft_is_valid_identifier(key))
-		{
-			ft_put_error_str("unset:", NULL);
-			ft_put_error_str(key, ": invalid parameter name");
-		}
-		else
-			ft_unset_key(key, envs);
+		ft_unset_key(args[i], envs);
+		i++;
 	}
-}
-
-void	ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
-{
-	(void)minishell;
-	(void)args;
-	(void)envps;
-	(void)envs;
-	// int	count;
-
-	// count = 0;
-	// printf("in unset func\n");
-	// if (!lexems->next)
-	// 	exit(EXIT_SUCCESS);
-	// lexems = lexems->next->next;
-	// while (lexems)
-	// {
-	// 	if (lexems->type == SEPERATOR)
-	// 		lexems = lexems->next;
-	// 	ft_process_unset_key(lexems->value, envs, &count);
-	// 	lexems = lexems->next;
-	// }
-	// if (!count)
-	// {
-	// 	ft_putendl_fd("unset: not enough arguments", STDERR_FILENO);
-	// 	exit(EXIT_FAILURE);
-	// }
-	// ft_update_envps(*envs, envps);
-	// exit(EXIT_SUCCESS);
+	i = 1;
+	while (args[i])
+	{
+		if (!ft_is_valid_identifier(args[i]))
+		{
+			ft_put_error_str("bash: unset: `", NULL);
+			ft_put_error_str(args[i], "': not a valid identifier");
+			(*minishell)->exit_status = 1;
+			break ;
+		}
+		i++;
+	}
+	ft_update_envps(*envs, envps);
+	return (1);
 }

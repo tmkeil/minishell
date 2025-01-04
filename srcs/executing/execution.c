@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 15:57:36 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 20:18:39 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@
 // 	exit(EXIT_FAILURE);
 // }
 
-// int	ft_builtin(t_minishell **m_shell, t_lexems *lexes, t_envs **envs, int ipc)
+// int	ft_builtin(t_minishell **m_shell, t_lexems *lexes, t_envs **envs,
+// int ipc)
 // {
 // 	char	*cmd;
 
@@ -132,7 +133,8 @@
 // 		{
 // 			close((*minishell)->ipc[1]);
 // 			ft_parent(minishell, &new_read, (*minishell)->pipe, pid);
-// 			ft_transfer_child_parent(minishell, &(*minishell)->envs, (*minishell)->ipc[0], &(*minishell)->envps);
+// 			ft_transfer_child_parent(minishell, &(*minishell)->envs,
+// (*minishell)->ipc[0], &(*minishell)->envps);
 // 			ft_init_sig();
 // 		}
 // 		i++;
@@ -196,10 +198,10 @@ void	ft_child(t_minishell *minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 	exit(1);
 }
 
-int run_builtin(t_minishell *minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
+int	run_builtin(t_minishell *minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 {
 	char	*cmd_builtin;
-	
+
 	cmd_builtin = ft_is_builtin(cmd->cmd, minishell->envps);
 	if (!cmd_builtin)
 		return (0);
@@ -208,7 +210,7 @@ int run_builtin(t_minishell *minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 	if (!ft_strncmp(cmd_builtin, "cd", 3))
 		ft_changedir(&minishell, cmd->args);
 	if (!ft_strncmp(cmd_builtin, "echo", 5))
-		ft_echo(cmd->args, false);
+		ft_echo(cmd->args);
 	if (!ft_strncmp(cmd_builtin, "env", 4))
 		ft_env(minishell->envs);
 	if (!ft_strncmp(cmd_builtin, "exit", 5))
@@ -219,61 +221,62 @@ int run_builtin(t_minishell *minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 		ft_pwd();
 	if (!ft_strncmp(cmd_builtin, "unset", 6))
 		ft_unset(&minishell, cmd->args, &(*minishell).envs, &minishell->envps);
-    dup2(minishell->in_fd, STDIN_FILENO);
-    dup2(minishell->out_fd, STDOUT_FILENO);
-    if (fd_pipe[0] != -1)
+	dup2(minishell->in_fd, STDIN_FILENO);
+	dup2(minishell->out_fd, STDOUT_FILENO);
+	if (fd_pipe[0] != -1)
 		close(fd_pipe[0]);
-    if (fd_pipe[1] != -1)
+	if (fd_pipe[1] != -1)
 		close(fd_pipe[1]);
 	return (free(cmd_builtin), 1);
 }
 
-void execute_external(t_minishell *minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
+void	execute_external(t_minishell *minishell, t_cmds *cmd, int fd_in,
+		int *fd_pipe)
 {
 	int		status;
-    pid_t	pid;
-	
+	pid_t	pid;
+
 	pid = fork();
-    if (pid == 0)
+	if (pid == 0)
 		ft_child(minishell, cmd, fd_in, fd_pipe);
-    else
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-            minishell->exit_status = WEXITSTATUS(status);
-        else
-            minishell->exit_status = 1;
-        if (fd_pipe[1] != -1)
-            close(fd_pipe[1]);
-    }
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			minishell->exit_status = WEXITSTATUS(status);
+		else
+			minishell->exit_status = 1;
+		if (fd_pipe[1] != -1)
+			close(fd_pipe[1]);
+	}
 }
 
 int	ft_execute_commands(t_minishell **minishell)
 {
-	int 	fd_pipe[2];
+	int		fd_pipe[2];
 	int		fd_in;
-	t_cmds *current;
-	
+	t_cmds	*current;
+
 	fd_in = -1;
 	current = (*minishell)->cmds;
 	while (current)
 	{
-        if (current->next)
-        {
-            if (pipe(fd_pipe) == -1)
-                return (perror("pipe error"), 1);
-        }
-        else
-        {
-            fd_pipe[0] = -1;
-            fd_pipe[1] = -1;
-        }
-        if (!run_builtin(*minishell, current, fd_in, fd_pipe))
-            execute_external(*minishell, current, fd_in, fd_pipe);
-        if (fd_in != -1)
-            close(fd_in);
-        fd_in = fd_pipe[0];
-        current = current->next;
+		if (current->next)
+		{
+			if (pipe(fd_pipe) == -1)
+				return (perror("pipe error"), 1);
+		}
+		else
+		{
+			fd_pipe[0] = -1;
+			fd_pipe[1] = -1;
+		}
+		if (!run_builtin(*minishell, current, fd_in, fd_pipe))
+			execute_external(*minishell, current, fd_in, fd_pipe);
+		if (fd_in != -1)
+			close(fd_in);
+		fd_in = fd_pipe[0];
+		current = current->next;
 	}
-	return (EXIT_SUCCESS);
+	return (1);
 }

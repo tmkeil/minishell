@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 22:23:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 20:21:15 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,24 @@ int	ft_extract_envps(t_envs **envs, char **envp)
 	}
 	if (!ft_set_env("?", "0", envs))
 		return (0);
+	// printf("abfibdscisbdisbdivbsdvbsdibvsv\n");
+	// t_envs *e;
+	// e = *envs;
+	// while (e)
+	// {
+	// 	printf("%s=%s\n", e->name, e->value);
+	// 	e = e->next;
+	// }
+	// printf("\n\n\n");
+	// e = *envs;
+	// while (e)
+	// {
+	// 	if (e->value)
+	// 		printf("%s=%s\n", e->name, e->value);
+	// 	else
+	// 		printf("%s=\n", e->name);
+	// 	e = e->next;
+	// }
 	return (1);
 }
 

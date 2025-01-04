@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 15:48:33 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 20:40:38 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	ft_add_env(const char *name, const char *value, t_envs **envs)
 	t_envs	*current;
 	t_envs	*new_node;
 
-	// printf("will be added: name = %s, value = %s\n", name, value);
 	new_node = malloc(sizeof(t_envs));
 	if (!new_node)
 		return (0);
@@ -80,29 +79,30 @@ void	ft_process_args(char *value, t_envs **envs)
 		if (!ft_set_env(env_args[0], env_args[1], envs))
 			ft_free_ptr(&env_args);
 	}
-	else if (!ft_valid_env(env_args[0]))
-		ft_put_error_str(ERR_EXPORT, value);
 	ft_free_ptr(&env_args);
 }
 
-void	ft_export(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
+int	ft_export(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
 {
-	(void)minishell;
-	(void)args;
-	(void)envps;
-	(void)envs;
-	// if (!lexems->next || !lexems->next->next)
-	// 	ft_print_envs(*envs);
-	// lexems = lexems->next->next;
-	// while (lexems)
-	// {
-	// 	if (lexems->type == SEPERATOR)
-	// 		lexems = lexems->next;
-	// 	if (!lexems)
-	// 		break ;
-	// 	ft_process_args((char *)lexems->value, envs);
-	// 	lexems = lexems->next;
-	// }
-	// ft_update_envps(*envs, envps);
-	// exit(EXIT_SUCCESS);
+	if (!args[1])
+		ft_print_envs(*envs);
+	int i = 1;
+	while (args[i])
+	{
+		ft_process_args(args[i], envs);
+		i++;
+	}
+	i = 1;
+	while (args[i])
+	{
+		if (!ft_valid_env(args[i]))
+		{
+			(*minishell)->exit_status = 1;
+			ft_put_error_str(ERR_EXPORT, args[i]);
+			break ;
+		}
+		i++;		
+	}
+	ft_update_envps(*envs, envps);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/04 15:52:37 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 19:53:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // # define OPERATIONS "&& || & | < > << >>"
 # define OPERATIONS "|<><<>>"
 # define BAD_CD "cd: no such file or directory: "
-# define CD_TOO_MANY "-bash: cd: too many arguments"
+# define CD_TOO_MANY "-bash: cd: too many arguments\n"
 # define ERR_EXPORT "export: not valid in this context: "
 # define BUILTINS "echo cd env exit export pwd unset"
 
@@ -102,6 +102,7 @@ typedef struct s_minishell
 	t_cmds			*cmds;
 }					t_minishell;
 
+void	ft_free_cmds(t_cmds **cmds);
 int 				ft_create_command_list(t_cmds **cmds, t_lexems **table);
 void 				ft_handle_redirections(t_cmds *cmd, int *in_fd);
 void				disable_ctrl_chars(void);
@@ -160,25 +161,22 @@ int					ft_expand_tilde(char **expanded, char *current, size_t *i);
 // executing
 int					ft_execute_commands(t_minishell **minishell);
 char				*ft_getpath(char *cmd, char **envp, bool absolute);
-size_t				ft_size(t_lexems *lexes);
+// size_t				ft_size(t_lexems *lexes);
 char				*ft_find_end(char *ptr);
 char				*ft_until_next_env(char *ptr);
 char				*ft_get_env(char *env_var, t_envs *envs);
 
 // cmdarguments
-int					ft_handle_lexem(char ***args, t_lexems *lexem, char *cmd);
-int					ft_append_args(char **args, char *value);
 char				*ft_until_next_env(char *ptr);
-char				*ft_find_end(char *ptr);
 
 // builtins
-void				ft_changedir(t_minishell **minishell, char **args);
-void				ft_export(t_minishell **minishell, char **args, t_envs **envs, char ***envps);
-void				ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps);
-void 				ft_exit(t_minishell **minishell, char **args);
-void				ft_pwd(void);
-void				ft_env(t_envs *envs);
-void				ft_echo(char **args, bool absolute);
+int				ft_changedir(t_minishell **minishell, char **args);
+int				ft_export(t_minishell **minishell, char **args, t_envs **envs, char ***envps);
+int				ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps);
+int 				ft_exit(t_minishell **minishell, char **args);
+int				ft_pwd(void);
+int				ft_env(t_envs *envs);
+int				ft_echo(char **args);
 
 // builtin utils
 int					ft_set_env(const char *name, const char *value,

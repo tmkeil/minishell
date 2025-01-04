@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 12:58:06 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 15:53:47 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:55:59 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,6 @@ int ft_alloc_args(t_cmds **cmd, t_lexems *lexem)
     size = 0;
     while (lexem)
     {
-        if (lexem->type == SEPERATOR)
-        {
-            lexem = lexem->next;
-            continue ;
-        }
         if (ft_strnstr(OPERATIONS, (char *)lexem->value, ft_strlen(OPERATIONS)))
             break ;
         if (lexem->type == WORD)
@@ -74,13 +69,10 @@ int ft_fill_args(t_cmds **cmd, t_lexems **lexem)
 	{
 		if (ft_strnstr(OPERATIONS, (char *)(*lexem)->value, ft_strlen(OPERATIONS)))
 			break ;
-		if ((*lexem)->type != SEPERATOR)
-		{
-            ((*cmd)->args)[i] = ft_strdup((char *)(*lexem)->value);
-			if (!((*cmd)->args)[i])
-				return (0);
-			i++;
-		}
+        ((*cmd)->args)[i] = ft_strdup((char *)(*lexem)->value);
+		if (!((*cmd)->args)[i])
+			return (0);
+		i++;
 		*lexem = (*lexem)->next;
 	}
 	return (1);
@@ -90,11 +82,6 @@ int ft_get_new_cmd(t_cmds **cmd, t_lexems *lexem)
 {
     while (lexem)
     {
-        if (lexem->type == SEPERATOR)
-        {
-            lexem = lexem->next;
-            continue;
-        }
         if (lexem->type == WORD)
         {
             if (!(*cmd)->cmd)
@@ -155,11 +142,11 @@ int ft_create_command_list(t_cmds **cmds, t_lexems **table)
     {
         new_cmd = malloc(sizeof(t_cmds));
         if (!new_cmd)
-            return (EXIT_FAILURE);
+            return (0);
         ft_init_new(&new_cmd);
         ft_get_new_cmd(&new_cmd, table[i]);
         ft_append_new_command(cmds, new_cmd);
         i++;
     }
-    return (0);
+    return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 15:03:32 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 19:09:31 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,26 @@ void	ft_test_exec_table(t_minishell *minishell)
 	}
 }
 
+void	ft_test_cmd_list(t_cmds *cmds)
+{
+	int i = 0;
+	while (cmds)
+	{
+		printf("cmd = %s\n", cmds->cmd);
+		i = 0;
+		while ((cmds->args)[i])
+		{
+			printf("arg[%i] = %s\n", i, (cmds->args)[i]);
+			i++;
+		}
+		printf("in file = %s\n", cmds->input_file);
+		printf("out file = %s\n", cmds->output_file);
+		printf("append = %i\n", cmds->append);
+		printf("heredoc_end = %s\n", cmds->heredoc_end);
+		cmds = cmds->next;
+	}
+	
+}
 
 int	ft_is_wsl_environment(void)
 {
@@ -94,11 +114,11 @@ int	ft_handle_input(t_minishell **minishell, char *input)
 		return (0);
 	if (!ft_create_command_list(&(*minishell)->cmds, (*minishell)->table))
 		return (0);
-	// ft_test_exec_table(*minishell);
+	// ft_test_cmd_list((*minishell)->cmds);
 	if (!ft_execute_commands(minishell))
 		return (0);
 	if (!ft_set_exit_status(*minishell))
-		return (ft_free_shell(minishell), 0);
+		return (0);
 	return (1);
 }
 
@@ -125,7 +145,8 @@ int	ft_get_user_input(t_minishell *minishell)
 	if (input)
 	{
 		add_history(input);
-		ft_handle_input(&minishell, input);
+		if (!ft_handle_input(&minishell, input))
+			return (0);
 	}
 	return (free(input), input = NULL, prompt = NULL, 1);
 }
@@ -140,8 +161,12 @@ int	ft_input_loop(t_minishell *minishell)
 			break ;
 		ft_free_tokens(&minishell->tokens);
 		ft_free_table(&minishell->table);
+		ft_free_cmds(&minishell->cmds);
 	}
 	exit_status = minishell->exit_status;
+	ft_free_tokens(&minishell->tokens);
+	ft_free_table(&minishell->table);
+	ft_free_cmds(&minishell->cmds);
 	ft_free_ptr(&minishell->envps);
 	ft_free_shell(&minishell);
 	return (exit_status);

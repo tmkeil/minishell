@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 15:46:35 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/03 23:56:38 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 17:46:53 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	ft_free_envs(t_envs **head)
 {
 	t_envs	*current;
 
-	// printf("clean envs1\n");
 	while (*head)
 	{
 		current = *head;
@@ -43,7 +42,6 @@ void	ft_free_envs(t_envs **head)
 		current->value = NULL;
 		free(current);
 	}
-	// printf("clean envs2\n");
 	head = NULL;
 }
 
@@ -93,6 +91,31 @@ void	ft_free_table(t_lexems ***table)
 	}
 	free(*table);
 	*table = NULL;
+}
+
+void	ft_free_cmds(t_cmds **cmds)
+{
+	t_cmds	*current;
+
+	if (!cmds || !*cmds)
+		return ;
+	while (*cmds)
+	{
+		current = *cmds;
+		*cmds = (*cmds)->next;
+		if (current->cmd)
+			free(current->cmd);
+		if (current->args)
+			ft_free_ptr(&(current->args));
+		if (current->input_file)
+			free(current->input_file);
+		if (current->output_file)
+			free(current->output_file);
+		if (current->heredoc_end)
+			free(current->heredoc_end);
+		free(current);
+	}
+	*cmds = NULL;
 }
 
 void	ft_free_shell(t_minishell **minishell)

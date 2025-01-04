@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:05:49 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 15:46:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 20:56:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ long	ft_atol(char *s)
 	long	val;
 	bool	valid;
 
-	if (!s)
-		return (255);
 	i = 0;
 	p = 1;
 	val = 0;
@@ -36,53 +34,43 @@ long	ft_atol(char *s)
 	{
 		valid = true;
 		val = val * 10 + (s[i++] - '0');
-		if (val > 255)
-			val = 255;
 	}
 	if (!valid || s[i] != '\0')
-		return (255);
+		return (LONG_MIN);
 	return (val * p);
 }
 
-int check_if_more_arguments(t_lexems *lexems)
+static size_t	ft_ptrsize(char **ptr)
 {
-	t_lexems *current;
+	size_t	i;
 
-	current = lexems->next;
-	while(current)
+	i = 0;
+	while (ptr[i])
 	{
-		if (ft_isalnum(((char *)(current->value))[0]))
-			return (1);
-		current = current->next;
+		i++;
 	}
-	return (0);
+	return (i);	
 }
 
-void ft_exit(t_minishell **minishell, char **args)
+int ft_exit(t_minishell **minishell, char **args)
 {
-	(void)minishell;
-	(void)args;
-	// int value_exit;
-
-	// if (!lexems->next || !lexems->next->next)
-	// {
-	// 	if (*minishell)
-	// 		ft_free_shell(minishell);
-	// 	exit((*minishell)->exit_status);
-	// }
-	// lexems = lexems->next->next;
-	// value_exit = (int)ft_atol(lexems->value);
-	// if (value_exit < 0 || value_exit > 255)
-	// 	value_exit = value_exit % 256;
-	// if (value_exit == 255 && !ft_isdigit(((char *)(lexems->value))[0]))
-	// {
-	// 	ft_putstr_fd("exit: ", STDERR_FILENO);
-	// 	ft_putstr_fd(lexems->value, STDERR_FILENO);
-	// 	ft_putstr_fd(": numeric argument required", STDERR_FILENO);
-	// }
-	// if (check_if_more_arguments(lexems))
-	// 	ft_putstr_fd("exit: too many arguments", STDERR_FILENO);
-	// if (*minishell)
-	// 	ft_free_shell(minishell);
-	// exit(value_exit);
+	if (!args[1])
+	{
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		exit((*minishell)->exit_status);
+	}
+	if (ft_atol(args[1]) == LONG_MIN)
+	{
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		ft_putstr_fd("bash: exit: ", STDOUT_FILENO);
+		ft_putstr_fd(args[1], STDOUT_FILENO);
+		ft_putstr_fd(": numeric argument required\n", STDOUT_FILENO);
+		exit(255);
+	}
+	if (ft_ptrsize(args) > 2)
+	{
+		ft_putstr_fd("bash: exit: too many arguments\n", STDOUT_FILENO);
+		exit(EXIT_FAILURE);
+	}
+	return (1);
 }

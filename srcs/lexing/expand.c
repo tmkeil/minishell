@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:52:26 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 13:05:12 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:46:03 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	ft_join_them(char **value, char *next)
 
 int	ft_join_word_neighbours(t_lexems **tokens)
 {
-	t_types		type;
 	t_lexems	*lex;
 	t_lexems	*to_delete;
 
@@ -70,23 +69,58 @@ int	ft_join_word_neighbours(t_lexems **tokens)
 	lex = *tokens;
 	while (lex && lex->next)
 	{
-		type = lex->type;
-		if ((lex->next->type == WORD
-				|| lex->next->type == DOUBLE_QUOTE
-				|| lex->next->type == SINGLE_QUOTE) && (type == WORD
-				|| type == DOUBLE_QUOTE || type == SINGLE_QUOTE))
+		if ((lex->next->type == WORD || lex->next->type == DOUBLE_QUOTE
+				|| lex->next->type == SINGLE_QUOTE) && (lex->type == WORD
+				|| lex->type == DOUBLE_QUOTE || lex->type == SINGLE_QUOTE))
 		{
 			if (!ft_join_them((char **)&lex->value, (char *)lex->next->value))
 				return (0);
 			to_delete = lex->next;
 			lex->next = lex->next->next;
 			lex->type = WORD;
+			free(to_delete->value);
 			free(to_delete);
 		}
 		else
 			lex = lex->next;
 	}
 	return (1);
+}
+
+void	ft_remove_seperators(t_lexems **tokens)
+{
+	t_lexems	*lex;
+	t_lexems	*to_delete;
+	t_lexems	*previous;
+
+	if (!tokens || !*tokens)
+		return ;
+	while (*tokens && (*tokens)->type == SEPERATOR)
+	{
+		to_delete = *tokens;
+		*tokens = (*tokens)->next;
+		free(to_delete->value);
+		free(to_delete);
+	}
+	lex = *tokens;
+	previous = NULL;
+	while (lex)
+	{
+		if (lex->type == SEPERATOR)
+		{
+			to_delete = lex;
+			lex = lex->next;
+			if (previous)
+				previous->next = lex;
+			free(to_delete->value);
+			free(to_delete);
+		}
+		else
+		{
+			previous = lex;
+			lex = lex->next;
+		}
+	}
 }
 
 int	ft_expand_escapes_envs(t_lexems **tokens, t_envs *envs)
@@ -101,5 +135,8 @@ int	ft_expand_escapes_envs(t_lexems **tokens, t_envs *envs)
 			return (0);
 		lex = lex->next;
 	}
-	return (ft_join_word_neighbours(tokens));
+	if (!ft_join_word_neighbours(tokens))
+		return (0);
+	ft_remove_seperators(tokens);
+	return (1);
 }

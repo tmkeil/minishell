@@ -53,7 +53,7 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 
 void ft_debug_exec_table(t_minishell *minishell)
 {
-	char		*types[] = {[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+	char		*types[] = {[SEPERATOR] = "SEP", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
 				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
 				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
 				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",

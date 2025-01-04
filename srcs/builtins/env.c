@@ -6,14 +6,18 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:21:34 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/03 16:01:15 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 20:22:23 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    ft_env(t_envs *envs)
+int    ft_env(t_envs *envs)
 {
-    ft_print_envs(envs);
-    exit(EXIT_SUCCESS);
+	while (envs)
+	{
+		ft_printf("%s=%s\n", envs->name, envs->value);
+		envs = envs->next;
+	}
+	return (1);
 }
