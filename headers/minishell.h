@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/04 19:53:51 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 22:12:06 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	ft_free_cmds(t_cmds **cmds);
 int 				ft_create_command_list(t_cmds **cmds, t_lexems **table);
 void 				ft_handle_redirections(t_cmds *cmd, int *in_fd);
 void				disable_ctrl_chars(void);
-void				ft_display_intro(void);
 
 // cleaners
 void				ft_free_ptr(char ***ptr);

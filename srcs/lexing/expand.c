@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:52:26 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 18:46:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 22:01:38 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	ft_expand_token(t_lexems *lex, t_envs *envs)
 	}
 	free(lex->value);
 	lex->value = vars.expanded;
+	if (lex->type == SINGLE_QUOTE || lex->type == DOUBLE_QUOTE)
+		lex->type = WORD;
 	return (1);
 }
 
@@ -69,16 +71,13 @@ int	ft_join_word_neighbours(t_lexems **tokens)
 	lex = *tokens;
 	while (lex && lex->next)
 	{
-		if ((lex->next->type == WORD || lex->next->type == DOUBLE_QUOTE
-				|| lex->next->type == SINGLE_QUOTE) && (lex->type == WORD
-				|| lex->type == DOUBLE_QUOTE || lex->type == SINGLE_QUOTE))
+		if (lex->next->type == WORD && lex->type == WORD)
 		{
 			if (!ft_join_them((char **)&lex->value, (char *)lex->next->value))
 				return (0);
 			to_delete = lex->next;
 			lex->next = lex->next->next;
 			lex->type = WORD;
-			free(to_delete->value);
 			free(to_delete);
 		}
 		else

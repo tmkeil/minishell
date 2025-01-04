@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:05:49 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 20:56:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 22:06:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ int ft_exit(t_minishell **minishell, char **args)
 	if (ft_atol(args[1]) == LONG_MIN)
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
-		ft_putstr_fd("bash: exit: ", STDOUT_FILENO);
-		ft_putstr_fd(args[1], STDOUT_FILENO);
-		ft_putstr_fd(": numeric argument required\n", STDOUT_FILENO);
+		ft_putstr_fd("bash: exit: ", STDERR_FILENO);
+		ft_putstr_fd(args[1], STDERR_FILENO);
+		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 		exit(255);
 	}
 	if (ft_ptrsize(args) > 2)
 	{
-		ft_putstr_fd("bash: exit: too many arguments\n", STDOUT_FILENO);
+		ft_putstr_fd("bash: exit: too many arguments\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
 	return (1);
