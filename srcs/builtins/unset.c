@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 20:33:56 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/04 23:31:20 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	ft_is_valid_identifier(const char *key)
 	return (1);
 }
 
-int	ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
+int	ft_unset(t_minishell **minishell, char **args, t_envs **envs)
 {
 	int	i;
 
@@ -80,6 +80,6 @@ int	ft_unset(t_minishell **minishell, char **args, t_envs **envs, char ***envps)
 		}
 		i++;
 	}
-	ft_update_envps(*envs, envps);
+	ft_update_envps(*envs, &(*minishell)->envps);
 	return (1);
 }
