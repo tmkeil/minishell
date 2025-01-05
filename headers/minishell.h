@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/05 14:19:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 14:26:09 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void				ft_init_sig(void);
 void				ft_set_execution_sig(void);
 void				ft_put_error_str(char *msg, char *value);
 // utils2
-int					ft_split_env(const char *env_var, char **name,
+int					ft_split_env(char *env_var, char **name,
 						char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);
 int					ft_update_envps(t_envs *envs, char ***envps);

@@ -10,11 +10,11 @@ LIBFTDIR = libft/
 LIBFT = libft/libft.a
 
 LEXING = lexer.c lexer_utils.c lexer_utils2.c expand.c expand2.c expand3.c
-TABLE = create_exec_table.c create_command_list.c
+TABLE = create_exec_table.c cmd_list.c cmd_list2.c
 EXECUTING = execution.c getpath.c execution_utils.c pipes.c
 BUILTINS = cd.c env.c exit.c export.c pwd.c unset.c echo.c
-CLEARING = cleaners.c
-UTILS = utils.c utils2.c utils3.c utils4.c
+CLEARING = cleaners.c cleaners2.c
+UTILS = utils.c utils2.c utils3.c utils_main.c
 
 SRCS = minishell.c $(addprefix lexing/, $(LEXING)) $(addprefix create_execution_table/, $(TABLE)) $(addprefix executing/, $(EXECUTING)) \
 		$(addprefix builtins/, $(BUILTINS)) $(addprefix clearing/, $(CLEARING)) $(addprefix utils/, $(UTILS))
