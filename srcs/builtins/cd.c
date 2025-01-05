@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 20:53:20 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:01:11 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,6 @@ int	ft_cd_to(char *str, char **path)
 	if (!str)
 		return (*path = ft_strdup(home), 1);
 	return (*path = ft_strdup(str), 1);
-}
-
-static size_t	ft_ptrsize(char **ptr)
-{
-	size_t	i;
-
-	i = 0;
-	while (ptr[i])
-	{
-		i++;
-	}
-	return (i);	
 }
 
 int	ft_changedir(t_minishell **minishell, char **args)

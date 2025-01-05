@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:05:49 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 22:06:57 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:00:04 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,6 @@ long	ft_atol(char *s)
 	if (!valid || s[i] != '\0')
 		return (LONG_MIN);
 	return (val * p);
-}
-
-static size_t	ft_ptrsize(char **ptr)
-{
-	size_t	i;
-
-	i = 0;
-	while (ptr[i])
-	{
-		i++;
-	}
-	return (i);	
 }
 
 int ft_exit(t_minishell **minishell, char **args)

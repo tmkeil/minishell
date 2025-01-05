@@ -6,29 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 16:55:50 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/01 11:54:35 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:09:52 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char *ft_strndup(const char *s, size_t n)
-{
-    char *dup;
-    size_t i;
-
-    dup = malloc(n + 1);
-    if (!dup)
-        return (NULL);
-    i = 0;
-    while (i < n && s[i])
-    {
-        dup[i] = s[i];
-        i++;
-    }
-    dup[i] = '\0';
-    return (dup);
-}
 
 char	*ft_get_env(char *env_var, t_envs *envs)
 {
@@ -77,28 +59,4 @@ int	ft_join(char **str, char *to_join)
 	if (!*str)
 		return (0);
 	return (1);
-}
-
-char **ft_split_once(char *str, char delimiter) 
-{
-    char *pos;
-    char **result;
-    
-    pos = ft_strchr(str, delimiter);
-    result = (char **)malloc(3 * sizeof(char *));
-    if (!result)
-    {
-        ft_printf("Memory allocation failed\n");
-        exit(1);
-    }
-    if (!pos)
-    {
-        result[0] = ft_strdup(str);
-        result[1] = NULL;
-        return (result);
-    }
-    result[0] = ft_strndup(str, pos - str);
-    result[1] = ft_strdup(pos + 1);
-    result[2] = NULL;
-    return (result);
 }

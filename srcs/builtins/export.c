@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 23:32:25 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:08:07 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,9 @@ void	ft_process_args(char *value, t_envs **envs)
 {
 	char	**env_args;
 
-	env_args = ft_split_once(value, '=');
+	env_args = ft_split(value, '=');
+	if (!env_args)
+		return (0);
 	if (ft_valid_env(env_args[0]) && ft_strchr(value, '='))
 	{
 		if (!ft_set_env(env_args[0], env_args[1], envs))

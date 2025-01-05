@@ -6,13 +6,13 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 20:59:35 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:53:29 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_handle_sig(int sig)
+static void	ft_handle_sig(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -23,16 +23,16 @@ void	ft_handle_sig(int sig)
 	}
 }
 
-void	disable_ctrl_chars(void)
-{
-	struct termios			new_termios;
-	static struct termios	orig_termios;
+// void	disable_ctrl_chars(void)
+// {
+// 	struct termios			new_termios;
+// 	static struct termios	orig_termios;
 
-	tcgetattr(STDIN_FILENO, &orig_termios);
-	new_termios = orig_termios;
-	new_termios.c_lflag &= ~(ECHOCTL);
-	tcsetattr(STDIN_FILENO, TCSAFLUSH, &new_termios);
-}
+// 	tcgetattr(STDIN_FILENO, &orig_termios);
+// 	new_termios = orig_termios;
+// 	new_termios.c_lflag &= ~(ECHOCTL);
+// 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &new_termios);
+// }
 
 void	ft_init_sig(void)
 {
@@ -50,4 +50,16 @@ void	ft_put_error_str(char *msg, char *value)
 {
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putendl_fd(value, STDERR_FILENO);
+}
+
+size_t	ft_ptrsize(char **ptr)
+{
+	size_t	i;
+
+	i = 0;
+	while (ptr[i])
+	{
+		i++;
+	}
+	return (i);	
 }

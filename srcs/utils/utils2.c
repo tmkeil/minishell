@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 22:58:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:54:44 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,26 @@
 
 int	ft_print_envs(t_envs *envs)
 {
-	t_envs *env;
-	env = envs;
 	while (envs)
 	{
-		if (env->value)
-			ft_printf("%s=%s\n", env->name, env->value);
-		else
-			ft_printf("%s=\n", env->name);
-		env = env->next;
+		ft_putstr_fd(envs->name, STDOUT_FILENO);
+		ft_putstr_fd("=", STDOUT_FILENO);
+		ft_putstr_fd(envs->value, STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	}
 	return (1);
 }
 
-int	ft_split_env(const char *env_var, char **name, char **value)
+int	ft_split_env(char *env_var, char **name, char **value)
 {
-	char	*equal_sign;
+	char	**split;
 
-	equal_sign = ft_strchr(env_var, '=');
-	if (equal_sign)
-	{
-		*name = ft_substr(env_var, 0, equal_sign - env_var);
-		*value = ft_strdup(equal_sign + 1);
-	}
-	else
-	{
-		*name = ft_strdup(env_var);
-		*value = NULL;
-	}
-	if (!*name || (equal_sign && !*value))
+	split = ft_split(env_var, '=');
+	if (!split)
 		return (0);
-	return (1);
+	*name = ft_strdup(split[0]);
+	*value = ft_strdup(split[1]);
+	return (ft_free_ptr(&split), 1);
 }
 
 int	ft_extract_envps(t_envs **envs, char **envp)
@@ -53,7 +42,6 @@ int	ft_extract_envps(t_envs **envs, char **envp)
 	t_envs	*new_node;
 	int		i;
 
-	current = NULL;
 	i = 0;
 	while (envp[i])
 	{
@@ -70,30 +58,10 @@ int	ft_extract_envps(t_envs **envs, char **envp)
 		current = new_node;
 		i++;
 	}
-	if (!ft_set_env("?", "0", envs))
-		return (0);
-	// printf("abfibdscisbdisbdivbsdvbsdibvsv\n");
-	// t_envs *e;
-	// e = *envs;
-	// while (e)
-	// {
-	// 	printf("%s=%s\n", e->name, e->value);
-	// 	e = e->next;
-	// }
-	// printf("\n\n\n");
-	// e = *envs;
-	// while (e)
-	// {
-	// 	if (e->value)
-	// 		printf("%s=%s\n", e->name, e->value);
-	// 	else
-	// 		printf("%s=\n", e->name);
-	// 	e = e->next;
-	// }
-	return (1);
+	return (ft_set_env("?", "0", envs));
 }
 
-size_t	ft_prepare_envs(t_envs *envs, char ***envps)
+static int	ft_prepare_envs(t_envs *envs, char ***envps)
 {
 	size_t	size;
 

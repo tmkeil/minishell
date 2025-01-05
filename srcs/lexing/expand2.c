@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:36:14 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/30 20:51:41 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:18:54 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ int	ft_expand_environments(char **expanded, char *current, t_envs *envs, size_t 
 	env_end = ft_find_end(env_start);
 	if (env_end - env_start > 0)
 	{
+		*i += (env_end - env_start) + 1;
 		env_var = ft_substr(env_start, 0, env_end - env_start);
 		env_value = ft_get_env(env_var, envs);
-		if (env_value)
-			ft_join(expanded, env_value);
+		if (!ft_join(expanded, env_value))
+			return (free(env_var), 0);
 		free(env_var);
-		*i += (env_end - env_start) + 1;
 		return (1);
 	}
 	else

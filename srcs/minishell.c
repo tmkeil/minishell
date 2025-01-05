@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 22:24:48 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/05 13:49:47 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,75 +39,29 @@
 // 	}
 // }
 
-void	ft_test_cmd_list(t_cmds *cmds)
-{
-	int i = 0;
-	while (cmds)
-	{
-		printf("cmd = %s\n", cmds->cmd);
-		i = 0;
-		while ((cmds->args)[i])
-		{
-			printf("arg[%i] = %s\n", i, (cmds->args)[i]);
-			i++;
-		}
-		printf("in file = %s\n", cmds->input_file);
-		printf("out file = %s\n", cmds->output_file);
-		printf("append = %i\n", cmds->append);
-		printf("heredoc_end = %s\n", cmds->heredoc_end);
-		if (cmds->next)
-		{
-			printf("\npipe\n\n");
-		}
-		cmds = cmds->next;
-	}
-}
-
-int	ft_is_wsl_environment(void)
-{
-	if (getenv("WSLENV"))
-		return (1);
-	return (0);
-}
-
-int	ft_is_interactive(void)
-{
-	if (isatty(fileno(stdin)))
-		return (1);
-	return (ft_is_wsl_environment());
-}
-
-int	ft_set_exit_status(t_minishell *minishell)
-{
-	char	*exit_status_str;
-
-	exit_status_str = ft_itoa(minishell->exit_status);
-	if (!exit_status_str)
-		return (0);
-	if (!ft_set_env("?", exit_status_str, &minishell->envs))
-		return (free(exit_status_str), 0);
-	return (free(exit_status_str), 1);
-}
-
-char	*ft_get_prompt(void)
-{
-	char	*user;
-	char	*prompt;
-
-	user = getenv("USER");
-	prompt = ft_strjoin(user, "@minishell $ ");
-	if (!prompt)
-		return (ft_strdup("user@minishell $ "));
-	return (prompt);
-}
-
-char	*ft_get_input(const char *prompt)
-{
-	char	*input;
-
-	input = readline(prompt);
-	return (input);
-}
+// void	ft_test_cmd_list(t_cmds *cmds)
+// {
+// 	int i = 0;
+// 	while (cmds)
+// 	{
+// 		printf("cmd = %s\n", cmds->cmd);
+// 		i = 0;
+// 		while ((cmds->args)[i])
+// 		{
+// 			printf("arg[%i] = %s\n", i, (cmds->args)[i]);
+// 			i++;
+// 		}
+// 		printf("in file = %s\n", cmds->input_file);
+// 		printf("out file = %s\n", cmds->output_file);
+// 		printf("append = %i\n", cmds->append);
+// 		printf("heredoc_end = %s\n", cmds->heredoc_end);
+// 		if (cmds->next)
+// 		{
+// 			printf("\npipe\n\n");
+// 		}
+// 		cmds = cmds->next;
+// 	}
+// }
 
 int	ft_handle_input(t_minishell **minishell, char *input)
 {
@@ -142,15 +96,12 @@ int	ft_get_user_input(t_minishell *minishell)
 		input = ft_strtrim(line, "\n");
 		free(line);
 	}
-	if (!input || *input == '\0')
-		return (free(prompt), free(input), prompt = NULL, input = NULL, 0);
 	free(prompt);
-	if (input)
-	{
-		add_history(input);
-		if (!ft_handle_input(&minishell, input))
-			return (0);
-	}
+	if (!input || *input == '\0')
+		return (free(input), prompt = NULL, input = NULL, 0);
+	add_history(input);
+	if (!ft_handle_input(&minishell, input))
+		return (free(input), 0);
 	return (free(input), input = NULL, prompt = NULL, 1);
 }
 
@@ -162,17 +113,10 @@ int	ft_input_loop(t_minishell *minishell)
 	{
 		if (!ft_get_user_input(minishell))
 			break ;
-		ft_free_tokens(&minishell->tokens);
-		ft_free_table(&minishell->table);
-		ft_free_cmds(&minishell->cmds);
+		ft_free_next_iteration(&minishell);
 	}
 	exit_status = minishell->exit_status;
-	ft_free_tokens(&minishell->tokens);
-	ft_free_table(&minishell->table);
-	ft_free_cmds(&minishell->cmds);
-	ft_free_ptr(&minishell->envps);
-	ft_free_shell(&minishell);
-	return (exit_status);
+	return (ft_free_shell(&minishell), exit_status);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -182,7 +126,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc > 1)
 		return (EXIT_FAILURE);
-	disable_ctrl_chars();
 	minishell.in_fd = STDIN_FILENO;
 	minishell.out_fd = STDOUT_FILENO;
 	minishell.tokens = NULL;

@@ -51,28 +51,28 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	return ;
 }
 
-void ft_debug_exec_table(t_minishell *minishell)
-{
-	char		*types[] = {[SEPERATOR] = "SEP", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-	int i = 0;
-    for (i = 0; minishell->table[i]; i++)
-    {
-        t_lexems *current = minishell->table[i];
-        while (current)
-        {
-            printf("table[%i].Type: %s, table[%i].Value: %s\n", i, types[current->type], i, (char *)current->value ? (char *)current->value : (char *)"(null)");
-            current = current->next;
-        }
-    }
-	printf("table[%i] = %p\n", i, minishell->table[i]);
-}
+// void ft_debug_exec_table(t_minishell *minishell)
+// {
+// 	char		*types[] = {[SEPERATOR] = "SEP", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+// 				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+// 				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+// 				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+// 				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+// 				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+// 				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+// 				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+// 	int i = 0;
+//     for (i = 0; minishell->table[i]; i++)
+//     {
+//         t_lexems *current = minishell->table[i];
+//         while (current)
+//         {
+//             printf("table[%i].Type: %s, table[%i].Value: %s\n", i, types[current->type], i, (char *)current->value ? (char *)current->value : (char *)"(null)");
+//             current = current->next;
+//         }
+//     }
+// 	printf("table[%i] = %p\n", i, minishell->table[i]);
+// }
 
 int	ft_skip_prefix_spaces(t_lexems **lexes, bool *first)
 {
