@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 14:22:45 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:22:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	ft_process_args(char *value, t_envs **envs)
 
 int	ft_export(t_minishell **minishell, char **args, t_envs **envs)
 {
+	char	**name;
+
 	if (!args[1])
 		ft_print_envs(*envs);
 	int i = 1;
@@ -95,16 +97,17 @@ int	ft_export(t_minishell **minishell, char **args, t_envs **envs)
 		i++;
 	}
 	i = 1;
+	ft_update_envps(*envs, &(*minishell)->envps);
 	while (args[i])
 	{
-		if (!ft_valid_env(args[i]))
+		name = ft_split(args[i], '=');
+		if (!ft_valid_env(name[0]))
 		{
-			(*minishell)->exit_status = 1;
 			ft_put_error_str(ERR_EXPORT, args[i]);
-			break ;
+			return (ft_free_ptr(&name), EXIT_FAILURE);
 		}
+		ft_free_ptr(&name);
 		i++;
 	}
-	ft_update_envps(*envs, &(*minishell)->envps);
-	return (1);
+	return (EXIT_SUCCESS);
 }

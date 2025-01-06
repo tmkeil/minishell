@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:05:49 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 13:00:04 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:15:30 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,5 @@ int ft_exit(t_minishell **minishell, char **args)
 		ft_putstr_fd("bash: exit: too many arguments\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }

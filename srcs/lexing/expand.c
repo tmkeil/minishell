@@ -6,11 +6,33 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:52:26 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 12:56:55 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 14:49:57 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_test_lexes(t_lexems *lex)
+{
+	int		i;
+	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+
+	i = 0;
+	while (lex)
+	{
+		printf("lexem[%i].type = %s\n", i, types[lex->type]);
+		printf("lexem[%i].value = %s\n\n", i, (char *)lex->value);
+		lex = lex->next;
+		i++;
+	}
+}
 
 int	ft_expander(t_expander *vars, t_types type, size_t *i)
 {
@@ -110,6 +132,7 @@ int	ft_expand_escapes_envs(t_lexems **tokens, t_envs *envs)
 	t_lexems	*lex;
 
 	lex = *tokens;
+	// ft_test_lexes(*tokens);
 	while (lex)
 	{
 		if (!ft_expand_token(lex, envs))

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 00:54:34 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 20:04:27 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:12:51 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ int	ft_is_only_minusn(char *arg)
 void	ft_jump(char **args, int *i)
 {
 	while (args[*i] && ft_is_only_minusn(args[*i]))
-	{
 		(*i)++;
-	}
 }
 
 int	ft_echo(char **args)
@@ -48,7 +46,7 @@ int	ft_echo(char **args)
 	if (!args[1])
 	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
-		return (1);
+		return (EXIT_SUCCESS);
 	}
 	if (args[i] && ft_is_only_minusn(args[i]))
 	{

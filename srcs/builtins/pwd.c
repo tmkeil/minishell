@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:10:15 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 20:24:04 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:20:46 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int    ft_pwd(void)
     if (!getcwd(buffer, sizeof(buffer)))
     {
         perror("getcwd");
-        exit(EXIT_FAILURE);
+        return (EXIT_FAILURE);
     }
     ft_putendl_fd(buffer, STDOUT_FILENO);
-    return (1);
+    return (EXIT_SUCCESS);
 }

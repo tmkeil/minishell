@@ -6,103 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 00:11:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 18:00:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*ft_is_builtin(void *value, char **envp)
-{
-	int		i;
-	char	*path;
-	char	**cmd_path;
-
-	if (ft_strnstr(BUILTINS, (char *)value, ft_strlen(BUILTINS)))
-		return (ft_strdup((char *)value));
-	path = ft_getpath((char *)value, envp, false);
-	if (!path)
-		return (NULL);
-	cmd_path = ft_split(path, '/');
-	free(path);
-	if (!cmd_path)
-		return (NULL);
-	i = 0;
-	while (cmd_path[i])
-		i++;
-	if (ft_strnstr(BUILTINS, cmd_path[i - 1], ft_strlen(BUILTINS)))
-	{
-		path = ft_strdup(cmd_path[i - 1]);
-		return (ft_free_ptr(&cmd_path), path);
-	}
-	return (ft_free_ptr(&cmd_path), NULL);
-}
-
-void	ft_choose_builtin(t_minishell **minishell, char *cmd_builtin, char **args)
-{
-	if (!ft_strncmp(cmd_builtin, "cd", 3))
-		ft_changedir(minishell, args);
-	if (!ft_strncmp(cmd_builtin, "echo", 5))
-		ft_echo(args);
-	if (!ft_strncmp(cmd_builtin, "env", 4))
-		ft_env((*minishell)->envs);
-	if (!ft_strncmp(cmd_builtin, "exit", 5))
-		ft_exit(minishell, args);
-	if (!ft_strncmp(cmd_builtin, "export", 7))
-		ft_export(minishell, args, &(*minishell)->envs);
-	if (!ft_strncmp(cmd_builtin, "pwd", 4))
-		ft_pwd();
-	if (!ft_strncmp(cmd_builtin, "unset", 6))
-		ft_unset(minishell, args, &(*minishell)->envs);
-}
-
-void	ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next)
-{
-	if (fd_in != -1)
-	{
-		dup2(fd_in, STDIN_FILENO);
-		close(fd_in);
-	}
-	if (is_next && fd_pipe[1] != -1)
-	{
-		dup2(fd_pipe[1], STDOUT_FILENO);
-		close(fd_pipe[1]);
-		fd_pipe[1] = -1;
-	}
-}
-
-int	run_builtin(t_minishell **minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
-{
-	char	*cmd_builtin;
-
-	cmd_builtin = ft_is_builtin(cmd->cmd, (*minishell)->envps);
-	if (!cmd_builtin)
-		return (0);
-	ft_handle_redirections(cmd, &fd_in);
-	ft_redirect_pipe(fd_in, fd_pipe, (cmd->next != NULL));
-	ft_choose_builtin(minishell, cmd_builtin, cmd->args);
-	dup2((*minishell)->in_fd, STDIN_FILENO);
-	dup2((*minishell)->out_fd, STDOUT_FILENO);
-	if (fd_pipe[1] != -1)
-		close(fd_pipe[1]);
-	return (free(cmd_builtin), 1);
-}
-
-void	ft_run_builtin_in_parent(t_minishell **minishell, t_cmds **cmd, int fd_in, int *fd_pipe)
-{
-	char	*cmd_builtin;
-
-	cmd_builtin = ft_is_builtin((*cmd)->cmd, (*minishell)->envps);
-	if (!cmd_builtin)
-		return ;
-	ft_handle_redirections(*cmd, &fd_in);
-	ft_redirect_pipe(fd_in, fd_pipe, ((*cmd)->next != NULL));
-	ft_choose_builtin(minishell, cmd_builtin, (*cmd)->args);
-	if (fd_pipe[1] != -1)
-		close(fd_pipe[1]);
-	free(cmd_builtin);
-	*cmd = (*cmd)->next;
-}
 
 void	ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 {
@@ -111,8 +19,8 @@ void	ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 	ft_set_execution_sig();
 	ft_redirect_pipe(fd_in, fd_pipe, (cmd->next != NULL));
 	ft_handle_redirections(cmd, &fd_in);
-	if (run_builtin(minishell, cmd, fd_in, fd_pipe))
-		exit(EXIT_SUCCESS);
+	if (ft_run_builtin(minishell, &cmd, fd_in, fd_pipe) >= 0)
+		exit((*minishell)->exit_status);
 	path = ft_getpath(cmd->cmd, (*minishell)->envps, true);
 	if (!path)
 	{
@@ -126,7 +34,7 @@ void	ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 	exit(EXIT_FAILURE);
 }
 
-void	execute_external(t_minishell **minishell, t_cmds *cmd, int fd_in,
+void	ft_execute_external(t_minishell **minishell, t_cmds *cmd, int fd_in,
 		int *fd_pipe)
 {
 	int		status;
@@ -140,11 +48,30 @@ void	execute_external(t_minishell **minishell, t_cmds *cmd, int fd_in,
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			(*minishell)->exit_status = WEXITSTATUS(status);
-		else
-			(*minishell)->exit_status = 1;
 		if (fd_pipe[1] != -1)
 			close(fd_pipe[1]);
 	}
+}
+
+int	ft_run_builtin(t_minishell **minishell, t_cmds **cmd, int fd_in, int *fd_pipe)
+{
+	int		status;
+	char	*cmd_builtin;
+
+	status = -1;
+	cmd_builtin = ft_is_builtin((*cmd)->cmd, (*minishell)->envps);
+	if (!cmd_builtin)
+		return (-1);
+	ft_redirect_pipe(fd_in, fd_pipe, ((*cmd)->next != NULL));
+	ft_handle_redirections(*cmd, &fd_in);
+	status = ft_choose_builtin(minishell, cmd_builtin, (*cmd)->args);
+	dup2((*minishell)->in_fd, STDIN_FILENO);
+	dup2((*minishell)->out_fd, STDOUT_FILENO);
+	if (fd_pipe[1] != -1)
+		close(fd_pipe[1]);
+	free(cmd_builtin);
+	(*minishell)->exit_status = status;
+	return (status);
 }
 
 int	ft_execute_commands(t_minishell **minishell)
@@ -156,9 +83,17 @@ int	ft_execute_commands(t_minishell **minishell)
 	fd_in = -1;
 	current = (*minishell)->cmds;
 	if (!current->next)
-		ft_run_builtin_in_parent(minishell, &current, fd_in, fd_pipe);
+	{
+		fd_pipe[0] = -1;
+		fd_pipe[1] = -1;
+		// printf("e1\n");
+		if (ft_run_builtin(minishell, &current, fd_in, fd_pipe) != -1)
+			return (1);
+		// printf("e2\n");
+	}
 	while (current)
 	{
+		printf("test ksbdvisdiuvdsvbisudvbdsviubdsiubvsibdvisdbvisbdv\n");
 		if (current->next)
 		{
 			if (pipe(fd_pipe) == -1)
@@ -169,7 +104,7 @@ int	ft_execute_commands(t_minishell **minishell)
 			fd_pipe[0] = -1;
 			fd_pipe[1] = -1;
 		}
-		execute_external(minishell, current, fd_in, fd_pipe);
+		ft_execute_external(minishell, current, fd_in, fd_pipe);
 		if (fd_in != -1)
 			close(fd_in);
 		fd_in = fd_pipe[0];

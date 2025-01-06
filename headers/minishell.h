@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/05 14:26:09 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:14:17 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <termios.h>
-// # include <bits/termios-c_lflag.h>
-// # include <asm-generic/termbits.h>
 
 typedef enum s_errors
 {
@@ -81,12 +79,12 @@ typedef struct s_lexems
 typedef struct s_cmds
 {
 	char			*cmd;
-    char			**args;
-    char			*input_file;
-    char			*output_file;
-    int				append;
-    char			*heredoc_end;
-    struct s_cmds	*next;
+	char			**args;
+	char			*input_file;
+	char			*output_file;
+	int				append;
+	char			*heredoc_end;
+	struct s_cmds	*next;
 }					t_cmds;
 
 typedef struct s_minishell
@@ -102,8 +100,8 @@ typedef struct s_minishell
 	t_cmds			*cmds;
 }					t_minishell;
 
-int 				ft_create_command_list(t_cmds **cmds, t_lexems **table);
-void 				ft_handle_redirections(t_cmds *cmd, int *in_fd);
+int					ft_create_command_list(t_cmds **cmds, t_lexems **table);
+void				ft_handle_redirections(t_cmds *cmd, int *in_fd);
 
 // cleaners
 void				ft_free_next_iteration(t_minishell **minishell);
@@ -127,11 +125,10 @@ void				ft_init_sig(void);
 void				ft_set_execution_sig(void);
 void				ft_put_error_str(char *msg, char *value);
 // utils2
-int					ft_split_env(char *env_var, char **name,
-						char **value);
+int					ft_split_env(char *env_var, char **name, char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);
 int					ft_update_envps(t_envs *envs, char ***envps);
-int					ft_print_envs(t_envs *envs);
+void				ft_print_envs(t_envs *envs);
 // utils3
 int					ft_join(char **str, char *to_join);
 int					ft_strappend(char **str, char c);
@@ -170,16 +167,25 @@ char				*ft_until_next_env(char *ptr);
 int					ft_execute_commands(t_minishell **minishell);
 char				*ft_getpath(char *cmd, char **envp, bool absolute);
 char				*ft_find_end(char *ptr);
-
+void				ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in,
+						int *fd_pipe);
+int					ft_run_builtin(t_minishell **minishell, t_cmds **cmd,
+						int fd_in, int *fd_pipe);
+void				ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next);
+int					ft_choose_builtin(t_minishell **minishell,
+						char *cmd_builtin, char **args);
+char				*ft_is_builtin(void *value, char **envp);
 
 // builtins
-int				ft_changedir(t_minishell **minishell, char **args);
-int				ft_export(t_minishell **minishell, char **args, t_envs **envs);
-int				ft_unset(t_minishell **minishell, char **args, t_envs **envs);
-int 				ft_exit(t_minishell **minishell, char **args);
-int				ft_pwd(void);
-int				ft_env(t_envs *envs);
-int				ft_echo(char **args);
+int					ft_changedir(t_minishell **minishell, char **args);
+int					ft_export(t_minishell **minishell, char **args,
+						t_envs **envs);
+int					ft_unset(t_minishell **minishell, char **args,
+						t_envs **envs);
+int					ft_exit(t_minishell **minishell, char **args);
+int					ft_pwd(void);
+int					ft_env(t_envs *envs);
+int					ft_echo(char **args);
 
 // builtin utils
 int					ft_set_env(const char *name, const char *value,
@@ -189,8 +195,8 @@ int					ft_set_env(const char *name, const char *value,
 int					ft_create_exec_table(t_minishell **minishell);
 void				ft_append_node(t_lexems **table, t_lexems *lex);
 size_t				ft_table_size(t_lexems *lexems);
-int 				ft_alloc_args(t_cmds **cmd, t_lexems *lexem);
-void    			ft_init_new(t_cmds **cmd);
-void    			ft_append_new_command(t_cmds **cmds, t_cmds *new);
+int					ft_alloc_args(t_cmds **cmd, t_lexems *lexem);
+void				ft_init_new(t_cmds **cmd);
+void				ft_append_new_command(t_cmds **cmds, t_cmds *new);
 
 #endif

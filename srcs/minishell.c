@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 13:49:47 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 16:46:22 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,29 +39,32 @@
 // 	}
 // }
 
-// void	ft_test_cmd_list(t_cmds *cmds)
-// {
-// 	int i = 0;
-// 	while (cmds)
-// 	{
-// 		printf("cmd = %s\n", cmds->cmd);
-// 		i = 0;
-// 		while ((cmds->args)[i])
-// 		{
-// 			printf("arg[%i] = %s\n", i, (cmds->args)[i]);
-// 			i++;
-// 		}
-// 		printf("in file = %s\n", cmds->input_file);
-// 		printf("out file = %s\n", cmds->output_file);
-// 		printf("append = %i\n", cmds->append);
-// 		printf("heredoc_end = %s\n", cmds->heredoc_end);
-// 		if (cmds->next)
-// 		{
-// 			printf("\npipe\n\n");
-// 		}
-// 		cmds = cmds->next;
-// 	}
-// }
+void	ft_test_cmd_list(t_cmds *cmds)
+{
+	int i = 0;
+	while (cmds)
+	{
+		printf("cmd = %s\n", cmds->cmd);
+		i = 0;
+		if (cmds->args)
+		{
+			while ((cmds->args)[i])
+			{
+				printf("arg[%i] = %s\n", i, (cmds->args)[i]);
+				i++;
+			}
+		}
+		printf("in file = %s\n", cmds->input_file);
+		printf("out file = %s\n", cmds->output_file);
+		printf("append = %i\n", cmds->append);
+		printf("heredoc_end = %s\n", cmds->heredoc_end);
+		if (cmds->next)
+		{
+			printf("\npipe\n\n");
+		}
+		cmds = cmds->next;
+	}
+}
 
 int	ft_handle_input(t_minishell **minishell, char *input)
 {
@@ -71,7 +74,7 @@ int	ft_handle_input(t_minishell **minishell, char *input)
 		return (0);
 	if (!ft_create_command_list(&(*minishell)->cmds, (*minishell)->table))
 		return (0);
-	// ft_test_cmd_list((*minishell)->cmds);
+	ft_test_cmd_list((*minishell)->cmds);
 	if (!ft_execute_commands(minishell))
 		return (0);
 	if (!ft_set_exit_status(*minishell))
@@ -101,7 +104,7 @@ int	ft_get_user_input(t_minishell *minishell)
 		return (free(input), prompt = NULL, input = NULL, 0);
 	add_history(input);
 	if (!ft_handle_input(&minishell, input))
-		return (free(input), 0);
+		return (free(input), 1);
 	return (free(input), input = NULL, prompt = NULL, 1);
 }
 

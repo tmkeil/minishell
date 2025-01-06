@@ -6,13 +6,13 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 13:25:02 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 13:54:44 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:14:02 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_print_envs(t_envs *envs)
+void	ft_print_envs(t_envs *envs)
 {
 	while (envs)
 	{
@@ -20,8 +20,8 @@ int	ft_print_envs(t_envs *envs)
 		ft_putstr_fd("=", STDOUT_FILENO);
 		ft_putstr_fd(envs->value, STDOUT_FILENO);
 		ft_putstr_fd("\n", STDOUT_FILENO);
+		envs = envs->next;
 	}
-	return (1);
 }
 
 int	ft_split_env(char *env_var, char **name, char **value)

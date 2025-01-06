@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/04 23:31:20 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 15:23:22 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ int	ft_is_valid_identifier(const char *key)
 
 int	ft_unset(t_minishell **minishell, char **args, t_envs **envs)
 {
-	int	i;
+	int		i;
+	char	**name;
 
 	i = 1;
 	while (args[i])
@@ -69,17 +70,18 @@ int	ft_unset(t_minishell **minishell, char **args, t_envs **envs)
 		i++;
 	}
 	i = 1;
+	ft_update_envps(*envs, &(*minishell)->envps);
 	while (args[i])
 	{
-		if (!ft_is_valid_identifier(args[i]))
+		name = ft_split(args[i], '=');
+		if (!ft_is_valid_identifier(name[0]))
 		{
 			ft_put_error_str("bash: unset: `", NULL);
 			ft_put_error_str(args[i], "': not a valid identifier");
-			(*minishell)->exit_status = 1;
-			break ;
+			return (ft_free_ptr(&name), EXIT_FAILURE);
 		}
+		ft_free_ptr(&name);
 		i++;
 	}
-	ft_update_envps(*envs, &(*minishell)->envps);
-	return (1);
+	return (EXIT_SUCCESS);
 }
