@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 13:39:52 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 13:41:32 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 22:52:13 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ void	ft_free_cmds(t_cmds **cmds)
 			free(current->input_file);
 		if (current->output_file)
 			free(current->output_file);
-		if (current->heredoc_end)
-			free(current->heredoc_end);
+		if (current->heredoc)
+			free(current->heredoc);
 		free(current);
 	}
 	*cmds = NULL;

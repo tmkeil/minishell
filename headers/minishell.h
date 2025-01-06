@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/06 15:14:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 22:57:37 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ typedef struct s_cmds
 	char			*input_file;
 	char			*output_file;
 	int				append;
-	char			*heredoc_end;
+	char			*heredoc;
 	struct s_cmds	*next;
 }					t_cmds;
 
@@ -100,7 +100,7 @@ typedef struct s_minishell
 	t_cmds			*cmds;
 }					t_minishell;
 
-int					ft_create_command_list(t_cmds **cmds, t_lexems **table);
+int					ft_create_command_list(t_minishell **minishell, t_cmds **cmds, t_lexems **table);
 void				ft_handle_redirections(t_cmds *cmd, int *in_fd);
 
 // cleaners
@@ -198,5 +198,7 @@ size_t				ft_table_size(t_lexems *lexems);
 int					ft_alloc_args(t_cmds **cmd, t_lexems *lexem);
 void				ft_init_new(t_cmds **cmd);
 void				ft_append_new_command(t_cmds **cmds, t_cmds *new);
+int					ft_validate_commands(t_cmds *cmds);
+int					ft_fill_args(t_cmds **cmd, t_lexems **lexem);
 
 #endif

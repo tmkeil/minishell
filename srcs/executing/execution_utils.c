@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:29:09 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 17:46:17 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 22:51:31 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ char	*ft_is_builtin(void *value, char **envp)
 		return (NULL);
 	if (ft_strnstr(BUILTINS, (char *)value, ft_strlen(BUILTINS)))
 		return (ft_strdup((char *)value));
-	
 	path = ft_getpath((char *)value, envp, false);
 	if (!path)
 		return (NULL);
@@ -41,7 +40,7 @@ char	*ft_is_builtin(void *value, char **envp)
 	return (ft_free_ptr(&cmd_path), NULL);
 }
 
-int	ft_choose_builtin(t_minishell **minishell, char *cmd_builtin, char **args, int )
+int	ft_choose_builtin(t_minishell **minishell, char *cmd_builtin, char **args)
 {
 	if (!ft_strncmp(cmd_builtin, "cd", 3))
 		return (ft_changedir(minishell, args));
