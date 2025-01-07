@@ -14,15 +14,16 @@
 
 char	*ft_is_builtin(void *value, char **envp)
 {
-	int		i;
-	char	*path;
-	char	**cmd_path;
+	// int		i;
+	// char	*path;
+	// char	**cmd_path;
 
 	if (!value)
 		return (NULL);
 	if (ft_strnstr(BUILTINS, (char *)value, ft_strlen(BUILTINS)))
 		return (ft_strdup((char *)value));
-	path = ft_getpath((char *)value, envp, false);
+	return (NULL);
+	/* path = ft_getpath((char *)value, envp, false);
 	if (!path)
 		return (NULL);
 	cmd_path = ft_split(path, '/');
@@ -37,7 +38,7 @@ char	*ft_is_builtin(void *value, char **envp)
 		path = ft_strdup(cmd_path[i - 1]);
 		return (ft_free_ptr(&cmd_path), path);
 	}
-	return (ft_free_ptr(&cmd_path), NULL);
+	return (ft_free_ptr(&cmd_path), NULL);*/
 }
 
 int	ft_choose_builtin(t_minishell **minishell, char *cmd_builtin, char **args)
