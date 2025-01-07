@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/06 22:57:37 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/07 00:44:26 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ typedef struct s_minishell
 	t_cmds			*cmds;
 }					t_minishell;
 
-int					ft_create_command_list(t_minishell **minishell, t_cmds **cmds, t_lexems **table);
+int					ft_create_command_list(t_minishell **minishell,
+						t_cmds **cmds);
 void				ft_handle_redirections(t_cmds *cmd, int *in_fd);
 
 // cleaners
@@ -170,7 +171,7 @@ char				*ft_find_end(char *ptr);
 void				ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in,
 						int *fd_pipe);
 int					ft_run_builtin(t_minishell **minishell, t_cmds **cmd,
-						int fd_in, int *fd_pipe);
+						int *fd_in, int *fd_pipe);
 void				ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next);
 int					ft_choose_builtin(t_minishell **minishell,
 						char *cmd_builtin, char **args);

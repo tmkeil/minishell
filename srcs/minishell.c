@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 22:57:16 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 23:32:06 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,38 +39,38 @@
 // 	}
 // }
 
-// void	ft_test_cmd_list(t_cmds *cmds)
-// {
-// 	int i = 0;
-// 	while (cmds)
-// 	{
-// 		printf("cmd = %s\n", cmds->cmd);
-// 		i = 0;
-// 		if (cmds->args)
-// 		{
-// 			while ((cmds->args)[i])
-// 			{
-// 				printf("arg[%i] = %s\n", i, (cmds->args)[i]);
-// 				i++;
-// 			}
-// 		}
-// 		printf("in file = %s\n", cmds->input_file);
-// 		printf("out file = %s\n", cmds->output_file);
-// 		printf("append = %i\n", cmds->append);
-// 		printf("heredoc = %s\n", cmds->heredoc);
-// 		if (cmds->next)
-// 		{
-// 			printf("\npipe\n\n");
-// 		}
-// 		cmds = cmds->next;
-// 	}
-// }
+void	ft_test_cmd_list(t_cmds *cmds)
+{
+	int i = 0;
+	while (cmds)
+	{
+		printf("cmd = %s\n", cmds->cmd);
+		i = 0;
+		if (cmds->args)
+		{
+			while ((cmds->args)[i])
+			{
+				printf("arg[%i] = %s\n", i, (cmds->args)[i]);
+				i++;
+			}
+		}
+		printf("in file = %s\n", cmds->input_file);
+		printf("out file = %s\n", cmds->output_file);
+		printf("append = %i\n", cmds->append);
+		printf("heredoc = %s\n", cmds->heredoc);
+		if (cmds->next)
+		{
+			printf("\npipe\n\n");
+		}
+		cmds = cmds->next;
+	}
+}
 
 int	ft_handle_input(t_minishell **minishell, char *input)
 {
 	if (!ft_create_lexes(&(*minishell)->tokens, input, (*minishell)->envs))
 		return (0);
-	if (!ft_create_command_list(minishell, &(*minishell)->cmds, (*minishell)->table))
+	if (!ft_create_command_list(minishell, &(*minishell)->cmds))
 		return (0);
 	// ft_test_cmd_list((*minishell)->cmds);
 	if (!ft_execute_commands(minishell))

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipes.c                                            :+:      :+:    :+:   */
+/*   pipes_redirects.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 20:02:51 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 22:52:49 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 23:23:12 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	ft_setup_heredoc(t_cmds *cmd)
 {
-	int		fd_pipe[2];
 	char	*line;
+	int		fd_pipe[2];
 
 	if (pipe(fd_pipe) == -1)
 		return (perror("pipe"), -1);
@@ -35,21 +35,27 @@ int	ft_setup_heredoc(t_cmds *cmd)
 	return (fd_pipe[0]);
 }
 
-void	ft_handle_redirections(t_cmds *cmd, int *in_fd)
+void	ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next)
+{
+	if (fd_in != -1)
+	{
+		dup2(fd_in, STDIN_FILENO);
+		close(fd_in);
+	}
+	if (is_next && fd_pipe[1] != -1)
+	{
+		dup2(fd_pipe[1], STDOUT_FILENO);
+		close(fd_pipe[1]);
+		fd_pipe[1] = -1;
+	}
+}
+
+static void	ft_redirect_in_out(t_cmds *cmd, int *in_fd)
 {
 	int	fd;
 	int	flags;
-	int	heredoc_fd;
 
-	fd = -1;
-	if (cmd->heredoc)
-	{
-		heredoc_fd = ft_setup_heredoc(cmd);
-		if (heredoc_fd == -1)
-			return ;
-		*in_fd = heredoc_fd;
-	}
-	else if (cmd->input_file)
+	if (cmd->input_file)
 	{
 		fd = open(cmd->input_file, O_RDONLY);
 		if (*in_fd < 0)
@@ -57,7 +63,7 @@ void	ft_handle_redirections(t_cmds *cmd, int *in_fd)
 		else
 			*in_fd = fd;
 	}
-	if (cmd->output_file)
+	else if (cmd->output_file)
 	{
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
 		if (cmd->append)
@@ -71,4 +77,19 @@ void	ft_handle_redirections(t_cmds *cmd, int *in_fd)
 			close(fd);
 		}
 	}
+}
+
+void	ft_handle_redirections(t_cmds *cmd, int *in_fd)
+{
+	int	heredoc_fd;
+
+	if (cmd->heredoc)
+	{
+		heredoc_fd = ft_setup_heredoc(cmd);
+		if (heredoc_fd == -1)
+			return ;
+		*in_fd = heredoc_fd;
+	}
+	if (cmd->input_file || cmd->output_file)
+		ft_redirect_in_out(cmd, in_fd);
 }

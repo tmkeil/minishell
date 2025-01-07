@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_utils.c                                  :+:      :+:    :+:   */
+/*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:29:09 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 22:51:31 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 23:05:28 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,4 @@ int	ft_choose_builtin(t_minishell **minishell, char *cmd_builtin, char **args)
 	if (!ft_strncmp(cmd_builtin, "unset", 6))
 		return (ft_unset(minishell, args, &(*minishell)->envs));
 	return (-2);
-}
-
-void	ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next)
-{
-	if (fd_in != -1)
-	{
-		dup2(fd_in, STDIN_FILENO);
-		close(fd_in);
-	}
-	if (is_next && fd_pipe[1] != -1)
-	{
-		dup2(fd_pipe[1], STDOUT_FILENO);
-		close(fd_pipe[1]);
-		fd_pipe[1] = -1;
-	}
 }

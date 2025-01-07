@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 12:58:06 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 22:57:56 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/06 23:30:11 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void	ft_get_new_cmd(t_cmds **cmd, t_lexems *lexem)
 	}
 }
 
-int	ft_create_command_list(t_minishell **minishell, t_cmds **cmds, t_lexems **table)
+int	ft_create_command_list(t_minishell **minishell, t_cmds **cmds)
 {
 	t_cmds	*new_cmd;
 	int		i;
@@ -109,13 +109,13 @@ int	ft_create_command_list(t_minishell **minishell, t_cmds **cmds, t_lexems **ta
 	i = 0;
 	if (!ft_create_exec_table(minishell))
 		return (0);
-	while (table[i])
+	while (((*minishell)->table)[i])
 	{
 		new_cmd = malloc(sizeof(t_cmds));
 		if (!new_cmd)
 			return (0);
 		ft_init_new(&new_cmd);
-		ft_get_new_cmd(&new_cmd, table[i]);
+		ft_get_new_cmd(&new_cmd, ((*minishell)->table)[i]);
 		ft_append_new_command(cmds, new_cmd);
 		i++;
 	}
