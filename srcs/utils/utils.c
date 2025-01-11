@@ -61,5 +61,5 @@ size_t	ft_ptrsize(char **ptr)
 	{
 		i++;
 	}
-	return (i);	
+	return (i);
 }
