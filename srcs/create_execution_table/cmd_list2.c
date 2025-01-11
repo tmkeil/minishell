@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void    ft_append_new_command(t_cmds **cmds, t_cmds *new)
+void	ft_append_new_command(t_cmds **cmds, t_cmds *new)
 {
-    t_cmds *last;
+	t_cmds	*last;
 
 	if (!new)
 		return ;
@@ -29,35 +29,36 @@ void    ft_append_new_command(t_cmds **cmds, t_cmds *new)
 	last->next = new;
 }
 
-void    ft_init_new(t_cmds **cmd)
+void	ft_init_new(t_cmds **cmd)
 {
-    (*cmd)->cmd = NULL;
-    (*cmd)->args = NULL;
-    (*cmd)->input_file = NULL;
-    (*cmd)->output_file = NULL;
-    (*cmd)->append = 0;
-    (*cmd)->heredoc = NULL;
-    (*cmd)->next = NULL;
+	(*cmd)->cmd = NULL;
+	(*cmd)->args = NULL;
+	(*cmd)->input_file = NULL;
+	(*cmd)->output_file = NULL;
+	(*cmd)->append = 0;
+	(*cmd)->heredoc = NULL;
+	(*cmd)->next = NULL;
 }
 
-int ft_alloc_args(t_cmds **cmd, t_lexems *lexem)
+int	ft_alloc_args(t_cmds **cmd, t_lexems *lexem)
 {
-    int         size;
-    
-    size = 0;
-    while (lexem)
-    {
-        if (ft_strnstr(OPERATIONS, (char *)lexem->value, ft_strlen(OPERATIONS)))
-            break ;
-        if (lexem->type == WORD)
-            size++;
-        lexem = lexem->next;
-    }
-    (*cmd)->args = malloc(sizeof(char *) * (size + 1));
-    if (!(*cmd)->args)
-        return (0);
-    ((*cmd)->args)[size] = NULL;
-    return (1);
+	int	size;
+
+	size = 0;
+	while (lexem)
+	{
+		if (ft_strnstr(OPERATIONS, (char *)lexem->value,
+				ft_strlen(OPERATIONS)))
+			break ;
+		if (lexem->type == WORD)
+			size++;
+		lexem = lexem->next;
+	}
+	(*cmd)->args = malloc(sizeof(char *) * (size + 1));
+	if (!(*cmd)->args)
+		return (0);
+	((*cmd)->args)[size] = NULL;
+	return (1);
 }
 
 int	ft_fill_args(t_cmds **cmd, t_lexems **lexem)
@@ -68,7 +69,7 @@ int	ft_fill_args(t_cmds **cmd, t_lexems **lexem)
 	while (*lexem)
 	{
 		if (ft_strnstr(OPERATIONS, (char *)(*lexem)->value,
-				ft_strlen(OPERATIONS)))
+			ft_strlen(OPERATIONS)))
 			break ;
 		((*cmd)->args)[i] = ft_strdup((char *)(*lexem)->value);
 		if (!((*cmd)->args)[i])
