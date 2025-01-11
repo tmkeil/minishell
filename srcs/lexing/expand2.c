@@ -17,7 +17,7 @@ int	ft_expand_tilde(char **expanded, char *current, size_t *i)
 	int		c;
 	char	*sub;
 	char	*user;
-	
+
 	c = *i;
 	user = getenv("USER");
 	if (current[c + 1] == ' ' || current[c + 1] == '/')
@@ -57,7 +57,8 @@ int	ft_expand_escapes(char **expanded, char *current, size_t *i)
 		return (ft_strappend(expanded, current[(*i)++]));
 }
 
-int	ft_expand_environments(char **expanded, char *current, t_envs *envs, size_t *i)
+int	ft_expand_environments(char **expanded, char *current,
+							t_envs *envs, size_t *i)
 {
 	char		*env_start;
 	char		*env_end;
