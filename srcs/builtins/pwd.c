@@ -12,15 +12,15 @@
 
 #include "minishell.h"
 
-int    ft_pwd(void)
+int	ft_pwd(void)
 {
-    char    buffer[1024];
+	char	buffer[1024];
 
-    if (!getcwd(buffer, sizeof(buffer)))
-    {
-        perror("getcwd");
-        return (EXIT_FAILURE);
-    }
-    ft_putendl_fd(buffer, STDOUT_FILENO);
-    return (EXIT_SUCCESS);
+	if (!getcwd(buffer, sizeof(buffer)))
+	{
+		perror("getcwd");
+		return (EXIT_FAILURE);
+	}
+	ft_putendl_fd(buffer, STDOUT_FILENO);
+	return (EXIT_SUCCESS);
 }
