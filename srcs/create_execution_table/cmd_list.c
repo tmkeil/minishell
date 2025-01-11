@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 12:58:06 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 23:30:11 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/11 14:42:44 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_append_redir_or_append(t_cmds **cmd, t_lexems **lexem)
 		if ((*lexem)->next && (*lexem)->next->type == WORD)
 		{
 			(*cmd)->input_file = ft_strdup((char *)(*lexem)->next->value);
-			*lexem = (*lexem)->next;
+			*lexem = (*lexem)->next->next;
 		}
 	}
 	else if ((*lexem)->type == OUT_REDIRECT)
@@ -44,7 +44,7 @@ void	ft_append_redir_or_append(t_cmds **cmd, t_lexems **lexem)
 		if ((*lexem)->next && (*lexem)->next->type == WORD)
 		{
 			(*cmd)->output_file = ft_strdup((char *)(*lexem)->next->value);
-			*lexem = (*lexem)->next;
+			*lexem = (*lexem)->next->next;
 		}
 	}
 	else if ((*lexem)->type == APPEND)
@@ -53,7 +53,7 @@ void	ft_append_redir_or_append(t_cmds **cmd, t_lexems **lexem)
 		{
 			(*cmd)->output_file = ft_strdup((char *)(*lexem)->next->value);
 			(*cmd)->append = 1;
-			*lexem = (*lexem)->next;
+			*lexem = (*lexem)->next->next;
 		}
 	}
 }

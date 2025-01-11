@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 22:13:39 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 22:52:13 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/11 15:19:08 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	ft_validate_commands(t_cmds *cmds)
 {
 	int	flags;
 
+	if (!cmds)
+		return (0);
 	while (cmds)
 	{
 		if (cmds->cmd == NULL && cmds->heredoc)

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/07 00:44:26 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/11 14:23:24 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int					ft_run_builtin(t_minishell **minishell, t_cmds **cmd,
 void				ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next);
 int					ft_choose_builtin(t_minishell **minishell,
 						char *cmd_builtin, char **args);
-char				*ft_is_builtin(void *value, char **envp);
+char				*ft_is_builtin(void *value);
 
 // builtins
 int					ft_changedir(t_minishell **minishell, char **args);

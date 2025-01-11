@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 23:32:06 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/11 15:33:14 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,11 @@
 void	ft_test_cmd_list(t_cmds *cmds)
 {
 	int i = 0;
+	printf("test\n");
+	printf("cmd = %p\n", cmds);
 	while (cmds)
 	{
+		printf("cmd = %p\n", cmds);
 		printf("cmd = %s\n", cmds->cmd);
 		i = 0;
 		if (cmds->args)
@@ -64,6 +67,7 @@ void	ft_test_cmd_list(t_cmds *cmds)
 		}
 		cmds = cmds->next;
 	}
+	printf("abc\n");
 }
 
 int	ft_handle_input(t_minishell **minishell, char *input)
@@ -98,7 +102,7 @@ int	ft_get_user_input(t_minishell *minishell)
 		free(line);
 	}
 	free(prompt);
-	if (!input || *input == '\0')
+	if (!input)
 		return (free(input), prompt = NULL, input = NULL, 0);
 	add_history(input);
 	if (!ft_handle_input(&minishell, input))
