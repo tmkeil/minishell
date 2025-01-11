@@ -87,10 +87,11 @@ void	ft_process_args(char *value, t_envs **envs)
 int	ft_export(t_minishell **minishell, char **args, t_envs **envs)
 {
 	char	**name;
+	int		i;
 
 	if (!args[1])
 		ft_print_envs(*envs);
-	int i = 1;
+	i = 1;
 	while (args[i])
 	{
 		ft_process_args(args[i], envs);

@@ -40,7 +40,7 @@ long	ft_atol(char *s)
 	return (val * p);
 }
 
-int ft_exit(t_minishell **minishell, char **args)
+int	ft_exit(t_minishell **minishell, char **args)
 {
 	if (!args[1])
 	{
