@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_create_exec_table.c                                :+:      :+:    :+:   */
+/*   cmd_list4.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -48,7 +48,6 @@ void	ft_append_node(t_lexems **table, t_lexems *lex)
 	while (last->next)
 		last = last->next;
 	last->next = new_node;
-	return ;
 }
 
 // void ft_debug_exec_table(t_minishell *minishell)
@@ -85,17 +84,17 @@ int	ft_skip_prefix_spaces(t_lexems **lexes, bool *first)
 	return (*lexes != NULL);
 }
 
-int ft_init_table(t_minishell **minishell, size_t size)
+int	ft_init_table(t_minishell **minishell, size_t size)
 {
-    size_t i;
+	size_t	i;
 
-    i = 0;
-    (*minishell)->table = malloc(sizeof(t_lexems *) * size);
-    if (!(*minishell)->table)
-        return (0);
-    while (i < size)
-        (*minishell)->table[i++] = NULL;
-    return (1);
+	i = 0;
+	(*minishell)->table = malloc(sizeof(t_lexems *) * size);
+	if (!(*minishell)->table)
+		return (0);
+	while (i < size)
+		(*minishell)->table[i++] = NULL;
+	return (1);
 }
 
 int	ft_create_exec_table(t_minishell **minishell)
