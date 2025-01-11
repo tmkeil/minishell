@@ -41,7 +41,9 @@
 
 void	ft_test_cmd_list(t_cmds *cmds)
 {
-	int i = 0;
+	int		i;
+
+	i = 0;
 	printf("test\n");
 	printf("cmd = %p\n", cmds);
 	while (cmds)

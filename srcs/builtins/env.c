@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int    ft_env(t_envs *envs)
+int	ft_env(t_envs *envs)
 {
 	return (ft_print_envs(envs), EXIT_SUCCESS);
 }
