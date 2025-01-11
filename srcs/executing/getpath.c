@@ -47,6 +47,7 @@ void	ft_to_lower(char **cmd)
 		i++;
 	}
 }
+
 char	*ft_getpath(char *cmd, char **envp, bool absolute)
 {
 	char	**ptr;
