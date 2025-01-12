@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:36:14 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/12 02:14:05 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 02:17:42 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	ft_expand_tilde(t_expander **vars, size_t *i)
 	int		c;
 	char	*sub;
 	char	*user;
+
 
 	c = *i;
 	user = getenv("USER");

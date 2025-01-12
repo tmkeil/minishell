@@ -6,15 +6,15 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:11 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/12 00:43:13 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 02:18:56 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    ft_append_new_command(t_cmds **cmds, t_cmds *new)
+void	ft_append_new_command(t_cmds **cmds, t_cmds *new)
 {
-    t_cmds *last;
+	t_cmds	*last;
 
 	if (!new)
 		return ;
@@ -29,18 +29,18 @@ void    ft_append_new_command(t_cmds **cmds, t_cmds *new)
 	last->next = new;
 }
 
-void    ft_init_new(t_cmds **cmd)
+void	ft_init_new(t_cmds **cmd)
 {
-    (*cmd)->cmd = NULL;
-    (*cmd)->args = NULL;
-    (*cmd)->input_file = NULL;
-    (*cmd)->output_file = NULL;
-    (*cmd)->append = 0;
-    (*cmd)->heredoc = NULL;
-    (*cmd)->next = NULL;
+	(*cmd)->cmd = NULL;
+	(*cmd)->args = NULL;
+	(*cmd)->input_file = NULL;
+	(*cmd)->output_file = NULL;
+	(*cmd)->append = 0;
+	(*cmd)->heredoc = NULL;
+	(*cmd)->next = NULL;
 }
 
-int ft_alloc_args(t_cmds **cmd, t_lexems *lexem)
+int	ft_alloc_args(t_cmds **cmd, t_lexems *lexem)
 {
     int         size;
     
