@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 15:22:36 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 01:58:24 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,18 @@ int	ft_set_env(const char *name, const char *value, t_envs **envs)
 void	ft_process_args(char *value, t_envs **envs)
 {
 	char	**env_args;
+	char	*name;
 
 	env_args = ft_split(value, '=');
+	name = ft_strchr(value, '=');
 	if (!env_args)
 		return ;
-	if (ft_valid_env(env_args[0]) && ft_strchr(value, '='))
+	if (ft_valid_env(env_args[0]) && name)
 	{
-		if (!ft_set_env(env_args[0], env_args[1], envs))
+		if (!ft_set_env(env_args[0], name + 1, envs))
+		{
 			ft_free_ptr(&env_args);
+		}
 	}
 	ft_free_ptr(&env_args);
 }
@@ -92,10 +96,7 @@ int	ft_export(t_minishell **minishell, char **args, t_envs **envs)
 		ft_print_envs(*envs);
 	int i = 1;
 	while (args[i])
-	{
-		ft_process_args(args[i], envs);
-		i++;
-	}
+		ft_process_args(args[i++], envs);
 	i = 1;
 	ft_update_envps(*envs, &(*minishell)->envps);
 	while (args[i])
@@ -103,7 +104,8 @@ int	ft_export(t_minishell **minishell, char **args, t_envs **envs)
 		name = ft_split(args[i], '=');
 		if (!ft_valid_env(name[0]))
 		{
-			ft_put_error_str(ERR_EXPORT, args[i]);
+			ft_putstr_fd("bash: export: `", STDERR_FILENO);
+			ft_put_error_str(args[i], "': not a valid identifier");
 			return (ft_free_ptr(&name), EXIT_FAILURE);
 		}
 		ft_free_ptr(&name);

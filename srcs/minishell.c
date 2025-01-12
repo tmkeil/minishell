@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/11 15:33:14 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 01:59:38 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,10 @@
 void	ft_test_cmd_list(t_cmds *cmds)
 {
 	int i = 0;
-	printf("test\n");
-	printf("cmd = %p\n", cmds);
 	while (cmds)
 	{
-		printf("cmd = %p\n", cmds);
-		printf("cmd = %s\n", cmds->cmd);
 		i = 0;
+		printf("cmd = %s\n", cmds->cmd);
 		if (cmds->args)
 		{
 			while ((cmds->args)[i])
@@ -67,21 +64,18 @@ void	ft_test_cmd_list(t_cmds *cmds)
 		}
 		cmds = cmds->next;
 	}
-	printf("abc\n");
 }
 
 int	ft_handle_input(t_minishell **minishell, char *input)
 {
-	if (!ft_create_lexes(&(*minishell)->tokens, input, (*minishell)->envs))
-		return (0);
+	if (!ft_create_lexes(minishell, &(*minishell)->tokens, input, (*minishell)->envs))
+		return (ft_set_exit_status(*minishell), 0);
 	if (!ft_create_command_list(minishell, &(*minishell)->cmds))
-		return (0);
+		return (ft_set_exit_status(*minishell), 0);
 	// ft_test_cmd_list((*minishell)->cmds);
 	if (!ft_execute_commands(minishell))
-		return (0);
-	if (!ft_set_exit_status(*minishell))
-		return (0);
-	return (1);
+		return (ft_set_exit_status(*minishell), 0);
+	return (ft_set_exit_status(*minishell), 1);
 }
 
 int	ft_get_user_input(t_minishell *minishell)
@@ -104,7 +98,8 @@ int	ft_get_user_input(t_minishell *minishell)
 	free(prompt);
 	if (!input)
 		return (free(input), prompt = NULL, input = NULL, 0);
-	add_history(input);
+	if (ft_strlen(input))
+		add_history(input);
 	if (!ft_handle_input(&minishell, input))
 		return (free(input), 1);
 	return (free(input), input = NULL, prompt = NULL, 1);
@@ -131,8 +126,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc > 1)
 		return (EXIT_FAILURE);
-	minishell.in_fd = STDIN_FILENO;
-	minishell.out_fd = STDOUT_FILENO;
+	minishell.in_fd = dup(STDIN_FILENO);
+	minishell.out_fd = dup(STDOUT_FILENO);
 	minishell.tokens = NULL;
 	minishell.table = NULL;
 	minishell.envs = NULL;

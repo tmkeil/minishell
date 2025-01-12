@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:29:09 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/11 14:23:13 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/11 22:27:31 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,5 @@ int	ft_choose_builtin(t_minishell **minishell, char *cmd_builtin, char **args)
 		return (ft_pwd());
 	if (!ft_strncmp(cmd_builtin, "unset", 6))
 		return (ft_unset(minishell, args, &(*minishell)->envs));
-	return (-2);
+	return (-1);
 }

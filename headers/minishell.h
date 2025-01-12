@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/11 14:23:24 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 01:35:42 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # define OPERATIONS "|<><<>>"
 # define BAD_CD "cd: no such file or directory: "
 # define CD_TOO_MANY "-bash: cd: too many arguments\n"
-# define ERR_EXPORT "export: not valid in this context: "
+# define ERR_EXPORT "bash: export: `"
 # define BUILTINS "echo cd env exit export pwd unset"
 
 # include "libft.h"
@@ -67,6 +67,7 @@ typedef struct s_expander
 	char			*expanded;
 	char			*current;
 	t_envs			*envs;
+	t_types			type;
 }					t_expander;
 
 typedef struct s_lexems
@@ -100,6 +101,7 @@ typedef struct s_minishell
 	t_cmds			*cmds;
 }					t_minishell;
 
+int					ft_setup_heredoc(t_cmds *cmd);
 int					ft_create_command_list(t_minishell **minishell,
 						t_cmds **cmds);
 void				ft_handle_redirections(t_cmds *cmd, int *in_fd);
@@ -136,31 +138,28 @@ int					ft_strappend(char **str, char c);
 char				*ft_get_env(char *env_var, t_envs *envs);
 
 // lexing
-int					ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs);
+int					ft_create_lexes(t_minishell **minishell, t_lexems **tokens, char *s, t_envs *envs);
 int					ft_op(char c);
 bool				ft_sep(char c);
 bool				ft_ident(char c);
 int					ft_handle_seperator(t_lexems **lexems, char **prompt);
-int					ft_handle_operator(t_lexems **lexems, char **prompt);
-int					ft_handle_identifier(t_lexems **lexems, char **prompt);
+int					ft_handle_operator(t_minishell **minishell, t_lexems **lexems, char **prompt);
+int					ft_handle_identifier(t_minishell **minishell, t_lexems **lexems, char **prompt);
 void				ft_append_word(t_lexems **lexems, char *sub);
 void				ft_append_operation(t_lexems **lexems, char **sub);
 void				ft_append_identifier(t_lexems **lexems, char **sub,
 						char type);
 void				ft_append_lexem(t_lexems **lexems, t_types type,
 						void *value);
-void				ft_invalid(char *sub);
+void				ft_invalid(char *sub, t_minishell **minishell);
 // expander
-int					ft_expand_escapes_envs(t_lexems **tokens, t_envs *envs);
-int					ft_expand_token(t_lexems *lex, t_envs *envs);
-int					ft_expander(t_expander *vars, t_types type, size_t *i);
-int					ft_expand_single_quotes(char **expanded, char *current,
-						size_t *i);
-int					ft_expand_escapes(char **expanded, char *current,
-						size_t *i);
-int					ft_expand_environments(char **expanded, char *current,
-						t_envs *envs, size_t *i);
-int					ft_expand_tilde(char **expanded, char *current, size_t *i);
+int					ft_expand_escapes_envs(t_minishell **minishell, t_lexems **tokens, t_envs *envs);
+int					ft_expand_token(t_minishell **minishell, t_lexems *lex, t_envs *envs);
+int					ft_expander(t_minishell **minishell, t_expander *vars, size_t *i, t_lexems *lex);
+int					ft_expand_single_quotes(t_expander **vars, size_t *i);
+int					ft_expand_escapes(t_minishell **minishell, t_expander **vars, size_t *i);
+int					ft_expand_environments(t_expander **vars, size_t *i, t_lexems *lex);
+int					ft_expand_tilde(t_expander **vars, size_t *i);
 int					ft_join_them(char **value, char *next);
 char				*ft_until_next_env(char *ptr);
 

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 18:04:25 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 15:26:54 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 00:15:20 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_putstrn_fd(char *s, int n, int fd)
 	}
 }
 
-void	ft_invalid(char *sub)
+void	ft_invalid(char *sub, t_minishell **minishell)
 {
 	int	a;
 	int	i;
@@ -64,4 +64,5 @@ void	ft_invalid(char *sub)
 	ft_putstr_fd("-bash: syntax error near unexpected token `", STDERR_FILENO);
 	ft_putstrn_fd(sub + a, 2, STDERR_FILENO);
 	ft_putendl_fd("'", STDERR_FILENO);
+	(*minishell)->exit_status = 258;
 }

@@ -6,50 +6,49 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 16:52:26 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 22:20:16 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 02:14:21 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	ft_test_lexes(t_lexems *lex)
-// {
-// 	int		i;
-// 	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-// 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-// 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-// 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-// 			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-// 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-// 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-// 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-
-// 	i = 0;
-// 	while (lex)
-// 	{
-// 		printf("lexem[%i].type = %s\n", i, types[lex->type]);
-// 		printf("lexem[%i].value = %s\n\n", i, (char *)lex->value);
-// 		lex = lex->next;
-// 		i++;
-// 	}
-// }
-
-int	ft_expander(t_expander *vars, t_types type, size_t *i)
+void	ft_test_lexes(t_lexems *lex)
 {
-	if (type == SINGLE_QUOTE)
-		return (ft_expand_single_quotes(&vars->expanded, vars->current, i));
+	int		i;
+	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+
+	i = 0;
+	while (lex)
+	{
+		printf("lexem[%i].type = %s\n", i, types[lex->type]);
+		printf("lexem[%i].value = %s\n\n", i, (char *)lex->value);
+		lex = lex->next;
+		i++;
+	}
+}
+
+int	ft_expander(t_minishell **minishell, t_expander *vars, size_t *i, t_lexems *lex)
+{
+	if (vars->type == SINGLE_QUOTE)
+		return (ft_expand_single_quotes(&vars, i));
 	else if (vars->current[*i] == '\\')
-		return (ft_expand_escapes(&vars->expanded, vars->current, i));
+		return (ft_expand_escapes(minishell, &vars, i));
 	else if (vars->current[*i] == '$')
-		return (ft_expand_environments(&vars->expanded, vars->current,
-				vars->envs, i));
-	else if (vars->current[*i] == '~' && type == WORD)
-		return (ft_expand_tilde(&vars->expanded, vars->current, i));
+		return (ft_expand_environments(&vars, i, lex));
+	else if (vars->current[*i] == '~' && vars->type == WORD)
+		return (ft_expand_tilde(&vars, i));
 	else
 		return (ft_strappend(&vars->expanded, vars->current[(*i)++]));
 }
 
-int	ft_expand_token(t_lexems *lex, t_envs *envs)
+int	ft_expand_token(t_minishell **minishell, t_lexems *lex, t_envs *envs)
 {
 	size_t		i;
 	char		*expanded;
@@ -62,9 +61,10 @@ int	ft_expand_token(t_lexems *lex, t_envs *envs)
 	vars.expanded = expanded;
 	vars.current = (char *)(lex)->value;
 	vars.envs = envs;
+	vars.type = lex->type;
 	while (vars.current[i])
 	{
-		if (!ft_expander(&vars, (lex)->type, &i))
+		if (!ft_expander(minishell, &vars, &i, lex->next))
 			return (free(vars.expanded), 0);
 	}
 	free(lex->value);
@@ -127,14 +127,14 @@ void	ft_remove_seperators(t_lexems **tokens)
 	}
 }
 
-int	ft_expand_escapes_envs(t_lexems **tokens, t_envs *envs)
+int	ft_expand_escapes_envs(t_minishell **minishell, t_lexems **tokens, t_envs *envs)
 {
 	t_lexems	*lex;
 
 	lex = *tokens;
 	while (lex)
 	{
-		if (!ft_expand_token(lex, envs))
+		if (!ft_expand_token(minishell, lex, envs))
 			return (0);
 		lex = lex->next;
 	}

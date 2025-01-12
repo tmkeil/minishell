@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 14:00:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 00:44:30 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_append_lexem(t_lexems **lexems, t_types type, void *value)
 
 void	ft_append_word(t_lexems **lexems, char *sub)
 {
-	if (ft_isalnum(*sub) || strchr("_/.-$~#+\\", *sub))
+	if (ft_isalnum(*sub) || strchr("_/.-$~#+\\=", *sub))
 		ft_append_lexem(lexems, WORD, sub);
 	else if (*sub == ' ')
 		ft_append_lexem(lexems, SEPERATOR, sub);
@@ -102,7 +102,7 @@ void	ft_append_operation(t_lexems **lexems, char **sub)
 	free(*sub);
 }
 
-int	ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs)
+int	ft_create_lexes(t_minishell **minishell, t_lexems **tokens, char *s, t_envs *envs)
 {
 	char	*ptr;
 	char	*sub;
@@ -110,9 +110,9 @@ int	ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs)
 	while (*s)
 	{
 		ft_handle_seperator(tokens, &s);
-		if (!ft_handle_operator(tokens, &s))
+		if (!ft_handle_operator(minishell, tokens, &s))
 			return (0);
-		if (!ft_handle_identifier(tokens, &s))
+		if (!ft_handle_identifier(minishell, tokens, &s))
 			return (0);
 		ptr = s;
 		while (*s && !ft_sep(*s) && !ft_op(*s) && !ft_ident(*s))
@@ -126,6 +126,6 @@ int	ft_create_lexes(t_lexems **tokens, char *s, t_envs *envs)
 			free(sub);
 		}
 	}
-	ft_expand_escapes_envs(tokens, envs);
+	ft_expand_escapes_envs(minishell, tokens, envs);
 	return (1);
 }

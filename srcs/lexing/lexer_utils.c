@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:57:55 by tkeil             #+#    #+#             */
-/*   Updated: 2024/12/27 12:34:42 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 00:14:06 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_handle_seperator(t_lexems **lexems, char **prompt)
 	return (0);
 }
 
-int	ft_handle_identifier(t_lexems **lexems, char **prompt)
+int	ft_handle_identifier(t_minishell **minishell, t_lexems **lexems, char **prompt)
 {
 	char	*ptr;
 	char	*sub;
@@ -62,7 +62,7 @@ int	ft_handle_identifier(t_lexems **lexems, char **prompt)
 		while (**prompt && **prompt != *type)
 			(*prompt)++;
 		if (**prompt != *type)
-			return (ft_invalid(type), free(sub), 0);
+			return (ft_invalid(type, minishell), free(sub), 0);
 		if (!ft_sub_and_join(&sub, ptr, prompt))
 			return (free(sub), 0);
 		ft_append_identifier(lexems, &sub, *type);
@@ -71,7 +71,7 @@ int	ft_handle_identifier(t_lexems **lexems, char **prompt)
 	return (1);
 }
 
-int	ft_handle_operator(t_lexems **lexems, char **prompt)
+int	ft_handle_operator(t_minishell **minishell, t_lexems **lexems, char **prompt)
 {
 	char	*ptr;
 	char	*sub;
@@ -87,7 +87,7 @@ int	ft_handle_operator(t_lexems **lexems, char **prompt)
 		if (!sub)
 			return (0);
 		if (!ft_strnstr(OPERATIONS, sub, ft_strlen(OPERATIONS)))
-			return (ft_invalid(sub), free(sub), 0);
+			return (ft_invalid(sub, minishell), free(sub), 0);
 		ft_append_operation(lexems, &sub);
 	}
 	return (1);

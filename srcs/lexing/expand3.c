@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 19:02:57 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 12:52:32 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/11 21:06:23 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char	*ft_find_end(char *ptr)
 	i = 0;
 	if (ptr[i] == '?')
 		return (&ptr[i + 1]);
+	// printf("ptr = %s\n", ptr);
 	while (ptr[i] && (ft_isalnum(ptr[i]) || ft_strchr("_", ptr[i])))
 		i++;
 	return (&ptr[i]);

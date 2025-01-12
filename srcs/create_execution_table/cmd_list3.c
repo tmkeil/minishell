@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 22:13:39 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/11 15:19:08 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/12 00:30:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int	ft_validate_commands(t_cmds *cmds)
 		if (cmds->input_file)
 		{
 			if (open(cmds->input_file, O_RDONLY) == -1)
+			{
+				printf("konnte nicht gesbvjsbvdsv\n");
 				return (perror("open input_file"), 0);
+			}
 		}
 		if (cmds->output_file)
 		{
@@ -35,6 +38,8 @@ int	ft_validate_commands(t_cmds *cmds)
 			if (open(cmds->output_file, flags, 0644) == -1)
 				return (perror("open output_file"), 0);
 		}
+		if (!cmds->cmd && !cmds->output_file && !cmds->input_file && !cmds->heredoc)
+			return (0);
 		cmds = cmds->next;
 	}
 	return (1);
