@@ -215,4 +215,14 @@ void				ft_append_new_command(t_cmds **cmds, t_cmds *new);
 int					ft_validate_commands(t_cmds *cmds);
 int					ft_fill_args(t_cmds **cmd, t_lexems **lexem);
 
+void				ft_append_heredoc(t_cmds **cmd, t_lexems **lexem,
+						int *returned_value);
+void				ft_append_redirection(t_cmds **cmd,
+						t_lexems **lexem, int *returned_value);
+void				ft_append_append(t_cmds **cmd, t_lexems **lexem,
+						int *returned_value);
+void				ft_append_words(t_cmds **cmd, t_lexems *lexem,
+						int *returned_value);
+int					ft_get_new_cmd(t_cmds **cmd, t_lexems *lexem);
+
 #endif
