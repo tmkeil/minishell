@@ -23,13 +23,8 @@ int	ft_validate_commands(t_cmds *cmds)
 		if (cmds->cmd == NULL && cmds->heredoc)
 			return (0);
 		if (cmds->input_file)
-		{
 			if (open(cmds->input_file, O_RDONLY) == -1)
-			{
-				printf("konnte nicht gesbvjsbvdsv\n");
 				return (perror("open input_file"), 0);
-			}
-		}
 		if (cmds->output_file)
 		{
 			flags = O_WRONLY | O_CREAT | O_TRUNC;
