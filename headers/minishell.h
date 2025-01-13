@@ -138,13 +138,16 @@ int					ft_strappend(char **str, char c);
 char				*ft_get_env(char *env_var, t_envs *envs);
 
 // lexing
-int					ft_create_lexes(t_minishell **minishell, t_lexems **tokens, char *s, t_envs *envs);
+int					ft_create_lexes(t_minishell **minishell, t_lexems **tokens,
+						char *s, t_envs *envs);
 int					ft_op(char c);
 bool				ft_sep(char c);
 bool				ft_ident(char c);
 int					ft_handle_seperator(t_lexems **lexems, char **prompt);
-int					ft_handle_operator(t_minishell **minishell, t_lexems **lexems, char **prompt);
-int					ft_handle_identifier(t_minishell **minishell, t_lexems **lexems, char **prompt);
+int					ft_handle_operator(t_minishell **minishell,
+						t_lexems **lexems,	char **prompt);
+int					ft_handle_identifier(t_minishell **minishell,
+						t_lexems **lexems, char **prompt);
 void				ft_append_word(t_lexems **lexems, char *sub);
 void				ft_append_operation(t_lexems **lexems, char **sub);
 void				ft_append_identifier(t_lexems **lexems, char **sub,
@@ -153,12 +156,17 @@ void				ft_append_lexem(t_lexems **lexems, t_types type,
 						void *value);
 void				ft_invalid(char *sub, t_minishell **minishell);
 // expander
-int					ft_expand_escapes_envs(t_minishell **minishell, t_lexems **tokens, t_envs *envs);
-int					ft_expand_token(t_minishell **minishell, t_lexems *lex, t_envs *envs);
-int					ft_expander(t_minishell **minishell, t_expander *vars, size_t *i, t_lexems *lex);
+int					ft_expand_escapes_envs(t_minishell **minishell,
+						t_lexems **tokens, t_envs *envs);
+int					ft_expand_token(t_minishell **minishell, t_lexems *lex,
+						t_envs *envs);
+int					ft_expander(t_minishell **minishell, t_expander *vars,
+						size_t *i, t_lexems *lex);
 int					ft_expand_single_quotes(t_expander **vars, size_t *i);
-int					ft_expand_escapes(t_minishell **minishell, t_expander **vars, size_t *i);
-int					ft_expand_environments(t_expander **vars, size_t *i, t_lexems *lex);
+int					ft_expand_escapes(t_minishell **minishell,
+						t_expander **vars, size_t *i);
+int					ft_expand_environments(t_expander **vars, size_t *i,
+						t_lexems *lex);
 int					ft_expand_tilde(t_expander **vars, size_t *i);
 int					ft_join_them(char **value, char *next);
 char				*ft_until_next_env(char *ptr);
