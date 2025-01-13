@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 20:02:51 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/11 23:13:41 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 17:28:21 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,17 @@ int	ft_setup_heredoc(t_cmds *cmd)
 	return (fd_pipe[0]);
 }
 
-void	ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next)
+void	ft_redirect_pipe(int *fd_in, int *fd_pipe, bool is_next)
 {
-	if (fd_in != -1)
+	if (*fd_in != -1)
 	{
-		dup2(fd_in, STDIN_FILENO);
-		close(fd_in);
+		dup2(*fd_in, STDIN_FILENO);
+		ft_close_fd(fd_in);
 	}
 	if (is_next && fd_pipe[1] != -1)
 	{
 		dup2(fd_pipe[1], STDOUT_FILENO);
-		close(fd_pipe[1]);
-		fd_pipe[1] = -1;
+		ft_close_fd(&fd_pipe[1]);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/13 16:35:40 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 17:29:52 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,14 +165,15 @@ char				*ft_until_next_env(char *ptr);
 void				ft_remove_invalid_end(t_lexems **tokens);
 
 // executing
+void				ft_close_fd(int *fd);
 int					ft_execute_commands(t_minishell **minishell);
 char				*ft_getpath(char *cmd, char **envp, char ***args);
 char				*ft_find_end(char *ptr);
-void				ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in,
+void				ft_child(t_minishell **minishell, t_cmds *cmd, int *fd_in,
 						int *fd_pipe);
 int					ft_run_builtin(t_minishell **minishell, t_cmds **cmd,
 						int *fd_in, int *fd_pipe);
-void				ft_redirect_pipe(int fd_in, int *fd_pipe, bool is_next);
+void				ft_redirect_pipe(int *fd_in, int *fd_pipe, bool is_next);
 int					ft_choose_builtin(t_minishell **minishell,
 						char *cmd_builtin, char **args);
 char				*ft_is_builtin(void *value);
