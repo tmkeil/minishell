@@ -48,7 +48,7 @@ void	ft_to_lower(char **cmd)
 	}
 }
 
-char *ft_get_relative_path(char *cmd, char ***args)
+char	*ft_get_relative_path(char *cmd, char ***args)
 {
 	char	*rel;
 	char	*tmp;
