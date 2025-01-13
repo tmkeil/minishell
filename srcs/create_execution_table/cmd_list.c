@@ -39,31 +39,32 @@ void	ft_test_exec_table(t_minishell *minishell)
 	}
 }
 
-int	ft_append_heredoc(t_cmds **cmd, t_lexems **lexem)
+void	ft_append_heredoc(t_cmds **cmd, t_lexems **lexem, int *returned_value)
 {
 	if ((*lexem)->next && (*lexem)->next->type == WORD)
 	{
 		(*cmd)->heredoc = ft_strdup((char *)(*lexem)->next->value);
 		*lexem = (*lexem)->next->next;
-		return (1);
+		*returned_value = 1;
 	}
 	else
 	{
 		ft_putstr_fd("bash: syntax error near unexpected token `newline'\n",
 			STDERR_FILENO);
 		*lexem = (*lexem)->next;
-		return (0);
+		*returned_value = 0;
 	}
 }
 
-int	ft_append_redirection(t_cmds **cmd, t_lexems **lexem)
+void	ft_append_redirection(t_cmds **cmd, t_lexems **lexem, int *returned_value)
 {
 	if (!(*lexem)->next || (*lexem)->next->type != WORD)
 	{
 		ft_putstr_fd("bash: syntax error near unexpected token `newline'\n",
 			STDERR_FILENO);
 		*lexem = (*lexem)->next;
-		return (0);
+		*returned_value = 0;
+		return ;
 	}
 	if ((*lexem)->type == IN_REDIRECT)
 	{
@@ -81,10 +82,10 @@ int	ft_append_redirection(t_cmds **cmd, t_lexems **lexem)
 			*lexem = (*lexem)->next->next;
 		}
 	}
-	return (1);
+	*returned_value = 1;
 }
 
-int	ft_append_append(t_cmds **cmd, t_lexems **lexem)
+void	ft_append_append(t_cmds **cmd, t_lexems **lexem, int *returned_value)
 {
 	if ((*lexem)->next && (*lexem)->next->type == WORD)
 	{
@@ -97,57 +98,52 @@ int	ft_append_append(t_cmds **cmd, t_lexems **lexem)
 		ft_putstr_fd("bash: syntax error near unexpected token `newline'\n",
 			STDERR_FILENO);
 		*lexem = (*lexem)->next;
-		return (0);
+		*returned_value = 0;
+		return ;
 	}
-	return (1);
+	*returned_value = 1;
 }
 
-int	ft_append_words(t_cmds **cmd, t_lexems *lexem)
+void	ft_append_words(t_cmds **cmd, t_lexems *lexem, int *returned_value)
 {
 	if (!(*cmd)->cmd)
 	{
 		(*cmd)->cmd = ft_strdup((char *)lexem->value);
 		if (!ft_alloc_args(cmd, lexem))
-			return (0);
+		{
+			*returned_value = 0;
+			return ;
+		}
 		if (!ft_fill_args(cmd, &lexem))
-			return (0);
-		return (1);
+		{
+			*returned_value = 0;
+			return ;
+		}
+		*returned_value = 1;
+		return ;
 	}
-	return (2);
+	*returned_value = 2;
 }
 
 int	ft_get_new_cmd(t_cmds **cmd, t_lexems *lexem)
 {
-	int	appended;
+	int returned_value;
 
 	while (lexem)
 	{
+		returned_value = -1;
 		if (lexem->type == HEREDOC)
-		{
-			if (!ft_append_heredoc(cmd, &lexem))
-				return (0);
-			continue ;
-		}
+			ft_append_heredoc(cmd, &lexem, &returned_value);
 		else if (lexem->type == IN_REDIRECT || lexem->type == OUT_REDIRECT)
-		{
-			if (!ft_append_redirection(cmd, &lexem))
-				return (0);
-			continue ;
-		}
+			ft_append_redirection(cmd, &lexem, &returned_value);
 		else if (lexem->type == APPEND)
-		{
-			if (!ft_append_append(cmd, &lexem))
-				return (0);
-			continue ;
-		}
+			ft_append_append(cmd, &lexem, &returned_value);
 		else if (lexem->type == WORD)
-		{
-			appended = ft_append_words(cmd, lexem);
-			if (appended == 1)
-				continue ;
-			else if (appended == 0)
-				return (0);
-		}
+			ft_append_words(cmd, lexem, &returned_value);
+		if (returned_value == 0)
+			return (0);
+		else if (returned_value == 1)
+			continue;
 		lexem = lexem->next;
 	}
 	return (1);
