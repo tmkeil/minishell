@@ -85,7 +85,5 @@ int	ft_expand_environments(t_expander **vars, size_t *i, t_lexems *lex)
 	if ((*vars)->current[*i + 1] == '$'
 		|| (*vars)->current[*i + 1] || (!lex && lex->type == WORD))
 		return (ft_strappend(&(*vars)->expanded, '$'), (*i)++, 1);
-	// else
-	// 	return (ft_strappend(&(*vars)->expanded, '$'), (*i)++, 1);
 	return ((*i)++, 1);
 }
