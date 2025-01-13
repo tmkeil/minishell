@@ -15,7 +15,8 @@
 // void	ft_test_lexes(t_lexems *lex)
 // {
 // 	int		i;
-// 	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+// 	char	*types[] = {[SEPERATOR] = "SEPERATOR",
+//			[OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
 // 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
 // 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
 // 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
@@ -34,7 +35,8 @@
 // 	}
 // }
 
-int	ft_expander(t_minishell **minishell, t_expander *vars, size_t *i, t_lexems *lex)
+int	ft_expander(t_minishell **minishell, t_expander *vars,
+			size_t *i, t_lexems *lex)
 {
 	if (vars->type == SINGLE_QUOTE)
 		return (ft_expand_single_quotes(&vars, i));
@@ -127,7 +129,8 @@ void	ft_remove_seperators(t_lexems **tokens)
 	}
 }
 
-int	ft_expand_escapes_envs(t_minishell **minishell, t_lexems **tokens, t_envs *envs)
+int	ft_expand_escapes_envs(t_minishell **minishell,
+			t_lexems **tokens, t_envs *envs)
 {
 	t_lexems	*lex;
 
