@@ -28,7 +28,6 @@ char	*ft_find_end(char *ptr)
 	i = 0;
 	if (ptr[i] == '?')
 		return (&ptr[i + 1]);
-	// printf("ptr = %s\n", ptr);
 	while (ptr[i] && (ft_isalnum(ptr[i]) || ft_strchr("_", ptr[i])))
 		i++;
 	return (&ptr[i]);
