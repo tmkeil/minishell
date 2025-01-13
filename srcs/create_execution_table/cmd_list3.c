@@ -33,7 +33,8 @@ int	ft_validate_commands(t_cmds *cmds)
 			if (open(cmds->output_file, flags, 0644) == -1)
 				return (1);
 		}
-		if (!cmds->cmd && !cmds->output_file && !cmds->input_file && !cmds->heredoc)
+		if (!cmds->cmd && !cmds->output_file
+			&& !cmds->input_file && !cmds->heredoc)
 			return (0);
 		cmds = cmds->next;
 	}
