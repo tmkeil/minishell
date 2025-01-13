@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 14:16:11 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/12 02:18:56 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 19:03:15 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_alloc_args(t_cmds **cmd, t_lexems *lexem)
     size = 0;
     while (lexem)
     {
-        if (ft_strnstr(OPERATIONS, (char *)lexem->value, ft_strlen(OPERATIONS)) && *(char *)lexem->value)
+        if (lexem->type != WORD && *(char *)lexem->value)
             break ;
         if (lexem->type == WORD)
             size++;
@@ -67,8 +67,7 @@ int	ft_fill_args(t_cmds **cmd, t_lexems **lexem)
 	i = 0;
 	while (*lexem)
 	{
-		if (ft_strnstr(OPERATIONS, (char *)(*lexem)->value,
-				ft_strlen(OPERATIONS)) && *(char *)(*lexem)->value)
+		if ((*lexem)->type != WORD && *(char *)(*lexem)->value)
 			break ;
 		((*cmd)->args)[i] = ft_strdup((char *)(*lexem)->value);
 		if (!((*cmd)->args)[i])

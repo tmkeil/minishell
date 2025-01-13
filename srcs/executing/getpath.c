@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:49:09 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 16:37:29 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 19:28:27 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,29 +36,26 @@ static char	*ft_check_paths(char **env, char *cmd)
 	return (ft_free_ptr(&env), NULL);
 }
 
-void	ft_to_lower(char **cmd)
-{
-	int	i;
-
-	i = 0;
-	while ((*cmd)[i])
-	{
-		(*cmd)[i] = ft_tolower((*cmd)[i]);
-		i++;
-	}
-}
-
 char *ft_get_relative_path(char *cmd, char ***args)
 {
 	char	*rel;
 	char	*tmp;
 	char	curr[1024];
 
-	getcwd(curr, 1024);
-	rel = ft_strjoin(curr, "/");
-	tmp = rel;
+	getcwd(curr, sizeof(curr));
+	tmp = ft_strjoin(curr, "/");
 	rel = ft_strjoin(tmp, cmd);
 	free(tmp);
+	if (access(rel, F_OK) != 0)
+	{
+		ft_put_error_str("bash: ", cmd, ": No such file or directory");
+		exit(127);
+	}
+	if (access(rel, X_OK) != 0)
+	{
+		ft_put_error_str("bash: ", cmd, ": Permission denied");
+		exit(126);
+	}
 	free(*args[0]);
 	*args[0] = ft_strdup(rel);
 	return (rel);
@@ -69,10 +66,10 @@ char	*ft_getpath(char *cmd, char **envp, char ***args)
 	char	**ptr;
 	char	**env;
 
-	if (*cmd == '.')
-		return (ft_get_relative_path(cmd, args));
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
+	if (ft_strchr("./", *cmd))
+		return (ft_get_relative_path(cmd, args));
 	if (!envp || !*envp)
 		return (NULL);
 	ptr = envp;

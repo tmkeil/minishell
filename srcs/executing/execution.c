@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 17:56:35 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 18:37:39 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,7 @@ void	ft_child(t_minishell **minishell, t_cmds *cmd, int *fd_in, int *fd_pipe)
 	path = ft_getpath(cmd->cmd, (*minishell)->envps, &cmd->args);
 	if (!path || !*(*cmd).cmd)
 	{
-		ft_putstr_fd("bash: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->cmd, STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		ft_put_error_str("bash: ", cmd->cmd, ": command not found");
 		exit(INVALID_CMD);
 	}
 	execve(path, cmd->args, (*minishell)->envps);

@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:36:14 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/12 02:17:42 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 19:12:19 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,5 @@ int	ft_expand_environments(t_expander **vars, size_t *i, t_lexems *lex)
 	}
 	if ((*vars)->current[*i + 1] == '$' || (*vars)->current[*i + 1] || (!lex && lex->type == WORD))
 		return (ft_strappend(&(*vars)->expanded, '$'), (*i)++, 1);
-	// else
-	// 	return (ft_strappend(&(*vars)->expanded, '$'), (*i)++, 1);
 	return ((*i)++, 1);
 }
