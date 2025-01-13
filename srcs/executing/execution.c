@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/12 02:01:19 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 13:33:32 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,7 @@ int	ft_run_builtin(t_minishell **minishell, t_cmds **cmd, int *fd_in,
 		return (0);
 	}
 	status = ft_choose_builtin(minishell, (*cmd)->cmd, (*cmd)->args);
+	printf("status = %i\n", status);
 	(*minishell)->exit_status = status;
 	ft_close_fd(fd_in);
 	dup2((*minishell)->in_fd, STDIN_FILENO);
@@ -210,32 +211,13 @@ void	ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in, int *fd_pipe)
 		ft_close_fd(&fd_pipe[0]);
 	else
 		ft_close_fd(&fd_pipe[1]);
-	// if (!cmd->cmd && cmd->heredoc)
-	// {
-	// 	ft_close_fd(&fd_pipe[0]);
-	// 	ft_close_fd(&fd_pipe[1]);
-	// 	ft_close_fd(&fd_in);
-	// 	term_fd = open("/dev/tty", O_RDONLY);
-	// 	if (term_fd != -1)
-	// 	{
-	// 		dup2(term_fd, STDIN_FILENO);
-	// 		close(term_fd);
-	// 	}
-	// 	heredoc_fd = ft_setup_heredoc(cmd);
-	// 	if (heredoc_fd != -1)
-	// 	{
-	// 		dup2(heredoc_fd, STDIN_FILENO);
-	// 		close(heredoc_fd);
-	// 	}
-	// 	exit(0);
-	// }
 	if (ft_run_builtin(minishell, &cmd, &fd_in, fd_pipe) >= 0)
-		exit((*minishell)->exit_status);
+		return ;
 	ft_redirect_pipe(fd_in, fd_pipe, (cmd->next != NULL));
 	ft_handle_redirections(cmd, &fd_in);
 	if (!cmd->cmd)
 		exit(0);
-	path = ft_getpath(cmd->cmd, (*minishell)->envps, true);
+	path = ft_getpath(cmd->cmd, (*minishell)->envps);
 	if (!path)
 	{
 		ft_putstr_fd("bash: ", STDERR_FILENO);
@@ -283,6 +265,7 @@ void	ft_execute_command_in_pipeline(t_minishell **minishell,
 	}
 	if (ft_run_builtin(minishell, current, fd_in, fd_pipe) != -1)
 	{
+		printf("bef22\n");
 		ft_close_fd(&fd_pipe[1]);
 		ft_close_fd(fd_in);
 		*fd_in = fd_pipe[0];

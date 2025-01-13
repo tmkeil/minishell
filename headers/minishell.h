@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/12 01:35:42 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 13:17:36 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ char				*ft_until_next_env(char *ptr);
 
 // executing
 int					ft_execute_commands(t_minishell **minishell);
-char				*ft_getpath(char *cmd, char **envp, bool absolute);
+char				*ft_getpath(char *cmd, char **envp);
 char				*ft_find_end(char *ptr);
 void				ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in,
 						int *fd_pipe);
