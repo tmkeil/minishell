@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:20:47 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/12 01:58:24 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 18:13:24 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,7 @@ int	ft_export(t_minishell **minishell, char **args, t_envs **envs)
 		name = ft_split(args[i], '=');
 		if (!ft_valid_env(name[0]))
 		{
-			ft_putstr_fd("bash: export: `", STDERR_FILENO);
-			ft_put_error_str(args[i], "': not a valid identifier");
+			ft_put_error_str("bash: export: `", args[i], "': not a valid identifier");
 			return (ft_free_ptr(&name), EXIT_FAILURE);
 		}
 		ft_free_ptr(&name);

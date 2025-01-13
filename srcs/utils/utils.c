@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:13:21 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 13:53:29 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 18:19:44 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,15 @@ void	ft_set_execution_sig(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
-void	ft_put_error_str(char *msg, char *value)
+void	ft_put_error_str(char *msg1, char *msg2, char *msg3)
 {
-	ft_putstr_fd(msg, STDERR_FILENO);
-	ft_putendl_fd(value, STDERR_FILENO);
+	if (msg1)
+		ft_putstr_fd(msg1, STDERR_FILENO);
+	if (msg2)
+		ft_putstr_fd(msg2, STDERR_FILENO);
+	if (msg3)
+		ft_putstr_fd(msg3, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
 }
 
 size_t	ft_ptrsize(char **ptr)

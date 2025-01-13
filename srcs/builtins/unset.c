@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 21:04:42 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 15:23:22 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 18:14:25 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ int	ft_unset(t_minishell **minishell, char **args, t_envs **envs)
 		name = ft_split(args[i], '=');
 		if (!ft_is_valid_identifier(name[0]))
 		{
-			ft_put_error_str("bash: unset: `", NULL);
-			ft_put_error_str(args[i], "': not a valid identifier");
+			ft_put_error_str("bash: unset: `", args[i], "': not a valid identifier");
 			return (ft_free_ptr(&name), EXIT_FAILURE);
 		}
 		ft_free_ptr(&name);

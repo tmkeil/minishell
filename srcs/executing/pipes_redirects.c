@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 20:02:51 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 17:28:21 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 18:18:52 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	ft_redirect_in_out(t_cmds *cmd, int *in_fd)
 	{
 		fd = open(cmd->input_file, O_RDONLY);
 		if (fd < 0)
-			perror("open input_file");
+			ft_put_error_str("bash: ", cmd->input_file, ": No such file or directory");
 		else
 			*in_fd = fd;
 	}
@@ -69,7 +69,7 @@ static void	ft_redirect_in_out(t_cmds *cmd, int *in_fd)
 			flags = O_WRONLY | O_CREAT | O_APPEND;
 		fd = open(cmd->output_file, flags, 0644);
 		if (fd < 0)
-			perror("open error");
+			ft_put_error_str("bash: ", cmd->output_file, ": No such file or directory");
 		else
 		{
 			dup2(fd, STDOUT_FILENO);

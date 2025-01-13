@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:48:13 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/06 15:17:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 18:13:01 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_changedir(t_minishell **minishell, char **args)
 	ft_cd_to(args[1], &path);
 	if (chdir(path) != 0)
 	{
-		ft_put_error_str(BAD_CD, path);
+		ft_put_error_str(BAD_CD, path, NULL);
 		free(path);
 		return (EXIT_FAILURE);
 	}
