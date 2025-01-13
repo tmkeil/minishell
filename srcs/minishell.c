@@ -33,7 +33,10 @@
 // 		current = minishell->table[i];
 // 		while (current)
 // 		{
-// 			printf("minishell.table[%i].Type: %s, minishell.table[%i].Value: %s\n", i, types[current->type], i, (char *)current->value ? (char *)current->value : (char *)"(null)");
+// 			printf("minishell.table[%i].Type: %s,
+//			minishell.table[%i].Value: %s\n", i,
+//			types[current->type], i,
+//			(char *)current->value ? (char *)current->value : (char *)"(null)");
 // 			current = current->next;
 // 		}
 // 	}
@@ -41,7 +44,9 @@
 
 void	ft_test_cmd_list(t_cmds *cmds)
 {
-	int i = 0;
+	int		i;
+
+	i = 0;
 	while (cmds)
 	{
 		i = 0;
@@ -68,11 +73,12 @@ void	ft_test_cmd_list(t_cmds *cmds)
 
 int	ft_handle_input(t_minishell **minishell, char *input)
 {
-	if (!ft_create_lexes(minishell, &(*minishell)->tokens, input, (*minishell)->envs))
+	if (!ft_create_lexes(minishell, &(*minishell)->tokens,
+			input, (*minishell)->envs))
 		return (ft_set_exit_status(*minishell), 0);
 	if (!ft_create_command_list(minishell, &(*minishell)->cmds))
 		return (ft_set_exit_status(*minishell), 0);
-	// ft_test_cmd_list((*minishell)->cmds);
+	//	ft_test_cmd_list((*minishell)->cmds);
 	if (!ft_execute_commands(minishell))
 		return (ft_set_exit_status(*minishell), 0);
 	return (ft_set_exit_status(*minishell), 1);

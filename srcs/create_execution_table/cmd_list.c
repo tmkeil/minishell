@@ -56,7 +56,8 @@ void	ft_append_heredoc(t_cmds **cmd, t_lexems **lexem, int *returned_value)
 	}
 }
 
-void	ft_append_redirection(t_cmds **cmd, t_lexems **lexem, int *returned_value)
+void	ft_append_redirection(t_cmds **cmd,
+				t_lexems **lexem, int *returned_value)
 {
 	if (!(*lexem)->next || (*lexem)->next->type != WORD)
 	{
