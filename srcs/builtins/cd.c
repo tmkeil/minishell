@@ -41,7 +41,7 @@ int	ft_changedir(t_minishell **minishell, char **args)
 	ft_cd_to(args[1], &path);
 	if (chdir(path) != 0)
 	{
-		ft_put_error_str(BAD_CD, path, NULL);
+		ft_sterr(BAD_CD, path, NULL);
 		free(path);
 		return (EXIT_FAILURE);
 	}

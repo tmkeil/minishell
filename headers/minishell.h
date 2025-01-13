@@ -126,7 +126,7 @@ char				*ft_get_prompt(void);
 size_t				ft_ptrsize(char **ptr);
 void				ft_init_sig(void);
 void				ft_set_execution_sig(void);
-void				ft_put_error_str(char *msg1, char *msg2, char *msg3);
+void				ft_sterr(char *msg1, char *msg2, char *msg3);
 // utils2
 int					ft_split_env(char *env_var, char **name, char **value);
 int					ft_extract_envps(t_envs **envs, char **envp);

@@ -58,7 +58,7 @@ static void	ft_redirect_in_out(t_cmds *cmd, int *in_fd)
 	{
 		fd = open(cmd->input_file, O_RDONLY);
 		if (fd < 0)
-			ft_put_error_str("bash: ", cmd->input_file, ": No such file or directory");
+			ft_sterr("bash: ", cmd->input_file, ": No such file or directory");
 		else
 			*in_fd = fd;
 	}
@@ -69,7 +69,7 @@ static void	ft_redirect_in_out(t_cmds *cmd, int *in_fd)
 			flags = O_WRONLY | O_CREAT | O_APPEND;
 		fd = open(cmd->output_file, flags, 0644);
 		if (fd < 0)
-			ft_put_error_str("bash: ", cmd->output_file, ": No such file or directory");
+			ft_sterr("bash: ", cmd->output_file, ": No such file or directory");
 		else
 		{
 			dup2(fd, STDOUT_FILENO);

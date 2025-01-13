@@ -46,7 +46,7 @@ void	ft_set_execution_sig(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
-void	ft_put_error_str(char *msg1, char *msg2, char *msg3)
+void	ft_sterr(char *msg1, char *msg2, char *msg3)
 {
 	if (msg1)
 		ft_putstr_fd(msg1, STDERR_FILENO);
