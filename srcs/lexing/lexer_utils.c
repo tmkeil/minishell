@@ -44,7 +44,8 @@ int	ft_handle_seperator(t_lexems **lexems, char **prompt)
 	return (0);
 }
 
-int	ft_handle_identifier(t_minishell **minishell, t_lexems **lexems, char **prompt)
+int	ft_handle_identifier(t_minishell **minishell,
+					t_lexems **lexems, char **prompt)
 {
 	char	*ptr;
 	char	*sub;
@@ -71,7 +72,8 @@ int	ft_handle_identifier(t_minishell **minishell, t_lexems **lexems, char **prom
 	return (1);
 }
 
-int	ft_handle_operator(t_minishell **minishell, t_lexems **lexems, char **prompt)
+int	ft_handle_operator(t_minishell **minishell,
+			t_lexems **lexems, char **prompt)
 {
 	char	*ptr;
 	char	*sub;

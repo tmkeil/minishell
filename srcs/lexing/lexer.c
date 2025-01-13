@@ -6,33 +6,34 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 22:25:01 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 19:28:01 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 19:44:59 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_test_lexes(t_lexems *lex)
-{
-	int		i;
-	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
-			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-
-	i = 0;
-	while (lex)
-	{
-		printf("lexem[%i].type = %s\n", i, types[lex->type]);
-		printf("lexem[%i].value = %s\n\n", i, (char *)lex->value);
-		lex = lex->next;
-		i++;
-	}
-}
+// void	ft_test_lexes(t_lexems *lex)
+// {
+// 	int		i;
+// 	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR",
+//			[AND] = "AND", [PIPE] = "PIPE",
+// 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+// 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+// 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+// 			[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+// 			[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+// 			[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+// 			[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+// 
+// i = 0;
+// while (lex)
+// {
+// 	printf("lexem[%i].type = %s\n", i, types[lex->type]);
+// 	printf("lexem[%i].value = %s\n\n", i, (char *)lex->value);
+// 	lex = lex->next;
+// 	i++;
+// }
+// }
 
 void	ft_append_lexem(t_lexems **lexems, t_types type, void *value)
 {
@@ -102,7 +103,8 @@ void	ft_append_operation(t_lexems **lexems, char **sub)
 	free(*sub);
 }
 
-int	ft_create_lexes(t_minishell **minishell, t_lexems **tokens, char *s, t_envs *envs)
+int	ft_create_lexes(t_minishell **minishell, t_lexems **tokens, char *s,
+		t_envs *envs)
 {
 	char	*ptr;
 	char	*sub;

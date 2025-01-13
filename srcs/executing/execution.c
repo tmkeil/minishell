@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 18:37:39 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 19:46:52 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_child(t_minishell **minishell, t_cmds *cmd, int *fd_in, int *fd_pipe)
 	path = ft_getpath(cmd->cmd, (*minishell)->envps, &cmd->args);
 	if (!path || !*(*cmd).cmd)
 	{
-		ft_put_error_str("bash: ", cmd->cmd, ": command not found");
+		ft_sterr("bash: ", cmd->cmd, ": command not found");
 		exit(INVALID_CMD);
 	}
 	execve(path, cmd->args, (*minishell)->envps);
@@ -107,40 +107,4 @@ void	ft_execute_command_in_pipeline(t_minishell **minishell,
 	}
 	ft_execute(minishell, *current, fd_in, fd_pipe);
 	*fd_in = fd_pipe[0];
-}
-
-int	ft_execute_pipeline(t_minishell **minishell, t_cmds *current)
-{
-	int	fd_in;
-
-	fd_in = -1;
-	while (current)
-	{
-		ft_execute_command_in_pipeline(minishell, &current, &fd_in);
-		current = current->next;
-	}
-	return (1);
-}
-
-int	ft_execute_single_command(t_minishell **minishell, t_cmds *cmds)
-{
-	int	fd_in;
-	int	fd_pipe[2];
-
-	fd_in = -1;
-	fd_pipe[0] = -1;
-	fd_pipe[1] = -1;
-	if (ft_run_builtin(minishell, &cmds, &fd_in, fd_pipe) == -1)
-		ft_execute(minishell, cmds, &fd_in, fd_pipe);
-	return (1);
-}
-
-int	ft_execute_commands(t_minishell **minishell)
-{
-	t_cmds	*current;
-
-	current = (*minishell)->cmds;
-	if (!(*minishell)->cmds->next)
-		return (ft_execute_single_command(minishell, current));
-	return (ft_execute_pipeline(minishell, current));
 }

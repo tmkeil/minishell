@@ -76,7 +76,8 @@ int	ft_unset(t_minishell **minishell, char **args, t_envs **envs)
 		name = ft_split(args[i], '=');
 		if (!ft_is_valid_identifier(name[0]))
 		{
-			ft_put_error_str("bash: unset: `", args[i], "': not a valid identifier");
+			ft_sterr("bash: unset: `",
+				args[i], "': not a valid identifier");
 			return (ft_free_ptr(&name), EXIT_FAILURE);
 		}
 		ft_free_ptr(&name);

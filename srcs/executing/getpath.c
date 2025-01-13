@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:49:09 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 19:28:27 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 19:46:52 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ static char	*ft_check_paths(char **env, char *cmd)
 	return (ft_free_ptr(&env), NULL);
 }
 
+void	ft_to_lower(char **cmd)
+{
+	int	i;
+
+	i = 0;
+	while ((*cmd)[i])
+	{
+		(*cmd)[i] = ft_tolower((*cmd)[i]);
+		i++;
+	}
+}
+
 char *ft_get_relative_path(char *cmd, char ***args)
 {
 	char	*rel;
@@ -48,12 +60,12 @@ char *ft_get_relative_path(char *cmd, char ***args)
 	free(tmp);
 	if (access(rel, F_OK) != 0)
 	{
-		ft_put_error_str("bash: ", cmd, ": No such file or directory");
+		ft_sterr("bash: ", cmd, ": No such file or directory");
 		exit(127);
 	}
 	if (access(rel, X_OK) != 0)
 	{
-		ft_put_error_str("bash: ", cmd, ": Permission denied");
+		ft_sterr("bash: ", cmd, ": Permission denied");
 		exit(126);
 	}
 	free(*args[0]);

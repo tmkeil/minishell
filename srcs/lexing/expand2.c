@@ -18,7 +18,6 @@ int	ft_expand_tilde(t_expander **vars, size_t *i)
 	char	*sub;
 	char	*user;
 
-
 	c = *i;
 	user = getenv("USER");
 	if ((*vars)->current[c + 1] == ' ' || (*vars)->current[c + 1] == '/')
@@ -51,8 +50,8 @@ int	ft_expand_single_quotes(t_expander **vars, size_t *i)
 int	ft_expand_escapes(t_minishell **minishell, t_expander **vars, size_t *i)
 {
 	(*i)++;
-	if ((*vars)->current[*i] == '\\' || (*vars)->current[*i] == '\"' || (*vars)->current[*i] == '\''
-		|| (*vars)->current[*i] == '$')
+	if ((*vars)->current[*i] == '\\' || (*vars)->current[*i] == '\"'
+		|| (*vars)->current[*i] == '\'' || (*vars)->current[*i] == '$')
 		return (ft_strappend(&(*vars)->expanded, (*vars)->current[(*i)++]));
 	else if ((*vars)->current[*i] == '\0')
 		return (ft_invalid("\\", minishell), 0);
@@ -83,7 +82,8 @@ int	ft_expand_environments(t_expander **vars, size_t *i, t_lexems *lex)
 		free(env_var);
 		return (1);
 	}
-	if ((*vars)->current[*i + 1] == '$' || (*vars)->current[*i + 1] || (!lex && lex->type == WORD))
+	if ((*vars)->current[*i + 1] == '$'
+		|| (*vars)->current[*i + 1] || (!lex && lex->type == WORD))
 		return (ft_strappend(&(*vars)->expanded, '$'), (*i)++, 1);
 	return ((*i)++, 1);
 }
