@@ -186,9 +186,9 @@ int					ft_choose_builtin(t_minishell **minishell,
 						char *cmd_builtin, char **args);
 char				*ft_is_builtin(void *value);
 void				ft_execute(t_minishell **minishell, t_cmds *cmd, int *fd_in,
-					int *fd_pipe);
+						int *fd_pipe);
 void				ft_execute_command_in_pipeline(t_minishell **minishell,
-					t_cmds **current, int *fd_in);
+						t_cmds **current, int *fd_in);
 
 // builtins
 int					ft_changedir(t_minishell **minishell, char **args);
