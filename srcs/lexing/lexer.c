@@ -15,7 +15,8 @@
 // void	ft_test_lexes(t_lexems *lex)
 // {
 // 	int		i;
-// 	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR", [AND] = "AND", [PIPE] = "PIPE",
+// 	char	*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR",
+//			[AND] = "AND", [PIPE] = "PIPE",
 // 			[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
 // 			[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
 // 			[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
@@ -102,7 +103,8 @@ void	ft_append_operation(t_lexems **lexems, char **sub)
 	free(*sub);
 }
 
-int	ft_create_lexes(t_minishell **minishell, t_lexems **tokens, char *s, t_envs *envs)
+int	ft_create_lexes(t_minishell **minishell,
+			t_lexems **tokens, char *s, t_envs *envs)
 {
 	char	*ptr;
 	char	*sub;
