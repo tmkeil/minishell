@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 19:02:57 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/11 21:06:23 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 16:35:08 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,24 @@ char	*ft_until_next_env(char *ptr)
 	while (ptr[i] && ptr[i] != '$')
 		i++;
 	return (&ptr[i]);
+}
+
+void	ft_remove_invalid_end(t_lexems **tokens)
+{
+	t_lexems	*lex;
+	t_lexems	*to_delete;
+
+	lex = *tokens;
+	while (lex && lex->next)
+	{
+		if (lex->next->type == INVALID)
+		{
+			to_delete = lex->next;
+			lex->next = to_delete->next;
+			free(to_delete->value);
+			free(to_delete);
+		}
+		else
+			lex = lex->next;
+	}
 }

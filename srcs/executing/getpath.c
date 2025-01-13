@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:49:09 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 13:47:40 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 16:37:29 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,31 +48,29 @@ void	ft_to_lower(char **cmd)
 	}
 }
 
-char *ft_get_relative_path(char *cmd)
+char *ft_get_relative_path(char *cmd, char ***args)
 {
 	char	*rel;
 	char	*tmp;
 	char	curr[1024];
 
-	printf("abc\n");
 	getcwd(curr, 1024);
-	printf("curr = %s\n", curr);
 	rel = ft_strjoin(curr, "/");
 	tmp = rel;
 	rel = ft_strjoin(tmp, cmd);
 	free(tmp);
-	printf("rel = %s\n", rel);
+	free(*args[0]);
+	*args[0] = ft_strdup(rel);
 	return (rel);
 }
 
-char	*ft_getpath(char *cmd, char **envp)
+char	*ft_getpath(char *cmd, char **envp, char ***args)
 {
 	char	**ptr;
 	char	**env;
 
-	// ft_to_lower(&cmd);
 	if (*cmd == '.')
-		return (ft_get_relative_path(cmd));
+		return (ft_get_relative_path(cmd, args));
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	if (!envp || !*envp)

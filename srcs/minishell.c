@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/12 02:18:03 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 16:37:55 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,3 +142,20 @@ int	main(int argc, char **argv, char **envp)
 	rl_clear_history();
 	return (ft_input_loop(&minishell));
 }
+
+// int main(int argc, char **argv, char **envp)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	int pid;
+
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		char *args[] = {"./a.sh", NULL};
+// 		execve("./a.sh", args, envp);
+// 	}
+// 	else
+// 		wait(NULL);
+// 	return (0);
+// }

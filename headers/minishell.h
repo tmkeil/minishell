@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 21:23:41 by frocha            #+#    #+#             */
-/*   Updated: 2025/01/13 13:17:36 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/13 16:35:40 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,10 +162,11 @@ int					ft_expand_environments(t_expander **vars, size_t *i, t_lexems *lex);
 int					ft_expand_tilde(t_expander **vars, size_t *i);
 int					ft_join_them(char **value, char *next);
 char				*ft_until_next_env(char *ptr);
+void				ft_remove_invalid_end(t_lexems **tokens);
 
 // executing
 int					ft_execute_commands(t_minishell **minishell);
-char				*ft_getpath(char *cmd, char **envp);
+char				*ft_getpath(char *cmd, char **envp, char ***args);
 char				*ft_find_end(char *ptr);
 void				ft_child(t_minishell **minishell, t_cmds *cmd, int fd_in,
 						int *fd_pipe);
