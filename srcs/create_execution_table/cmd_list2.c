@@ -42,22 +42,23 @@ void	ft_init_new(t_cmds **cmd)
 
 int	ft_alloc_args(t_cmds **cmd, t_lexems *lexem)
 {
-    int         size;
-    
-    size = 0;
-    while (lexem)
-    {
-        if (ft_strnstr(OPERATIONS, (char *)lexem->value, ft_strlen(OPERATIONS)) && *(char *)lexem->value)
-            break ;
-        if (lexem->type == WORD)
-            size++;
-        lexem = lexem->next;
-    }
-    (*cmd)->args = malloc(sizeof(char *) * (size + 1));
-    if (!(*cmd)->args)
-        return (0);
-    ((*cmd)->args)[size] = NULL;
-    return (1);
+	int		size;
+
+	size = 0;
+	while (lexem)
+	{
+		if (ft_strnstr(OPERATIONS, (char *)lexem->value,
+				ft_strlen(OPERATIONS)) && *(char *)lexem->value)
+			break ;
+		if (lexem->type == WORD)
+			size++;
+		lexem = lexem->next;
+	}
+	(*cmd)->args = malloc(sizeof(char *) * (size + 1));
+	if (!(*cmd)->args)
+		return (0);
+	((*cmd)->args)[size] = NULL;
+	return (1);
 }
 
 int	ft_fill_args(t_cmds **cmd, t_lexems **lexem)
@@ -68,7 +69,7 @@ int	ft_fill_args(t_cmds **cmd, t_lexems **lexem)
 	while (*lexem)
 	{
 		if (ft_strnstr(OPERATIONS, (char *)(*lexem)->value,
-				ft_strlen(OPERATIONS)) && *(char *)(*lexem)->value)
+			ft_strlen(OPERATIONS)) && *(char *)(*lexem)->value)
 			break ;
 		((*cmd)->args)[i] = ft_strdup((char *)(*lexem)->value);
 		if (!((*cmd)->args)[i])
