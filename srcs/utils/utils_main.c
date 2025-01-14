@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 13:50:10 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/05 13:50:30 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/14 14:20:16 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_is_wsl_environment(void)
 
 int	ft_is_interactive(void)
 {
-	if (isatty(fileno(stdin)))
+	if (STDIN_FILENO)
 		return (1);
 	return (ft_is_wsl_environment());
 }
