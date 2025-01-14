@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 19:43:12 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/13 19:13:00 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/14 13:23:40 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	ft_handle_input(t_minishell **minishell, char *input)
 		return (ft_set_exit_status(*minishell), 0);
 	if (!ft_create_command_list(minishell, &(*minishell)->cmds))
 		return (ft_set_exit_status(*minishell), 0);
-		// ft_test_cmd_list((*minishell)->cmds);
+	// ft_test_cmd_list((*minishell)->cmds);
 	if (!ft_execute_commands(minishell))
 		return (ft_set_exit_status(*minishell), 0);
 	return (ft_set_exit_status(*minishell), 1);
