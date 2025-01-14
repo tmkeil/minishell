@@ -78,7 +78,6 @@ int	ft_handle_input(t_minishell **minishell, char *input)
 		return (ft_set_exit_status(*minishell), 0);
 	if (!ft_create_command_list(minishell, &(*minishell)->cmds))
 		return (ft_set_exit_status(*minishell), 0);
-	// ft_test_cmd_list((*minishell)->cmds);
 	if (!ft_execute_commands(minishell))
 		return (ft_set_exit_status(*minishell), 0);
 	return (ft_set_exit_status(*minishell), 1);

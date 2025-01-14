@@ -12,32 +12,34 @@
 
 #include "minishell.h"
 
-void	ft_test_exec_table(t_minishell *minishell)
-{
-	t_lexems	*current;
-	char		*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR",
-				[AND] = "AND", [PIPE] = "PIPE",
-				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
-				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
-				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
-				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
-				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
-				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
-				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
-
-	printf("Testing table:\n");
-	for (int i = 0; minishell->table[i]; i++)
-	{
-		if (!minishell->table[i])
-			continue ;
-		current = minishell->table[i];
-		while (current)
-		{
-			printf("minishell.table[%i].Type: %s, minishell.table[%i].Value: %s\n", i, types[current->type], i, (char *)current->value ? (char *)current->value : (char *)"(null)");
-			current = current->next;
-		}
-	}
-}
+// void	ft_test_exec_table(t_minishell *minishell)
+// {
+// 	t_lexems	*current;
+// 	char		*types[] = {[SEPERATOR] = "SEPERATOR", [OR] = "OR",
+// 				[AND] = "AND", [PIPE] = "PIPE",
+// 				[WORD] = "WORD", [NUMBER] = "NUMBER", [APPEND] = "APPEND",
+// 				[HEREDOC] = "HEREDOC", [ENV_VAR] = "ENV_VAR",
+// 				[IN_REDIRECT] = "IN_REDIRECT", [OUT_REDIRECT] = "OUT_REDIRECT",
+// 				[INVALID] = "INVALID", [LINEFEED] = "LINEFEED",
+// 				[O_BRACKET] = "O_BRACKET", [C_BRACKET] = "C_BRACKET",
+// 				[AMPERSAND] = "AMPERSAND", [SINGLE_QUOTE] = "SINGLE_QUOTE",
+// 				[DOUBLE_QUOTE] = "DOUBLE_QUOTE"};
+// 	printf("Testing table:\n");
+// 	for (int i = 0; minishell->table[i]; i++)
+// 	{
+// 		if (!minishell->table[i])
+// 			continue ;
+// 		current = minishell->table[i];
+// 		while (current)
+// 		{
+// 			printf("minishell.table[%i].Type: %s,
+//			minishell.table[%i].Value: %s\n",
+//			i, types[current->type], i,
+//			(char *)current->value ? (char *)current->value : (char *)"(null)");
+// 			current = current->next;
+// 		}
+// 	}
+// }
 
 void	ft_append_heredoc(t_cmds **cmd, t_lexems **lexem, int *returned_value)
 {
