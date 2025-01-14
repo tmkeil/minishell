@@ -6,20 +6,11 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 13:49:32 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/14 14:17:26 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/14 14:22:34 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_close_fd(int *fd)
-{
-	if (*fd != -1)
-	{
-		close(*fd);
-		*fd = -1;
-	}
-}
 
 int	ft_run_builtin(t_minishell **minishell, t_cmds **cmd, int *fd_in,
 		int *fd_pipe)
@@ -71,40 +62,38 @@ void	ft_child(t_minishell **minishell, t_cmds *cmd, int *fd_in, int *fd_pipe)
 	exit(EXIT_FAILURE);
 }
 
-void	ft_execute(t_minishell **minishell, t_cmds *cmd, int *fd_in,
-		int *fd_pipe)
+int	ft_execute_pipeline(t_minishell **minishell, t_cmds *current)
 {
-	int		status;
-	pid_t	pid;
+	int	fd_in;
 
-	pid = fork();
-	if (pid == 0)
-		ft_child(minishell, cmd, fd_in, fd_pipe);
-	else
+	fd_in = -1;
+	while (current)
 	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			(*minishell)->exit_status = WEXITSTATUS(status);
-		ft_close_fd(&fd_pipe[1]);
-		ft_close_fd(fd_in);
+		ft_execute_command_in_pipeline(minishell, &current, &fd_in);
+		current = current->next;
 	}
+	return (1);
 }
 
-void	ft_execute_command_in_pipeline(t_minishell **minishell,
-		t_cmds **current, int *fd_in)
+int	ft_execute_single_command(t_minishell **minishell, t_cmds *cmds)
 {
+	int	fd_in;
 	int	fd_pipe[2];
 
-	if ((*current)->next)
-	{
-		if (pipe(fd_pipe) == -1)
-			return ;
-	}
-	else
-	{
-		fd_pipe[0] = -1;
-		fd_pipe[1] = -1;
-	}
-	ft_execute(minishell, *current, fd_in, fd_pipe);
-	*fd_in = fd_pipe[0];
+	fd_in = -1;
+	fd_pipe[0] = -1;
+	fd_pipe[1] = -1;
+	if (ft_run_builtin(minishell, &cmds, &fd_in, fd_pipe) == -1)
+		ft_execute(minishell, cmds, &fd_in, fd_pipe);
+	return (1);
+}
+
+int	ft_execute_commands(t_minishell **minishell)
+{
+	t_cmds	*current;
+
+	current = (*minishell)->cmds;
+	if (!(*minishell)->cmds->next)
+		return (ft_execute_single_command(minishell, current));
+	return (ft_execute_pipeline(minishell, current));
 }

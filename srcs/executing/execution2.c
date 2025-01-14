@@ -6,7 +6,7 @@
 /*   By: tkeil <tkeil@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 20:29:09 by tkeil             #+#    #+#             */
-/*   Updated: 2025/01/11 22:27:31 by tkeil            ###   ########.fr       */
+/*   Updated: 2025/01/14 13:27:44 by tkeil            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,38 +40,49 @@ int	ft_choose_builtin(t_minishell **minishell, char *cmd_builtin, char **args)
 	return (-1);
 }
 
-int	ft_execute_pipeline(t_minishell **minishell, t_cmds *current)
+void	ft_close_fd(int *fd)
 {
-	int	fd_in;
-
-	fd_in = -1;
-	while (current)
+	if (*fd != -1)
 	{
-		ft_execute_command_in_pipeline(minishell, &current, &fd_in);
-		current = current->next;
+		close(*fd);
+		*fd = -1;
 	}
-	return (1);
 }
 
-int	ft_execute_single_command(t_minishell **minishell, t_cmds *cmds)
+void	ft_execute_command_in_pipeline(t_minishell **minishell,
+		t_cmds **current, int *fd_in)
 {
-	int	fd_in;
 	int	fd_pipe[2];
 
-	fd_in = -1;
-	fd_pipe[0] = -1;
-	fd_pipe[1] = -1;
-	if (ft_run_builtin(minishell, &cmds, &fd_in, fd_pipe) == -1)
-		ft_execute(minishell, cmds, &fd_in, fd_pipe);
-	return (1);
+	if ((*current)->next)
+	{
+		if (pipe(fd_pipe) == -1)
+			return ;
+	}
+	else
+	{
+		fd_pipe[0] = -1;
+		fd_pipe[1] = -1;
+	}
+	ft_execute(minishell, *current, fd_in, fd_pipe);
+	*fd_in = fd_pipe[0];
 }
 
-int	ft_execute_commands(t_minishell **minishell)
+void	ft_execute(t_minishell **minishell, t_cmds *cmd, int *fd_in,
+		int *fd_pipe)
 {
-	t_cmds	*current;
+	int		status;
+	pid_t	pid;
 
-	current = (*minishell)->cmds;
-	if (!(*minishell)->cmds->next)
-		return (ft_execute_single_command(minishell, current));
-	return (ft_execute_pipeline(minishell, current));
+	pid = fork();
+	if (pid == 0)
+		ft_child(minishell, cmd, fd_in, fd_pipe);
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			(*minishell)->exit_status = WEXITSTATUS(status);
+		ft_close_fd(&fd_pipe[1]);
+		ft_close_fd(fd_in);
+	}
 }
